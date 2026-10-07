@@ -1240,7 +1240,12 @@
 
         if (!response.ok) {
           const errText = await response.text();
-          throw new Error(`Worker HTTP ${response.status}: ${errText}`);
+          let parsedMsg = errText;
+          try {
+            const errObj = JSON.parse(errText);
+            if (errObj && errObj.message) parsedMsg = errObj.message;
+          } catch (e) {}
+          throw new Error(`Worker HTTP ${response.status}: ${parsedMsg}`);
         }
 
         const data = await response.json();

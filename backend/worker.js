@@ -26,10 +26,17 @@ export default {
       return new Response(null, { headers: corsHeaders });
     }
 
-    const repo = env.GITHUB_REPO || "powerforcemotiondrive-pixel/gsea-attendance";
-    const branch = env.GITHUB_BRANCH || "main";
-    const filePath = env.FILE_PATH || "data/attendance.json";
-    const token = env.GITHUB_TOKEN;
+    // Sanitize and normalize environment variables
+    let repo = (env.GITHUB_REPO || "powerforcemotiondrive-pixel/gsea-attendance").trim();
+    repo = repo.replace(/^https?:\/\/github\.com\//i, "").replace(/\.git$/i, "").replace(/^\/+|\/+$/g, "");
+
+    let branch = (env.GITHUB_BRANCH || "main").trim();
+    if (!branch) branch = "main";
+
+    let filePath = (env.FILE_PATH || "data/attendance.json").trim();
+    filePath = filePath.replace(/^\/+/, "");
+
+    const token = (env.GITHUB_TOKEN || "").trim();
 
     if (!token) {
       return new Response(
@@ -201,6 +208,76 @@ export default {
 
           if (!putRes.ok) {
             const errDetail = await putRes.text();
+
+            // Intelligent diagnosis for HTTP 404
+            if (putRes.status === 404) {
+              try {
+                const repoProbe = await fetch(`https://api.github.com/repos/${repo}`, {
+                  headers: {
+                    "User-Agent": "GSEA-Attendance-Worker",
+                    "Authorization": `Bearer ${token}`,
+                    "Accept": "application/vnd.github.v3+json"
+                  }
+                });
+
+                if (repoProbe.status === 404) {
+                  return new Response(
+                    JSON.stringify({
+                      status: "error",
+                      message: `GitHub 404: Cannot access repository '${repo}'. Verify repository name in Cloudflare Worker settings, and ensure GITHUB_TOKEN has access to this repo (repo scope for classic tokens).`,
+                      details: errDetail
+                    }),
+                    { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+                  );
+                }
+
+                if (repoProbe.ok) {
+                  const repoInfo = await repoProbe.json();
+                  const defaultBranch = repoInfo.default_branch || "main";
+
+                  // Auto-recovery: if user set branch to master instead of main, retry with default_branch
+                  if (branch !== defaultBranch) {
+                    commitBody.branch = defaultBranch;
+                    const retryRes = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
+                      method: "PUT",
+                      headers: {
+                        "User-Agent": "GSEA-Attendance-Worker",
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                        "Accept": "application/vnd.github.v3+json"
+                      },
+                      body: JSON.stringify(commitBody)
+                    });
+
+                    if (retryRes.ok) {
+                      const retryJson = await retryRes.json();
+                      return new Response(
+                        JSON.stringify({
+                          status: "success",
+                          commitSha: retryJson.commit?.sha,
+                          newFileSha: retryJson.content?.sha,
+                          message: commitMessage
+                        }),
+                        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+                      );
+                    }
+                  }
+
+                  // Repo exists, branch is correct, but commit returned 404 -> Token lacks write permission!
+                  return new Response(
+                    JSON.stringify({
+                      status: "error",
+                      message: `GitHub 404: GITHUB_TOKEN has read access to '${repo}', but lacks WRITE permissions. For Fine-Grained Tokens: set 'Repository permissions > Contents' to 'Read and write'. For Classic Tokens: ensure 'repo' scope is selected.`,
+                      details: errDetail
+                    }),
+                    { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+                  );
+                }
+              } catch (probeErr) {
+                console.warn("Probe error:", probeErr);
+              }
+            }
+
             return new Response(
               JSON.stringify({ status: "error", message: `GitHub commit error: ${putRes.status}`, details: errDetail }),
               { status: putRes.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }

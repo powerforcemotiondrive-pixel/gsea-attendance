@@ -1,0 +1,1143 @@
+{
+  "_lastUpdated": "2026-10-07T16:25:14.930Z",
+  "sem1_aas": {
+    "A": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1001",
+          "name": "Alex Morgan"
+        },
+        {
+          "id": "STD-1002",
+          "name": "David Chen"
+        },
+        {
+          "id": "STD-1003",
+          "name": "Emma Watson"
+        },
+        {
+          "id": "STD-1004",
+          "name": "Lucas Garcia"
+        },
+        {
+          "id": "STD-1005",
+          "name": "Sofia Rossi"
+        },
+        {
+          "id": "STD-1006",
+          "name": "Liam Tremblay"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "B": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1101",
+          "name": "Noah Al-Mansoor"
+        },
+        {
+          "id": "STD-1102",
+          "name": "Camille Dubois"
+        },
+        {
+          "id": "STD-1103",
+          "name": "Elena Kowalski"
+        },
+        {
+          "id": "STD-1104",
+          "name": "Marcus Vance"
+        },
+        {
+          "id": "STD-1105",
+          "name": "Chloe Bennett"
+        },
+        {
+          "id": "STD-1106",
+          "name": "Tariq Evans"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "C": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1201",
+          "name": "Olivia Zhang"
+        },
+        {
+          "id": "STD-1202",
+          "name": "Mateo Hernandez"
+        },
+        {
+          "id": "STD-1203",
+          "name": "Aisha Bello"
+        },
+        {
+          "id": "STD-1204",
+          "name": "Julian Rossi"
+        },
+        {
+          "id": "STD-1205",
+          "name": "Priya Sharma"
+        },
+        {
+          "id": "STD-1206",
+          "name": "Ethan Brooks"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "D": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1301",
+          "name": "Daniel Kim"
+        },
+        {
+          "id": "STD-1302",
+          "name": "Zara Larsson"
+        },
+        {
+          "id": "STD-1303",
+          "name": "Samuel O'Connor"
+        },
+        {
+          "id": "STD-1304",
+          "name": "Mia Lindholm"
+        },
+        {
+          "id": "STD-1305",
+          "name": "Felipe Santos"
+        },
+        {
+          "id": "STD-1306",
+          "name": "Grace Hopper"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    }
+  },
+  "sem1_ag": {
+    "A": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1001",
+          "name": "Alex Morgan"
+        },
+        {
+          "id": "STD-1002",
+          "name": "David Chen"
+        },
+        {
+          "id": "STD-1003",
+          "name": "Emma Watson"
+        },
+        {
+          "id": "STD-1004",
+          "name": "Lucas Garcia"
+        },
+        {
+          "id": "STD-1005",
+          "name": "Sofia Rossi"
+        },
+        {
+          "id": "STD-1006",
+          "name": "Liam Tremblay"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "B": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1101",
+          "name": "Noah Al-Mansoor"
+        },
+        {
+          "id": "STD-1102",
+          "name": "Camille Dubois"
+        },
+        {
+          "id": "STD-1103",
+          "name": "Elena Kowalski"
+        },
+        {
+          "id": "STD-1104",
+          "name": "Marcus Vance"
+        },
+        {
+          "id": "STD-1105",
+          "name": "Chloe Bennett"
+        },
+        {
+          "id": "STD-1106",
+          "name": "Tariq Evans"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "C": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1201",
+          "name": "Olivia Zhang"
+        },
+        {
+          "id": "STD-1202",
+          "name": "Mateo Hernandez"
+        },
+        {
+          "id": "STD-1203",
+          "name": "Aisha Bello"
+        },
+        {
+          "id": "STD-1204",
+          "name": "Julian Rossi"
+        },
+        {
+          "id": "STD-1205",
+          "name": "Priya Sharma"
+        },
+        {
+          "id": "STD-1206",
+          "name": "Ethan Brooks"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "D": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1301",
+          "name": "Daniel Kim"
+        },
+        {
+          "id": "STD-1302",
+          "name": "Zara Larsson"
+        },
+        {
+          "id": "STD-1303",
+          "name": "Samuel O'Connor"
+        },
+        {
+          "id": "STD-1304",
+          "name": "Mia Lindholm"
+        },
+        {
+          "id": "STD-1305",
+          "name": "Felipe Santos"
+        },
+        {
+          "id": "STD-1306",
+          "name": "Grace Hopper"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    }
+  },
+  "sem2_aas": {
+    "A": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1001",
+          "name": "Alex Morgan"
+        },
+        {
+          "id": "STD-1002",
+          "name": "David Chen"
+        },
+        {
+          "id": "STD-1003",
+          "name": "Emma Watson"
+        },
+        {
+          "id": "STD-1004",
+          "name": "Lucas Garcia"
+        },
+        {
+          "id": "STD-1005",
+          "name": "Sofia Rossi"
+        },
+        {
+          "id": "STD-1006",
+          "name": "Liam Tremblay"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "B": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1101",
+          "name": "Noah Al-Mansoor"
+        },
+        {
+          "id": "STD-1102",
+          "name": "Camille Dubois"
+        },
+        {
+          "id": "STD-1103",
+          "name": "Elena Kowalski"
+        },
+        {
+          "id": "STD-1104",
+          "name": "Marcus Vance"
+        },
+        {
+          "id": "STD-1105",
+          "name": "Chloe Bennett"
+        },
+        {
+          "id": "STD-1106",
+          "name": "Tariq Evans"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "C": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1201",
+          "name": "Olivia Zhang"
+        },
+        {
+          "id": "STD-1202",
+          "name": "Mateo Hernandez"
+        },
+        {
+          "id": "STD-1203",
+          "name": "Aisha Bello"
+        },
+        {
+          "id": "STD-1204",
+          "name": "Julian Rossi"
+        },
+        {
+          "id": "STD-1205",
+          "name": "Priya Sharma"
+        },
+        {
+          "id": "STD-1206",
+          "name": "Ethan Brooks"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "D": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1301",
+          "name": "Daniel Kim"
+        },
+        {
+          "id": "STD-1302",
+          "name": "Zara Larsson"
+        },
+        {
+          "id": "STD-1303",
+          "name": "Samuel O'Connor"
+        },
+        {
+          "id": "STD-1304",
+          "name": "Mia Lindholm"
+        },
+        {
+          "id": "STD-1305",
+          "name": "Felipe Santos"
+        },
+        {
+          "id": "STD-1306",
+          "name": "Grace Hopper"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    }
+  },
+  "sem2_ag": {
+    "A": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1001",
+          "name": "Alex Morgan"
+        },
+        {
+          "id": "STD-1002",
+          "name": "David Chen"
+        },
+        {
+          "id": "STD-1003",
+          "name": "Emma Watson"
+        },
+        {
+          "id": "STD-1004",
+          "name": "Lucas Garcia"
+        },
+        {
+          "id": "STD-1005",
+          "name": "Sofia Rossi"
+        },
+        {
+          "id": "STD-1006",
+          "name": "Liam Tremblay"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "B": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1101",
+          "name": "Noah Al-Mansoor"
+        },
+        {
+          "id": "STD-1102",
+          "name": "Camille Dubois"
+        },
+        {
+          "id": "STD-1103",
+          "name": "Elena Kowalski"
+        },
+        {
+          "id": "STD-1104",
+          "name": "Marcus Vance"
+        },
+        {
+          "id": "STD-1105",
+          "name": "Chloe Bennett"
+        },
+        {
+          "id": "STD-1106",
+          "name": "Tariq Evans"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "C": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1201",
+          "name": "Olivia Zhang"
+        },
+        {
+          "id": "STD-1202",
+          "name": "Mateo Hernandez"
+        },
+        {
+          "id": "STD-1203",
+          "name": "Aisha Bello"
+        },
+        {
+          "id": "STD-1204",
+          "name": "Julian Rossi"
+        },
+        {
+          "id": "STD-1205",
+          "name": "Priya Sharma"
+        },
+        {
+          "id": "STD-1206",
+          "name": "Ethan Brooks"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "D": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1301",
+          "name": "Daniel Kim"
+        },
+        {
+          "id": "STD-1302",
+          "name": "Zara Larsson"
+        },
+        {
+          "id": "STD-1303",
+          "name": "Samuel O'Connor"
+        },
+        {
+          "id": "STD-1304",
+          "name": "Mia Lindholm"
+        },
+        {
+          "id": "STD-1305",
+          "name": "Felipe Santos"
+        },
+        {
+          "id": "STD-1306",
+          "name": "Grace Hopper"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    }
+  },
+  "sem3": {
+    "A": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1001",
+          "name": "Alex Morgan"
+        },
+        {
+          "id": "STD-1002",
+          "name": "David Chen"
+        },
+        {
+          "id": "STD-1003",
+          "name": "Emma Watson"
+        },
+        {
+          "id": "STD-1004",
+          "name": "Lucas Garcia"
+        },
+        {
+          "id": "STD-1005",
+          "name": "Sofia Rossi"
+        },
+        {
+          "id": "STD-1006",
+          "name": "Liam Tremblay"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "B": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1101",
+          "name": "Noah Al-Mansoor"
+        },
+        {
+          "id": "STD-1102",
+          "name": "Camille Dubois"
+        },
+        {
+          "id": "STD-1103",
+          "name": "Elena Kowalski"
+        },
+        {
+          "id": "STD-1104",
+          "name": "Marcus Vance"
+        },
+        {
+          "id": "STD-1105",
+          "name": "Chloe Bennett"
+        },
+        {
+          "id": "STD-1106",
+          "name": "Tariq Evans"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "C": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1201",
+          "name": "Olivia Zhang"
+        },
+        {
+          "id": "STD-1202",
+          "name": "Mateo Hernandez"
+        },
+        {
+          "id": "STD-1203",
+          "name": "Aisha Bello"
+        },
+        {
+          "id": "STD-1204",
+          "name": "Julian Rossi"
+        },
+        {
+          "id": "STD-1205",
+          "name": "Priya Sharma"
+        },
+        {
+          "id": "STD-1206",
+          "name": "Ethan Brooks"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "D": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1301",
+          "name": "Daniel Kim"
+        },
+        {
+          "id": "STD-1302",
+          "name": "Zara Larsson"
+        },
+        {
+          "id": "STD-1303",
+          "name": "Samuel O'Connor"
+        },
+        {
+          "id": "STD-1304",
+          "name": "Mia Lindholm"
+        },
+        {
+          "id": "STD-1305",
+          "name": "Felipe Santos"
+        },
+        {
+          "id": "STD-1306",
+          "name": "Grace Hopper"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    }
+  },
+  "sem4": {
+    "A": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1001",
+          "name": "Alex Morgan"
+        },
+        {
+          "id": "STD-1002",
+          "name": "David Chen"
+        },
+        {
+          "id": "STD-1003",
+          "name": "Emma Watson"
+        },
+        {
+          "id": "STD-1004",
+          "name": "Lucas Garcia"
+        },
+        {
+          "id": "STD-1005",
+          "name": "Sofia Rossi"
+        },
+        {
+          "id": "STD-1006",
+          "name": "Liam Tremblay"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "B": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1101",
+          "name": "Noah Al-Mansoor"
+        },
+        {
+          "id": "STD-1102",
+          "name": "Camille Dubois"
+        },
+        {
+          "id": "STD-1103",
+          "name": "Elena Kowalski"
+        },
+        {
+          "id": "STD-1104",
+          "name": "Marcus Vance"
+        },
+        {
+          "id": "STD-1105",
+          "name": "Chloe Bennett"
+        },
+        {
+          "id": "STD-1106",
+          "name": "Tariq Evans"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "C": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1201",
+          "name": "Olivia Zhang"
+        },
+        {
+          "id": "STD-1202",
+          "name": "Mateo Hernandez"
+        },
+        {
+          "id": "STD-1203",
+          "name": "Aisha Bello"
+        },
+        {
+          "id": "STD-1204",
+          "name": "Julian Rossi"
+        },
+        {
+          "id": "STD-1205",
+          "name": "Priya Sharma"
+        },
+        {
+          "id": "STD-1206",
+          "name": "Ethan Brooks"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    },
+    "D": {
+      "weeks": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "students": [
+        {
+          "id": "STD-1301",
+          "name": "Daniel Kim"
+        },
+        {
+          "id": "STD-1302",
+          "name": "Zara Larsson"
+        },
+        {
+          "id": "STD-1303",
+          "name": "Samuel O'Connor"
+        },
+        {
+          "id": "STD-1304",
+          "name": "Mia Lindholm"
+        },
+        {
+          "id": "STD-1305",
+          "name": "Felipe Santos"
+        },
+        {
+          "id": "STD-1306",
+          "name": "Grace Hopper"
+        }
+      ],
+      "attendance": {},
+      "notes": {}
+    }
+  }
+}
