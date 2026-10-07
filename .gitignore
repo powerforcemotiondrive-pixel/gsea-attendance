@@ -1,0 +1,30 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# VS Code settings (workspace-specific)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Environment variables & secrets
+.env
+.env.local
+*.pem
+
+# Node / Dependencies / Build output (if you use npm, Tailwind, etc.)
+node_modules/
+dist/
+build/
+*.log
+
+# Office / Temp files
+~$*
+*.tmp
