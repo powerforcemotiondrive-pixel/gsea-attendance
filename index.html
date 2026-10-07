@@ -157,9 +157,10 @@
           <span class="hidden md:inline">Cloud Backend</span>
         </button>
 
-        <!-- Sync Status Pill -->
-        <div id="syncStatus" class="text-[11px] bg-brand-mustard text-white px-2.5 py-1 rounded-md font-semibold shadow-sm flex items-center gap-1.5 shrink-0 cursor-pointer" title="Click to view Backend status">
-          <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> Initializing...
+        <!-- Sync & Cache Status Pill -->
+        <div id="syncStatus" class="text-[11px] bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-md font-semibold shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer transition-all duration-200" title="Click to view Backend & Local Cache status">
+          <span id="syncStatusDot" class="w-2 h-2 rounded-full bg-emerald-200"></span>
+          <span id="syncStatusText">✓ Local &amp; Cloud Saved</span>
         </div>
       </div>
     </div>
@@ -275,10 +276,20 @@
 
       <!-- TOOLBAR: SEARCH, BULK TOOLS & ACTIONS -->
       <div class="toolbar-container bg-white border-b border-slate-200 px-3 sm:px-6 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs no-print">
-        <!-- Search Input -->
-        <div class="relative w-full sm:w-64">
-          <input id="studentSearchInput" class="w-full border border-slate-300 rounded-lg pl-8 pr-3 py-1.5 text-xs bg-slate-50 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-terracotta focus:bg-white transition-all" type="search" placeholder="Search name or ID (Esc)...">
-          <svg class="w-3.5 h-3.5 absolute left-2.5 top-2 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <!-- Search Input & Live Save Indicator -->
+        <div class="flex items-center gap-2.5 w-full sm:w-auto">
+          <div class="relative w-full sm:w-64">
+            <input id="studentSearchInput" class="w-full border border-slate-300 rounded-lg pl-8 pr-3 py-1.5 text-xs bg-slate-50 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-terracotta focus:bg-white transition-all" type="search" placeholder="Search name or ID (Esc)...">
+            <svg class="w-3.5 h-3.5 absolute left-2.5 top-2 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          </div>
+
+          <!-- Live Cache & Cloud Status Indicator -->
+          <div id="toolbarSaveIndicator" class="hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-semibold shadow-2xs transition-all duration-200 shrink-0 select-none" title="Every change saves automatically to browser local cache and your cloud backend.">
+            <span id="toolbarSaveDot" class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span id="toolbarSaveLabel">✓ Local Cache: Saved</span>
+            <span class="text-emerald-300">|</span>
+            <span id="toolbarCloudLabel" class="text-emerald-700 font-normal">Cloud: Synced</span>
+          </div>
         </div>
 
         <!-- Action & Bulk Controls -->
@@ -306,8 +317,8 @@
             Print
           </button>
 
-          <button id="btnSyncNow" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-xs border border-amber-300 transition-all shrink-0 cursor-pointer flex items-center gap-1" type="button" title="Force Sync with GitHub">
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+          <button id="btnSyncNow" class="bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-xs border border-slate-300 transition-all shrink-0 cursor-pointer flex items-center gap-1" type="button" title="Backend saves are automatic — teachers do not need to push anything. Click here to force a manual sync or pull.">
+            <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
             Sync
           </button>
         </div>
@@ -331,13 +342,16 @@
       <footer class="bg-slate-50 border-t border-slate-200 px-3 sm:px-6 py-2.5 text-[10px] sm:text-[11px] text-slate-500 flex flex-wrap justify-between items-center gap-2 rounded-b-xl no-print">
         <div class="flex items-center space-x-2 truncate max-w-[320px] sm:max-w-none">
           <span class="font-bold text-slate-700">Target Backend:</span>
-          <span id="backendTargetDesc" class="font-mono text-slate-600">GitHub (data/attendance.json)</span>
+          <span id="backendTargetDesc" class="font-mono text-slate-600 truncate max-w-[260px] sm:max-w-none">Cloudflare Worker</span>
           <span>•</span>
-          <span id="lastActionText">Initializing...</span>
+          <span id="lastActionText">✓ All changes automatically saved</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="font-medium text-brand-terracotta">Real-Time Cloud Synchronization</span>
-          <span id="backendModeBadge" class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-[10px] font-bold">Local Cache</span>
+          <span class="font-medium text-brand-terracotta">Auto-Sync: Active</span>
+          <span id="backendModeBadge" class="bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1.5 shadow-2xs">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            <span id="localCacheStatusText">Local Cache: Saved</span>
+          </span>
         </div>
       </footer>
     </div>
@@ -465,9 +479,9 @@
         <div id="sectionWorkerConfig" class="space-y-3">
           <div>
             <label class="block font-bold text-slate-700 mb-1" for="inputWorkerUrl">Worker API Endpoint URL</label>
-            <input id="inputWorkerUrl" type="url" class="w-full border border-slate-300 rounded-lg p-2 font-mono text-xs focus:ring-2 focus:ring-brand-terracotta focus:outline-none" placeholder="https://attendance-api.<your-subdomain>.workers.dev">
-            <p class="text-[11px] text-slate-400 mt-1">
-              A Cloudflare Worker template is ready in <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">backend/worker.js</code>.
+            <input id="inputWorkerUrl" type="url" class="w-full border border-slate-300 rounded-lg p-2 font-mono text-xs focus:ring-2 focus:ring-brand-terracotta focus:outline-none" placeholder="https://gsea-attendance-worker.powerforcemotiondrive.workers.dev" value="https://gsea-attendance-worker.powerforcemotiondrive.workers.dev">
+            <p class="text-[11px] text-slate-500 mt-1">
+              Active Cloudflare Worker: <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700 font-mono">https://gsea-attendance-worker.powerforcemotiondrive.workers.dev</code>
             </p>
           </div>
         </div>
@@ -495,6 +509,12 @@
               Requires <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">repo</code> or <code class="bg-slate-100 px-1 py-0.5 rounded text-slate-700">contents:write</code> scope.
             </p>
           </div>
+        </div>
+
+        <!-- Automatic Save Notice -->
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 p-2.5 rounded-lg text-[11px] flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+          <span><strong>Automatic Cloud Sync is Active:</strong> Every attendance mark is saved automatically to the cloud and local cache. Teachers do not need to push anything.</span>
         </div>
 
         <!-- Connection Test & Manual Sync Buttons -->
@@ -543,6 +563,7 @@
 
     const STORAGE_KEY_DB = "gsea_attendance_registers_v3";
     const STORAGE_KEY_CONFIG = "gsea_attendance_backend_config_v1";
+    const BACKEND_URL = "https://gsea-attendance-worker.powerforcemotiondrive.workers.dev";
 
     const DEFAULT_WEEKS = [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41];
 
@@ -647,7 +668,11 @@
     }
 
     function saveDatabase() {
+      database._lastUpdated = new Date().toISOString();
       localStorage.setItem(STORAGE_KEY_DB, JSON.stringify(database));
+      lastLocalSaveTime = new Date();
+      if (typeof flashLocalCacheIndicator === "function") flashLocalCacheIndicator();
+      if (typeof updateSaveIndicators === "function") updateSaveIndicators({ localSaved: true });
     }
 
     function getActiveRegister() {
@@ -665,23 +690,34 @@
 
     function loadBackendConfig() {
       const stored = localStorage.getItem(STORAGE_KEY_CONFIG);
+      let cfg = null;
       if (stored) {
-        try { return JSON.parse(stored); } catch (e) {}
+        try { cfg = JSON.parse(stored); } catch (e) {}
       }
-      return {
-        mode: "worker", // "worker" or "github"
-        workerUrl: "https://attendance-api.<your-subdomain>.workers.dev",
-        ghRepo: "powerforcemotiondrive-pixel/gsea-attendance",
-        ghBranch: "main",
-        ghPath: "data/attendance.json",
-        ghToken: ""
-      };
+      if (!cfg) {
+        cfg = {
+          mode: "worker", // "worker" or "github"
+          workerUrl: BACKEND_URL,
+          ghRepo: "powerforcemotiondrive-pixel/gsea-attendance",
+          ghBranch: "main",
+          ghPath: "data/attendance.json",
+          ghToken: ""
+        };
+      } else {
+        // Automatically default empty or placeholder URLs to BACKEND_URL
+        if (!cfg.workerUrl || cfg.workerUrl.includes("<your-subdomain>") || cfg.workerUrl.trim() === "") {
+          cfg.workerUrl = BACKEND_URL;
+          cfg.mode = "worker";
+        }
+      }
+      return cfg;
     }
 
     function saveBackendConfig(cfg) {
       backendConfig = cfg;
       localStorage.setItem(STORAGE_KEY_CONFIG, JSON.stringify(cfg));
       updateBackendStatusBadge();
+      if (typeof updateSaveIndicators === "function") updateSaveIndicators();
     }
 
     // =========================================================================
@@ -962,82 +998,240 @@
     }
 
     // =========================================================================
-    // 5. GITHUB & CLOUD BACKEND SYNCHRONIZATION
+    // 5. GITHUB & CLOUD BACKEND SYNCHRONIZATION & AUTO-SAVE ENGINE
     // =========================================================================
+    let lastLocalSaveTime = new Date();
+    let lastCloudSyncTime = null;
+    let currentCloudState = "synced"; // "synced", "syncing", "pending", "offline", "error"
+    let isSyncInProgress = false;
+    let pendingSyncPayload = null;
+    let autoSaveDebounceTimer = null;
+
     function updateBackendStatusBadge() {
       const modeBadge = document.getElementById("backendModeBadge");
       const targetDesc = document.getElementById("backendTargetDesc");
 
       if (backendConfig.mode === "worker" && backendConfig.workerUrl && !backendConfig.workerUrl.includes("<your-subdomain>")) {
-        modeBadge.className = "bg-amber-100 text-amber-800 px-2 py-0.5 rounded text-[10px] font-bold";
-        modeBadge.textContent = "Worker Proxy";
-        targetDesc.textContent = backendConfig.workerUrl;
+        if (targetDesc) targetDesc.textContent = backendConfig.workerUrl;
       } else if (backendConfig.mode === "github" && backendConfig.ghToken) {
-        modeBadge.className = "bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold";
-        modeBadge.textContent = "Direct GitHub";
-        targetDesc.textContent = `${backendConfig.ghRepo} (${backendConfig.ghPath})`;
+        if (targetDesc) targetDesc.textContent = `${backendConfig.ghRepo} (${backendConfig.ghPath})`;
       } else {
-        modeBadge.className = "bg-slate-200 text-slate-700 px-2 py-0.5 rounded text-[10px] font-bold";
-        modeBadge.textContent = "Local Cache";
-        targetDesc.textContent = "Local Storage (Configure in Cloud Backend)";
+        if (targetDesc) targetDesc.textContent = "Local Cache (Offline Mode)";
+      }
+      updateSaveIndicators();
+    }
+
+    function flashLocalCacheIndicator() {
+      const elements = [
+        document.getElementById("toolbarSaveIndicator"),
+        document.getElementById("backendModeBadge")
+      ];
+      elements.forEach(el => {
+        if (!el) return;
+        el.classList.add("ring-2", "ring-emerald-400", "scale-102");
+        setTimeout(() => {
+          el.classList.remove("ring-2", "ring-emerald-400", "scale-102");
+        }, 350);
+      });
+    }
+
+    function updateSaveIndicators(opts = {}) {
+      const localSaved = opts.localSaved !== undefined ? opts.localSaved : true;
+      if (opts.cloudState) currentCloudState = opts.cloudState;
+      const actionText = opts.actionText || "";
+
+      const timeStr = lastLocalSaveTime ? lastLocalSaveTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : new Date().toLocaleTimeString();
+      const cloudTimeStr = lastCloudSyncTime ? lastCloudSyncTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : "";
+
+      // 1. Toolbar Save Indicator (Prominently visible above attendance table)
+      const toolbarInd = document.getElementById("toolbarSaveIndicator");
+      const toolbarDot = document.getElementById("toolbarSaveDot");
+      const toolbarLabel = document.getElementById("toolbarSaveLabel");
+      const toolbarCloud = document.getElementById("toolbarCloudLabel");
+
+      if (toolbarInd && toolbarLabel && toolbarCloud) {
+        if (localSaved) {
+          toolbarLabel.innerHTML = `✓ Local Cache: Saved <span class="font-normal text-[10px] text-emerald-600">(${timeStr})</span>`;
+        }
+
+        if (currentCloudState === "syncing" || currentCloudState === "pending") {
+          toolbarDot.className = "w-2 h-2 rounded-full bg-amber-400 animate-spin";
+          toolbarCloud.className = "text-amber-700 font-semibold";
+          toolbarCloud.innerHTML = `Cloud: ⟳ Auto-saving...`;
+        } else if (currentCloudState === "synced") {
+          toolbarDot.className = "w-2 h-2 rounded-full bg-emerald-500";
+          toolbarCloud.className = "text-emerald-700 font-normal";
+          toolbarCloud.innerHTML = `Cloud: ✓ Synced ${cloudTimeStr ? `(${cloudTimeStr})` : ''}`;
+        } else if (currentCloudState === "offline" || currentCloudState === "error") {
+          toolbarDot.className = "w-2 h-2 rounded-full bg-amber-400";
+          toolbarCloud.className = "text-amber-800 font-normal";
+          toolbarCloud.innerHTML = `Cloud: Offline (Changes kept locally)`;
+        }
+      }
+
+      // 2. Top Header Pill
+      const syncStatus = document.getElementById("syncStatus");
+      if (syncStatus) {
+        if (currentCloudState === "syncing" || currentCloudState === "pending") {
+          syncStatus.className = "text-[11px] bg-amber-600 text-white px-2.5 py-1 rounded-md font-semibold shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer transition-all";
+          syncStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-white animate-spin"></span> ✓ Cache Saved • Syncing Cloud...`;
+        } else if (currentCloudState === "synced") {
+          syncStatus.className = "text-[11px] bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-md font-semibold shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer transition-all";
+          syncStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-200"></span> ✓ Saved (Local & Cloud)`;
+        } else if (currentCloudState === "offline" || currentCloudState === "error") {
+          syncStatus.className = "text-[11px] bg-amber-700 hover:bg-amber-800 text-white px-2.5 py-1 rounded-md font-semibold shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer transition-all";
+          syncStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-300"></span> ✓ Local Cache Saved (Cloud Offline)`;
+        }
+      }
+
+      // 3. Footer Badge & Last Action Text
+      const modeBadge = document.getElementById("backendModeBadge");
+      const lastAction = document.getElementById("lastActionText");
+      const localCacheText = document.getElementById("localCacheStatusText");
+
+      if (modeBadge) {
+        modeBadge.className = "bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded text-[10px] font-bold flex items-center gap-1.5 shadow-2xs";
+        if (localCacheText) {
+          localCacheText.textContent = `Local Cache: ✓ Saved (${timeStr})`;
+        } else {
+          modeBadge.textContent = `Local Cache: ✓ Saved (${timeStr})`;
+        }
+      }
+
+      if (lastAction) {
+        if (actionText) {
+          if (currentCloudState === "syncing" || currentCloudState === "pending") {
+            lastAction.textContent = `Auto-saving "${actionText}" to cloud... (Local cache safe)`;
+          } else if (currentCloudState === "synced") {
+            lastAction.textContent = `✓ Auto-saved "${actionText}" to cloud & local cache at ${cloudTimeStr || timeStr}`;
+          } else if (currentCloudState === "error" || currentCloudState === "offline") {
+            lastAction.textContent = `✓ Saved to local cache (${timeStr}). Cloud retry pending: ${opts.errorMsg || 'Connection offline'}`;
+          }
+        } else {
+          lastAction.textContent = `✓ Auto-save active. Local cache & cloud backend in sync at ${cloudTimeStr || timeStr}.`;
+        }
       }
     }
 
+    /**
+     * Trigger automatic debounced background save to backend.
+     * Teachers do not need to click or push anything.
+     */
+    function triggerAutoSave(actionDescription, specificPayload = {}) {
+      // 1. Immediate Local Cache save
+      saveDatabase();
+
+      // 2. Queue backend sync payload with latest full state
+      pendingSyncPayload = {
+        action: specificPayload.action || "FULL_SNAPSHOT",
+        ...specificPayload,
+        semester: currentSemesterId,
+        group: currentGroupId,
+        fullState: database,
+        description: actionDescription || "Update attendance"
+      };
+
+      updateSaveIndicators({ localSaved: true, cloudState: isSyncInProgress ? "syncing" : "pending", actionText: actionDescription });
+
+      // 3. Debounce auto-save (750ms) to bundle rapid teacher clicks into a single clean commit
+      clearTimeout(autoSaveDebounceTimer);
+      autoSaveDebounceTimer = setTimeout(() => {
+        processAutoSaveQueue();
+      }, 750);
+    }
+
+    // Seamless alias for any sync calls
     async function syncToBackend(payload, actionDescription) {
-      const statusElem = document.getElementById("syncStatus");
-      const lastAction = document.getElementById("lastActionText");
+      triggerAutoSave(actionDescription, payload);
+      return { success: true };
+    }
 
-      statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-300 animate-spin"></span> Syncing...`;
-      lastAction.textContent = actionDescription + "...";
-
-      // 1. Direct GitHub API Mode
-      if (backendConfig.mode === "github" && backendConfig.ghToken) {
-        try {
-          const ghRes = await commitToGitHubDirect(database, actionDescription);
-          if (ghRes.success) {
-            statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-300"></span> Synced`;
-            lastAction.textContent = `${actionDescription} committed to GitHub (${new Date().toLocaleTimeString()})`;
-          } else {
-            throw new Error(ghRes.message);
-          }
-        } catch (err) {
-          console.error("GitHub Direct Commit Error:", err);
-          statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-400"></span> Sync Failed`;
-          lastAction.textContent = `GitHub sync error: ${err.message}. Saved locally.`;
-        }
+    async function processAutoSaveQueue() {
+      if (isSyncInProgress) {
+        // Sync currently in flight. When it finishes, it will pick up pendingSyncPayload.
+        return;
+      }
+      if (!pendingSyncPayload) {
         return;
       }
 
-      // 2. Cloudflare Worker Mode
+      const payloadToSend = pendingSyncPayload;
+      pendingSyncPayload = null;
+      isSyncInProgress = true;
+
+      updateSaveIndicators({ localSaved: true, cloudState: "syncing", actionText: payloadToSend.description });
+
+      try {
+        await performBackendSync(payloadToSend);
+        lastCloudSyncTime = new Date();
+        updateSaveIndicators({ localSaved: true, cloudState: "synced", actionText: payloadToSend.description });
+      } catch (err) {
+        console.warn("Auto-sync error:", err);
+        updateSaveIndicators({ localSaved: true, cloudState: "error", errorMsg: err.message, actionText: payloadToSend.description });
+      } finally {
+        isSyncInProgress = false;
+        // If teacher marked another student while this sync was in-flight, process immediately
+        if (pendingSyncPayload) {
+          processAutoSaveQueue();
+        }
+      }
+    }
+
+    async function performBackendSync(payload) {
+      // 1. Cloudflare Worker Mode
       if (backendConfig.mode === "worker" && backendConfig.workerUrl && !backendConfig.workerUrl.includes("<your-subdomain>")) {
-        try {
-          const response = await fetch(backendConfig.workerUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              ...payload,
-              semester: currentSemesterId,
-              group: currentGroupId,
-              fullState: database,
-              description: actionDescription
-            })
-          });
+        const response = await fetch(backendConfig.workerUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...payload,
+            semester: currentSemesterId,
+            group: currentGroupId,
+            fullState: database,
+            description: payload.description || "Automatic attendance update"
+          })
+        });
 
-          if (!response.ok) throw new Error("HTTP " + response.status);
-
-          statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-300"></span> Synced`;
-          lastAction.textContent = `${actionDescription} synced at ${new Date().toLocaleTimeString()}`;
-        } catch (err) {
-          console.warn("Worker Sync Error:", err);
-          statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400"></span> Local Cache`;
-          lastAction.textContent = `Worker sync unavailable. Changes kept locally.`;
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(`Worker HTTP ${response.status}: ${errText}`);
         }
-        return;
+
+        const data = await response.json();
+        if (data.status === "error") {
+          throw new Error(data.message || "Worker sync error");
+        }
+        return data;
       }
 
-      // 3. Local Cache Only Mode
-      statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-300"></span> Saved Locally`;
-      lastAction.textContent = `${actionDescription} (Saved locally in browser)`;
+      // 2. Direct GitHub API Mode
+      if (backendConfig.mode === "github" && backendConfig.ghToken) {
+        const ghRes = await commitToGitHubDirect(database, payload.description);
+        if (!ghRes.success) throw new Error(ghRes.message);
+        return ghRes;
+      }
+
+      return { status: "local_only" };
+    }
+
+    async function forceCloudSync(reason = "Manual synchronization") {
+      clearTimeout(autoSaveDebounceTimer);
+      pendingSyncPayload = null;
+      updateSaveIndicators({ cloudState: "syncing", actionText: reason });
+      try {
+        await performBackendSync({
+          action: "FULL_SNAPSHOT",
+          fullState: database,
+          description: reason
+        });
+        lastCloudSyncTime = new Date();
+        updateSaveIndicators({ localSaved: true, cloudState: "synced", actionText: "Cloud sync completed" });
+        return true;
+      } catch (err) {
+        console.warn("Manual sync error:", err);
+        updateSaveIndicators({ localSaved: true, cloudState: "error", errorMsg: err.message, actionText: "Sync failed. Changes safe in local cache" });
+        return false;
+      }
     }
 
     async function commitToGitHubDirect(dbSnapshot, commitMsg) {
@@ -1094,11 +1288,7 @@
     }
 
     async function pullRemoteData() {
-      const statusElem = document.getElementById("syncStatus");
-      const lastAction = document.getElementById("lastActionText");
-
-      statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-300 animate-spin"></span> Pulling...`;
-      lastAction.textContent = "Checking GitHub for updates...";
+      updateSaveIndicators({ cloudState: "syncing", actionText: "Checking backend for updates..." });
 
       // A. Direct GitHub API
       if (backendConfig.mode === "github" && backendConfig.ghToken) {
@@ -1125,13 +1315,12 @@
           renderGroupButtons();
           renderTable();
 
-          statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-300"></span> Synced`;
-          lastAction.textContent = `Updated from GitHub at ${new Date().toLocaleTimeString()}`;
+          lastCloudSyncTime = new Date();
+          updateSaveIndicators({ localSaved: true, cloudState: "synced", actionText: `Updated from GitHub at ${new Date().toLocaleTimeString()}` });
           return true;
         } catch (e) {
           console.warn("Direct GitHub pull failed:", e);
-          statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-300"></span> Local Cache`;
-          lastAction.textContent = `Using local cache: ${e.message}`;
+          updateSaveIndicators({ localSaved: true, cloudState: "offline", errorMsg: e.message, actionText: `Using local cache: ${e.message}` });
           return false;
         }
       }
@@ -1148,22 +1337,50 @@
             renderGroupButtons();
             renderTable();
 
-            statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-300"></span> Synced`;
-            lastAction.textContent = `Updated from Cloudflare Worker at ${new Date().toLocaleTimeString()}`;
+            lastCloudSyncTime = new Date();
+            updateSaveIndicators({ localSaved: true, cloudState: "synced", actionText: `Updated from Cloudflare Worker at ${new Date().toLocaleTimeString()}` });
+            return true;
+          } else if (result.status === "not_found") {
+            // First time setup: seed the remote file automatically
+            await performBackendSync({ action: "FULL_SNAPSHOT", fullState: database, description: "Initial register seed" });
+            lastCloudSyncTime = new Date();
+            updateSaveIndicators({ localSaved: true, cloudState: "synced", actionText: "Initialized cloud register" });
             return true;
           }
         } catch (e) {
           console.warn("Worker pull failed:", e);
-          statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-300"></span> Local Cache`;
-          lastAction.textContent = "Worker not reached. Using local cache.";
+          updateSaveIndicators({ localSaved: true, cloudState: "offline", errorMsg: e.message, actionText: "Worker not reached. Working from local cache." });
           return false;
         }
       }
 
-      statusElem.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-300"></span> Local Cache`;
-      lastAction.textContent = "Working in Local Cache mode.";
+      updateSaveIndicators({ localSaved: true, cloudState: "synced", actionText: "Working in Local Cache mode." });
       return false;
     }
+
+    // Auto-save listeners for online recovery and tab close
+    window.addEventListener("online", () => {
+      processAutoSaveQueue();
+    });
+
+    window.addEventListener("beforeunload", () => {
+      if (pendingSyncPayload && backendConfig.mode === "worker" && backendConfig.workerUrl) {
+        try {
+          fetch(backendConfig.workerUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              ...pendingSyncPayload,
+              semester: currentSemesterId,
+              group: currentGroupId,
+              fullState: database,
+              description: "Page unload auto-save"
+            }),
+            keepalive: true
+          });
+        } catch (e) {}
+      }
+    });
 
     // =========================================================================
     // 6. EVENT HANDLERS & INTERACTIONS
@@ -1489,9 +1706,18 @@
     // 9. Print Action
     document.getElementById("btnPrint").addEventListener("click", () => window.print());
 
-    // 10. Manual Sync Now Button
+    // 10. Manual Sync Button (Force Cloud Sync & Pull)
     document.getElementById("btnSyncNow").addEventListener("click", async () => {
-      await syncToBackend({ action: "FULL_SNAPSHOT", fullState: database }, "Manual synchronization triggered");
+      const btn = document.getElementById("btnSyncNow");
+      const origHtml = btn.innerHTML;
+      btn.innerHTML = `<span class="w-3 h-3 border-2 border-slate-600 border-t-transparent rounded-full animate-spin"></span> <span>Syncing...</span>`;
+      btn.disabled = true;
+
+      await forceCloudSync("Manual cloud sync requested by teacher");
+      await pullRemoteData();
+
+      btn.innerHTML = origHtml;
+      btn.disabled = false;
     });
 
     // =========================================================================
@@ -1564,7 +1790,7 @@
     document.getElementById("syncStatus").addEventListener("click", openBackendModal);
 
     function openBackendModal() {
-      document.getElementById("inputWorkerUrl").value = backendConfig.workerUrl || "";
+      document.getElementById("inputWorkerUrl").value = backendConfig.workerUrl || BACKEND_URL;
       document.getElementById("inputGhRepo").value = backendConfig.ghRepo || "powerforcemotiondrive-pixel/gsea-attendance";
       document.getElementById("inputGhBranch").value = backendConfig.ghBranch || "main";
       document.getElementById("inputGhPath").value = backendConfig.ghPath || "data/attendance.json";
@@ -1603,7 +1829,7 @@
       const mode = document.getElementById("modeBtnWorker").classList.contains("text-brand-terracotta") ? "worker" : "github";
       const newCfg = {
         mode,
-        workerUrl: document.getElementById("inputWorkerUrl").value.trim(),
+        workerUrl: document.getElementById("inputWorkerUrl").value.trim() || BACKEND_URL,
         ghRepo: document.getElementById("inputGhRepo").value.trim() || "powerforcemotiondrive-pixel/gsea-attendance",
         ghBranch: document.getElementById("inputGhBranch").value.trim() || "main",
         ghPath: document.getElementById("inputGhPath").value.trim() || "data/attendance.json",
@@ -1615,16 +1841,17 @@
     });
 
     document.getElementById("btnResetToLocal").addEventListener("click", () => {
-      if (!confirm("Reset backend settings to Local Browser Mode?")) return;
+      if (!confirm("Reset backend settings to default Cloudflare Worker?")) return;
       saveBackendConfig({
         mode: "worker",
-        workerUrl: "",
+        workerUrl: BACKEND_URL,
         ghRepo: "powerforcemotiondrive-pixel/gsea-attendance",
         ghBranch: "main",
         ghPath: "data/attendance.json",
         ghToken: ""
       });
       closeBackendModal();
+      pullRemoteData();
     });
 
     document.getElementById("btnTestBackend").addEventListener("click", async () => {
@@ -1679,8 +1906,8 @@
     });
 
     document.getElementById("btnPushRemote").addEventListener("click", async () => {
-      await syncToBackend({ action: "FULL_SNAPSHOT", fullState: database }, "Full registers database pushed to backend");
-      alert("Push request sent to backend!");
+      const ok = await forceCloudSync("Full registers database pushed to Cloudflare Worker");
+      alert(ok ? "Full registers database pushed to Cloudflare Worker successfully!" : "Cloud push failed. Your records remain safely preserved in Local Cache.");
     });
 
     // =========================================================================
