@@ -28,3 +28,4 @@ build/
 # Office / Temp files
 ~$*
 *.tmp
+.DS_Store
