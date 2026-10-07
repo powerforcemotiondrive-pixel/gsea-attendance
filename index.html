@@ -289,6 +289,7 @@
             <span id="toolbarSaveLabel">✓ Local Cache: Saved</span>
             <span class="text-emerald-300">|</span>
             <span id="toolbarCloudLabel" class="text-emerald-700 font-normal">Cloud: Synced</span>
+            <button id="btnToolbarSync" type="button" class="ml-1 text-[10px] bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-1.5 py-0.5 rounded font-bold cursor-pointer transition-colors" title="Check cloud now for latest marks from other devices">⟳ Sync</button>
           </div>
         </div>
 
@@ -1004,7 +1005,9 @@
     let lastCloudSyncTime = null;
     let currentCloudState = "synced"; // "synced", "syncing", "pending", "offline", "error"
     let isSyncInProgress = false;
-    let pendingSyncPayload = null;
+    let pendingMarksBatch = {}; // Persistent queue: { [markKey]: status }
+    let pendingNotesBatch = {}; // Persistent queue: { [noteKey]: text }
+    let hasPendingStructuralChange = false;
     let autoSaveDebounceTimer = null;
 
     function updateBackendStatusBadge() {
@@ -1115,64 +1118,93 @@
 
     /**
      * Trigger automatic debounced background save to backend.
-     * Teachers do not need to click or push anything.
+     * Collects and accumulates all marks so rapid multiple clicks are NEVER dropped.
      */
-    function triggerAutoSave(actionDescription, specificPayload = {}) {
-      // 1. Immediate Local Cache save
+    function triggerAutoSave(actionDescription) {
       saveDatabase();
 
-      // 2. Queue backend sync payload with latest register & full state
-      pendingSyncPayload = {
-        action: specificPayload.action || "UPDATE_REGISTER",
-        semester: currentSemesterId,
-        group: currentGroupId,
-        registerData: database[currentSemesterId]?.[currentGroupId],
-        fullState: database,
-        description: actionDescription || "Update attendance",
-        ...specificPayload
-      };
+      const numMarks = Object.keys(pendingMarksBatch).length;
+      const desc = actionDescription || (numMarks > 0 ? `Updating ${numMarks} mark(s)` : "Saving attendance");
 
-      updateSaveIndicators({ localSaved: true, cloudState: isSyncInProgress ? "syncing" : "pending", actionText: actionDescription });
+      updateSaveIndicators({
+        localSaved: true,
+        cloudState: isSyncInProgress ? "syncing" : "pending",
+        actionText: desc
+      });
 
-      // 3. Debounce auto-save (750ms) to bundle rapid teacher clicks into a single clean commit
       clearTimeout(autoSaveDebounceTimer);
       autoSaveDebounceTimer = setTimeout(() => {
         processAutoSaveQueue();
-      }, 750);
+      }, 500);
     }
 
-    // Seamless alias for any sync calls
+    // Seamless alias for queuing any sync operations
     async function syncToBackend(payload, actionDescription) {
-      triggerAutoSave(actionDescription, payload);
+      if (payload) {
+        if (payload.action === "UPDATE_MARK" && payload.studentId && payload.week) {
+          pendingMarksBatch[`${payload.studentId}_${payload.week}`] = payload.status || "";
+        } else if (payload.action === "UPDATE_NOTE" && payload.noteKey) {
+          pendingNotesBatch[payload.noteKey] = payload.noteText || "";
+        } else {
+          hasPendingStructuralChange = true;
+        }
+      }
+      triggerAutoSave(actionDescription);
       return { success: true };
     }
 
     async function processAutoSaveQueue() {
       if (isSyncInProgress) {
-        // Sync currently in flight. When it finishes, it will pick up pendingSyncPayload.
-        return;
-      }
-      if (!pendingSyncPayload) {
+        // Sync currently in flight. It will automatically process remaining queued items when complete.
         return;
       }
 
-      const payloadToSend = pendingSyncPayload;
-      pendingSyncPayload = null;
+      const marksToSend = { ...pendingMarksBatch };
+      const notesToSend = { ...pendingNotesBatch };
+      const structuralChange = hasPendingStructuralChange;
+
+      const numMarks = Object.keys(marksToSend).length;
+      const numNotes = Object.keys(notesToSend).length;
+
+      if (numMarks === 0 && numNotes === 0 && !structuralChange) {
+        return;
+      }
+
+      // Clear the queues so subsequent clicks while in-flight accumulate into the next batch cleanly
+      pendingMarksBatch = {};
+      pendingNotesBatch = {};
+      hasPendingStructuralChange = false;
+
       isSyncInProgress = true;
-
-      updateSaveIndicators({ localSaved: true, cloudState: "syncing", actionText: payloadToSend.description });
+      const desc = numMarks > 0 ? `Saving ${numMarks} mark(s)` : "Saving register updates";
+      updateSaveIndicators({ localSaved: true, cloudState: "syncing", actionText: desc });
 
       try {
-        await performBackendSync(payloadToSend);
+        await performBackendSync({
+          action: "BATCH_UPDATE",
+          semester: currentSemesterId,
+          group: currentGroupId,
+          marks: marksToSend,
+          notes: notesToSend,
+          registerData: database[currentSemesterId]?.[currentGroupId],
+          fullState: database,
+          description: desc
+        });
+
         lastCloudSyncTime = new Date();
-        updateSaveIndicators({ localSaved: true, cloudState: "synced", actionText: payloadToSend.description });
+        updateSaveIndicators({ localSaved: true, cloudState: "synced", actionText: `Synced ${numMarks > 0 ? numMarks + ' marks' : 'register'} to cloud` });
       } catch (err) {
         console.warn("Auto-sync error:", err);
-        updateSaveIndicators({ localSaved: true, cloudState: "error", errorMsg: err.message, actionText: payloadToSend.description });
+        // Put uncommitted marks back into queue so they are retried and never lost
+        pendingMarksBatch = { ...marksToSend, ...pendingMarksBatch };
+        pendingNotesBatch = { ...notesToSend, ...pendingNotesBatch };
+        if (structuralChange) hasPendingStructuralChange = true;
+
+        updateSaveIndicators({ localSaved: true, cloudState: "error", errorMsg: err.message, actionText: "Sync error. Changes kept safely in local cache" });
       } finally {
         isSyncInProgress = false;
-        // If teacher marked another student while this sync was in-flight, process immediately
-        if (pendingSyncPayload) {
+        // If more marks were queued while in flight, process them immediately!
+        if (Object.keys(pendingMarksBatch).length > 0 || Object.keys(pendingNotesBatch).length > 0 || hasPendingStructuralChange) {
           processAutoSaveQueue();
         }
       }
@@ -1180,6 +1212,8 @@
 
     function mergeRemoteDatabase(remoteDb) {
       if (!remoteDb || typeof remoteDb !== "object") return false;
+
+      const hasLocalPending = isSyncInProgress || Object.keys(pendingMarksBatch).length > 0 || Object.keys(pendingNotesBatch).length > 0 || hasPendingStructuralChange;
 
       let mergedCount = 0;
       SEMESTERS.forEach(sem => {
@@ -1200,16 +1234,20 @@
                 if (Array.isArray(remoteGrp.students) && remoteGrp.students.length > 0) {
                   database[sem.id][grp].students = remoteGrp.students;
                 }
+
                 // Attendance marks & notes:
-                // When no unsaved local changes are pending for this group, remote is the source of truth (cleared marks reflected accurately).
-                const hasPendingForGrp = isSyncInProgress || (pendingSyncPayload && pendingSyncPayload.semester === sem.id && pendingSyncPayload.group === grp);
-                if (!hasPendingForGrp) {
+                const isCurrentActiveGroup = (sem.id === currentSemesterId && grp === currentGroupId);
+                if (!isCurrentActiveGroup || !hasLocalPending) {
+                  // No uncommitted local edits: remote is the 100% authoritative source of truth
                   database[sem.id][grp].attendance = { ...(remoteGrp.attendance || {}) };
                   database[sem.id][grp].notes = { ...(remoteGrp.notes || {}) };
                 } else {
-                  // Merge local unsaved changes over remote data
-                  database[sem.id][grp].attendance = Object.assign({}, remoteGrp.attendance || {}, database[sem.id][grp].attendance || {});
-                  database[sem.id][grp].notes = Object.assign({}, remoteGrp.notes || {}, database[sem.id][grp].notes || {});
+                  // We have uncommitted clicks in flight on THIS device: overlay pending local marks on top of remote
+                  database[sem.id][grp].attendance = { ...(remoteGrp.attendance || {}) };
+                  for (const [k, v] of Object.entries(pendingMarksBatch)) {
+                    if (v) database[sem.id][grp].attendance[k] = v;
+                    else delete database[sem.id][grp].attendance[k];
+                  }
                 }
               }
             }
@@ -1267,7 +1305,9 @@
 
     async function forceCloudSync(reason = "Manual synchronization") {
       clearTimeout(autoSaveDebounceTimer);
-      pendingSyncPayload = null;
+      pendingMarksBatch = {};
+      pendingNotesBatch = {};
+      hasPendingStructuralChange = false;
       updateSaveIndicators({ cloudState: "syncing", actionText: reason });
       try {
         await performBackendSync({
@@ -1435,15 +1475,19 @@
     });
 
     window.addEventListener("beforeunload", () => {
-      if (pendingSyncPayload && backendConfig.mode === "worker" && backendConfig.workerUrl) {
+      const numMarks = Object.keys(pendingMarksBatch).length;
+      if (numMarks > 0 && backendConfig.mode === "worker" && backendConfig.workerUrl) {
         try {
           fetch(backendConfig.workerUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              ...pendingSyncPayload,
+              action: "BATCH_UPDATE",
               semester: currentSemesterId,
               group: currentGroupId,
+              marks: pendingMarksBatch,
+              notes: pendingNotesBatch,
+              registerData: database[currentSemesterId]?.[currentGroupId],
               fullState: database,
               description: "Page unload auto-save"
             }),
@@ -2008,23 +2052,28 @@
 
     // Auto-pull on window focus & tab visibility change so Computer B refreshes immediately when switched to
     window.addEventListener("focus", () => {
-      if (!isSyncInProgress && !pendingSyncPayload) {
+      if (!isSyncInProgress && Object.keys(pendingMarksBatch).length === 0) {
         pullRemoteData();
       }
     });
 
     document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible" && !isSyncInProgress && !pendingSyncPayload) {
+      if (document.visibilityState === "visible" && !isSyncInProgress && Object.keys(pendingMarksBatch).length === 0) {
         pullRemoteData();
       }
     });
 
-    // Periodic auto-pull (every 20s) so multi-computer changes stay synchronized automatically
+    // Fast periodic auto-pull (every 4s) so multi-device changes stay synchronized in near real-time
     setInterval(() => {
-      if (!isSyncInProgress && !pendingSyncPayload) {
+      if (!isSyncInProgress && Object.keys(pendingMarksBatch).length === 0) {
         pullRemoteData();
       }
-    }, 20000);
+    }, 4000);
+
+    // Direct manual sync button in toolbar
+    document.getElementById("btnToolbarSync")?.addEventListener("click", async () => {
+      await pullRemoteData();
+    });
   </script>
 </body>
 </html>

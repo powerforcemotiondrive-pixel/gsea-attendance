@@ -148,28 +148,55 @@ export default {
               mergedData[payload.semester][payload.group] = { weeks: [], students: [], attendance: {}, notes: {} };
             }
 
-            if (payload.action === "UPDATE_MARK") {
-              if (!mergedData[payload.semester][payload.group].attendance) {
-                mergedData[payload.semester][payload.group].attendance = {};
+            const targetGrp = mergedData[payload.semester][payload.group];
+            if (!targetGrp.attendance) targetGrp.attendance = {};
+            if (!targetGrp.notes) targetGrp.notes = {};
+
+            // 1. Process batch marks if present (supports multiple clicks from phones/tablets)
+            if (payload.marks && typeof payload.marks === "object") {
+              for (const [key, val] of Object.entries(payload.marks)) {
+                if (val) {
+                  targetGrp.attendance[key] = val;
+                } else {
+                  delete targetGrp.attendance[key];
+                }
               }
+            } else if (payload.action === "UPDATE_MARK" && payload.studentId && payload.week) {
               if (payload.status) {
-                mergedData[payload.semester][payload.group].attendance[`${payload.studentId}_${payload.week}`] = payload.status;
+                targetGrp.attendance[`${payload.studentId}_${payload.week}`] = payload.status;
               } else {
-                delete mergedData[payload.semester][payload.group].attendance[`${payload.studentId}_${payload.week}`];
+                delete targetGrp.attendance[`${payload.studentId}_${payload.week}`];
               }
-            } else if (payload.action === "UPDATE_NOTE") {
-              if (!mergedData[payload.semester][payload.group].notes) {
-                mergedData[payload.semester][payload.group].notes = {};
+            }
+
+            // 2. Process batch notes if present
+            if (payload.notes && typeof payload.notes === "object") {
+              for (const [key, val] of Object.entries(payload.notes)) {
+                if (val) {
+                  targetGrp.notes[key] = val;
+                } else {
+                  delete targetGrp.notes[key];
+                }
               }
+            } else if (payload.action === "UPDATE_NOTE" && payload.noteKey) {
               if (payload.noteText) {
-                mergedData[payload.semester][payload.group].notes[payload.noteKey] = payload.noteText;
+                targetGrp.notes[payload.noteKey] = payload.noteText;
               } else {
-                delete mergedData[payload.semester][payload.group].notes[payload.noteKey];
+                delete targetGrp.notes[payload.noteKey];
               }
-            } else if (payload.registerData) {
-              mergedData[payload.semester][payload.group] = payload.registerData;
-            } else {
-              mergedData = deepMergeAttendance(existingData, payload.fullState || payload);
+            }
+
+            // 3. Keep roster & weeks if payload has structural updates
+            if (payload.registerData) {
+              if (Array.isArray(payload.registerData.weeks) && payload.registerData.weeks.length > 0) {
+                targetGrp.weeks = payload.registerData.weeks;
+              }
+              if (Array.isArray(payload.registerData.students) && payload.registerData.students.length > 0) {
+                targetGrp.students = payload.registerData.students;
+              }
+              if (!payload.marks && payload.action === "UPDATE_REGISTER" && payload.registerData.attendance) {
+                targetGrp.attendance = payload.registerData.attendance;
+              }
             }
           } else {
             mergedData = deepMergeAttendance(existingData, payload.fullState || payload);
