@@ -1,58 +1,78 @@
-# GSEA Academic Attendance Register & Live Progression System
+# GSEA Attendance - Absence & Late Reporting System
 
-A web-based multi-semester, multi-group academic attendance register and progression tracker designed for GSEA, integrated with a GitHub cloud backend (`powerforcemotiondrive-pixel/gsea-attendance`).
+A fast, mobile-friendly, exception-only academic attendance logger for GSEA teachers and administrators.
+
+Instead of marking every present student across 20+ registers, teachers only log **exceptions** (**Absent** or **Late**). Every submission is automatically sent to a **Google Form** that instantly streams records into a linked **Google Sheet** with zero race conditions, merge conflicts, or file locks.
 
 ---
 
 ## 🌟 Key Features
 
-1. **6 Dedicated Semester Registers:**
-   - **Semester 1 AAS**
-   - **Semester 1 AG**
-   - **Semester 2 AAS**
-   - **Semester 2 AG**
-   - **Semester 3**
-   - **Semester 4**
-   - Switching semesters instantly switches to that semester's register.
+1. **4 Fast Cohort Selectors:**
+   - **Promotion:** `GSEA24B`, `GSEA25A`, `GSEA25B`, `GSEA26A`
+   - **Class Type:** `AAS` (Applied Animal Sciences) or `AG` (Agriculture)
+   - **Group:** `Group A`, `Group B`, `Group C`, `Group D`
+   - **Incident Status:** `Absent` (Rose ✕) or `Late` (Amber ◷)
 
-2. **Independent Group Pages per Semester:**
-   - **Group A**, **Group B**, **Group C**, and **Group D**.
-   - Each group appears on its own dedicated page with isolated rosters, attendance records, and cohort progression metrics.
-   - URL Hash Routing (`#sem=sem1_aas&group=A`, `#sem=sem1_aas&group=B`, etc.) for direct bookmarking and browser history navigation (back/forward).
+2. **Rapid 5-Second Teacher Workflow:**
+   - Tap the selectors (defaults to your last selection).
+   - Type the **Student Name**.
+   - Hit **`Enter`** (or tap **Submit Record**).
+   - The entry is logged, auto-saved locally, sent to Google Sheets via Google Forms, and the name field automatically clears and refocuses for the next student.
 
-3. **Real-Time GitHub Backend Synchronization:**
-   - **Direct GitHub REST API**: Direct commits to `powerforcemotiondrive-pixel/gsea-attendance` (`data/attendance.json`) via GitHub Personal Access Token.
-   - **Cloudflare Worker Proxy**: Production-ready serverless proxy (`backend/worker.js`) to commit securely without exposing tokens on client browsers.
-   - **Offline Resilience**: Instant local storage (`localStorage`) fallback if offline or backend is unconfigured.
+3. **Multi-User Safe (Powered by Google Forms → Google Sheets):**
+   - Built to handle multiple teachers submitting from different smartphones or laptops at the exact same moment.
+   - Google Forms safely queues all incoming responses in Google's cloud pipeline and writes each row sequentially into the linked Google Sheet with timestamps.
 
-4. **Attendance Tracking & Actions:**
-   - **Quick-Cycle Status**: Unmarked (`-`) &rarr; Present (`✓` Green) &rarr; Late (`◷` Amber) &rarr; Absent (`✕` Red) &rarr; Excused (`≡` Sky Blue) &rarr; Unmarked.
-   - **Attendance Notes**: Right-click on any cell to add/edit reasons or remarks (with indicator dot).
-   - **Live Progression Metrics**: Group attendance rate %, total present, late count, absences, and enrolled students.
-   - **Student Search**: Real-time filtering by name or student ID (press `Esc` to clear).
-   - **Bulk Actions**: Mark all students present for any selected week.
-   - **Dynamic Weeks**: Add new week columns on the fly.
-   - **Student Enrollment & Archiving**: Enroll new students or archive existing ones per group.
-   - **CSV Export**: RFC-4180 compliant CSV export for the active group register.
-   - **Print Optimization**: Clean print layout formatted for physical records or PDF export.
-   - **All Registers Overview**: Modal summarizing rates across all 24 registers with 1-click jump.
+4. **Offline Resilience & Local Activity Feed:**
+   - Works offline: all logged incidents are cached locally in the browser (`localStorage`).
+   - Live activity table with search, status filtering, and individual delete controls.
+   - Today's Summary stats (Total, Late, Absent, Form connection status).
+
+5. **1-Click Backup & Export Tools:**
+   - **📋 Copy for Sheets**: Copies all records as tab-separated values ready to paste (`Cmd+V` / `Ctrl+V`) directly into Google Sheets.
+   - **📥 CSV Export**: Downloads a clean `.csv` file.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 How to Set Up Google Forms & Google Sheets
 
-Simply open `index.html` in your web browser:
-```bash
-open index.html
-```
+### Step 1: Create your Google Form
+1. Go to [forms.google.com](https://forms.google.com) and click **Blank form**.
+2. Name the form **"GSEA Attendance"**.
+3. Add these 7 questions:
+   - **Promotion** (Multiple choice or Short answer: `GSEA24B`, `GSEA25A`, `GSEA25B`, `GSEA26A`)
+   - **Class Type** (Multiple choice or Short answer: `AAS`, `AG`)
+   - **Group** (Multiple choice or Short answer: `A`, `B`, `C`, `D`)
+   - **Status** (Multiple choice or Short answer: `Absent`, `Late`)
+   - **Student Name** (Short answer)
+   - **Date** (Date or Short answer)
+   - **Notes** (Short answer, optional)
 
-Or deploy to **GitHub Pages** (automatically served from `index.html`).
+### Step 2: Link the Form to Google Sheets
+1. In your Google Form, click the **Responses** tab at the top.
+2. Click the green **Link to Sheets** icon.
+3. Select **Create a new spreadsheet** &rarr; click **Create**.
+4. A Google Sheet will open. Every submission will automatically appear here as a new row with a timestamp!
 
----
+### Step 3: Get the Pre-filled Link
+1. In your Google Form, click the **⋮ (three dots)** in the top-right corner.
+2. Click **Get pre-filled link**.
+3. Fill in sample answers for all questions:
+   - Promotion: `GSEA24B`
+   - Class Type: `AAS`
+   - Group: `A`
+   - Status: `Absent`
+   - Student Name: `Test Student`
+   - Date: `2026-10-07`
+   - Notes: `Test note`
+4. Click **Get link** (or **Copy link**) at the bottom.
 
-## ☁️ GitHub Backend Setup
+### Step 4: Connect the Attendance App
+1. Open [index.html](index.html) in your browser.
+2. Click the **Google Form & Sheets** button in the top header.
+3. Paste the copied pre-filled link into the box.
+4. Click **⚡ Auto-Connect**.
+5. Click **🧪 Send Test Row to Google Sheet** to verify that your Google Sheet receives the test submission.
 
-Click the **Cloud Backend** button in the top-right header to configure your backend:
-
-- **Option A (Direct GitHub API):** Enter your GitHub Personal Access Token (`repo` scope), repo (`powerforcemotiondrive-pixel/gsea-attendance`), branch (`main`), and file path (`data/attendance.json`).
-- **Option B (Cloudflare Worker):** Deploy `backend/worker.js` to Cloudflare Workers and enter the worker URL. See [`backend/README.md`](backend/README.md) for step-by-step setup.
+Done! Any teacher using this webpage can now log absences and lates simultaneously.

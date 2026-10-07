@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GSEA Attendance - Absence & Late Reporting</title>
+  <title>GSEA Attendance - Absence Tracker</title>
   
   <!-- Tailwind CSS Compiled via CLI -->
   <link rel="stylesheet" href="output.css">
 
   <style>
-    /* Custom styling for brand theme and smooth transitions */
+    /* Custom styling for olive theme and smooth transitions */
     .btn-pill {
-      transition: all 0.15s ease-in-out;
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
       user-select: none;
     }
@@ -26,38 +26,38 @@
     }
   </style>
 </head>
-<body class="bg-slate-100 min-h-screen text-slate-800 antialiased font-sans flex flex-col justify-between">
+<body class="bg-[#f5f7f4] min-h-screen text-[#2c3726] antialiased font-sans flex flex-col justify-between">
 
-  <!-- TOP HEADER -->
-  <header class="bg-brand-terracotta text-white shadow-md border-b border-brand-terracottaDark no-print sticky top-0 z-30">
+  <!-- TOP HEADER (Executive Olive Green) -->
+  <header class="bg-[#3c4a34] text-white shadow-xs border-b border-[#2e3a27] no-print sticky top-0 z-30">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
       <!-- Brand & Title -->
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
-          <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/15 shadow-inner">
+          <svg class="w-5 h-5 text-[#cde2c4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
           </svg>
         </div>
         <div>
-          <span class="block text-[10px] font-black tracking-widest text-amber-200 uppercase">
-            GSEA ATTENDANCE 2026 - 7
+          <span class="block text-[10px] font-bold tracking-widest text-[#c2d7b7] uppercase">
+            GSEA ATTENDANCE 2026 - 2027
           </span>
-          <h1 class="text-base sm:text-lg font-bold text-white leading-tight">
-            Absence &amp; Late Incident Logger
+          <h1 class="text-base sm:text-lg font-bold text-white tracking-tight leading-tight">
+            Absence Tracker
           </h1>
         </div>
       </div>
 
       <!-- Header Action Controls -->
       <div class="flex items-center gap-2">
-        <button id="btnOpenSheetsModal" type="button" class="bg-white/10 hover:bg-white/20 active:bg-white/30 text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-1.5 transition-all cursor-pointer">
-          <svg class="w-3.5 h-3.5 text-emerald-300" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H6v-2h3v2zm0-4H6v-2h3v2zm0-4H6V7h3v2zm9 8h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4h-7V7h7v2z"/>
+        <button id="btnOpenFormsModal" type="button" class="bg-white/10 hover:bg-white/15 active:bg-white/20 text-[#eaf2e6] text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 transition-all cursor-pointer">
+          <svg class="w-3.5 h-3.5 text-[#cadbc1]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
           </svg>
-          <span id="headerSheetsStatus">Google Sheets</span>
+          <span id="headerFormStatus">Google Form &amp; Sheets</span>
         </button>
 
-        <div id="localCacheStatus" class="text-[11px] bg-black/20 text-white border border-white/20 px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5 shrink-0" title="All entries are saved offline-first in browser storage">
+        <div id="localCacheStatus" class="text-[11px] bg-black/15 text-[#d8e7d2] border border-white/15 px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5 shrink-0" title="All entries are saved offline-first in browser storage">
           <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           <span>✓ Ready</span>
         </div>
@@ -70,48 +70,48 @@
 
     <!-- SUMMARY STATS BAR -->
     <section class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 no-print">
-      <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between">
         <div>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Total Today</span>
-          <div id="statTotalToday" class="text-xl sm:text-2xl font-black text-slate-800">0</div>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c7b66]">Total Today</span>
+          <div id="statTotalToday" class="text-xl sm:text-2xl font-bold text-[#33412c]">0</div>
         </div>
-        <div class="w-9 h-9 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-sm">📋</div>
+        <div class="w-9 h-9 rounded-lg bg-[#edf2e8] text-[#4d5e43] flex items-center justify-center font-bold text-sm">📋</div>
       </div>
 
-      <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between">
         <div>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Late Today</span>
-          <div id="statLateToday" class="text-xl sm:text-2xl font-black text-amber-600">0</div>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c7b66]">Late Today</span>
+          <div id="statLateToday" class="text-xl sm:text-2xl font-bold text-[#8a6316]">0</div>
         </div>
-        <div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-base">◷</div>
+        <div class="w-9 h-9 rounded-lg bg-[#fef9ed] text-[#8a6316] border border-[#f8e6bc] flex items-center justify-center font-bold text-base">◷</div>
       </div>
 
-      <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between">
         <div>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Absent Today</span>
-          <div id="statAbsentToday" class="text-xl sm:text-2xl font-black text-rose-600">0</div>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c7b66]">Absent Today</span>
+          <div id="statAbsentToday" class="text-xl sm:text-2xl font-bold text-[#933434]">0</div>
         </div>
-        <div class="w-9 h-9 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-base">✕</div>
+        <div class="w-9 h-9 rounded-lg bg-[#fef2f2] text-[#933434] border border-[#fbd3d3] flex items-center justify-center font-bold text-base">✕</div>
       </div>
 
-      <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between">
         <div>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Google Sheets</span>
-          <div id="statSheetsStatus" class="text-xs sm:text-sm font-bold text-slate-600 truncate max-w-[130px]">Local Only</div>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c7b66]">Database Sync</span>
+          <div id="statFormStatus" class="text-xs sm:text-sm font-bold text-[#33412c] truncate max-w-[130px]">Local Only</div>
         </div>
-        <div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">📊</div>
+        <div id="statFormIcon" class="w-9 h-9 rounded-lg bg-[#edf2e8] text-[#4d5e43] flex items-center justify-center font-bold text-sm">📝</div>
       </div>
     </section>
 
     <!-- ENTRY FORM CARD -->
-    <section class="bg-white rounded-2xl shadow-md border border-slate-200 p-4 sm:p-6 no-print">
-      <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-[#dfe6dc] p-4 sm:p-6 no-print">
+      <div class="flex items-center justify-between mb-4 pb-3.5 border-b border-[#eaf0e6]">
         <div>
-          <h2 class="text-base sm:text-lg font-black text-slate-800 tracking-tight flex items-center gap-2">
-            <span>Log Absence or Late Incident</span>
-            <span class="text-xs bg-brand-terracotta/10 text-brand-terracotta px-2 py-0.5 rounded-full font-bold">Fast Entry</span>
+          <h2 class="text-base sm:text-lg font-bold text-[#2e3b28] tracking-tight flex items-center gap-2">
+            <span>Log Incident</span>
+            <span class="text-xs bg-[#ecf2e7] text-[#425437] px-2.5 py-0.5 rounded-full font-semibold">Absence Tracker</span>
           </h2>
-          <p class="text-xs text-slate-500 mt-0.5">Select the cohort selectors below and enter the student name.</p>
+          <p class="text-xs text-[#6e7d67] mt-0.5">Select the cohort parameters below and enter the student name.</p>
         </div>
       </div>
 
@@ -122,20 +122,20 @@
 
           <!-- 1. PROMOTION SELECTOR -->
           <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-[#52634b] mb-2">
               1. Promotion
             </label>
             <div id="promotionOptions" class="grid grid-cols-2 gap-1.5">
-              <button type="button" data-value="GSEA24B" class="btn-pill promotion-btn active py-2.5 px-3 rounded-lg text-xs font-bold text-center border border-brand-terracotta bg-brand-terracotta text-white shadow-xs">
+              <button type="button" data-value="GSEA24B" class="btn-pill promotion-btn active py-2.5 px-3 rounded-lg text-xs font-semibold text-center border border-[#48593e] bg-[#48593e] text-white shadow-xs">
                 GSEA24B
               </button>
-              <button type="button" data-value="GSEA25A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+              <button type="button" data-value="GSEA25A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
                 GSEA25A
               </button>
-              <button type="button" data-value="GSEA25B" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+              <button type="button" data-value="GSEA25B" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
                 GSEA25B
               </button>
-              <button type="button" data-value="GSEA26A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+              <button type="button" data-value="GSEA26A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
                 GSEA26A
               </button>
             </div>
@@ -144,39 +144,39 @@
 
           <!-- 2. CLASS TYPE SELECTOR -->
           <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-[#52634b] mb-2">
               2. Class Type
             </label>
             <div id="classTypeOptions" class="grid grid-cols-2 gap-1.5">
-              <button type="button" data-value="AAS" class="btn-pill classtype-btn active py-2.5 px-3 rounded-lg text-xs font-bold text-center border border-brand-teal bg-brand-teal text-white shadow-xs">
+              <button type="button" data-value="AAS" class="btn-pill classtype-btn active py-2.5 px-3 rounded-lg text-xs font-semibold text-center border border-[#4a5f4e] bg-[#4a5f4e] text-white shadow-xs">
                 AAS
               </button>
-              <button type="button" data-value="AG" class="btn-pill classtype-btn py-2.5 px-3 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+              <button type="button" data-value="AG" class="btn-pill classtype-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
                 AG
               </button>
             </div>
             <input type="hidden" id="inputClassType" value="AAS">
-            <p class="text-[11px] text-slate-400 mt-2">
+            <p class="text-[11px] text-[#788871] mt-2">
               Applied Animal Sciences (AAS) or Agriculture (AG)
             </p>
           </div>
 
           <!-- 3. GROUP SELECTOR -->
           <div>
-            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-[#52634b] mb-2">
               3. Group
             </label>
             <div id="groupOptions" class="grid grid-cols-4 gap-1.5">
-              <button type="button" data-value="A" class="btn-pill group-btn active py-2.5 px-2 rounded-lg text-xs font-bold text-center border border-brand-terracotta bg-brand-terracotta text-white shadow-xs">
+              <button type="button" data-value="A" class="btn-pill group-btn active py-2.5 px-2 rounded-lg text-xs font-semibold text-center border border-[#48593e] bg-[#48593e] text-white shadow-xs">
                 A
               </button>
-              <button type="button" data-value="B" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+              <button type="button" data-value="B" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
                 B
               </button>
-              <button type="button" data-value="C" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+              <button type="button" data-value="C" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
                 C
               </button>
-              <button type="button" data-value="D" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+              <button type="button" data-value="D" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
                 D
               </button>
             </div>
@@ -186,19 +186,19 @@
 
         <!-- STATUS SELECTOR (LATE vs ABSENT) -->
         <div>
-          <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[#52634b] mb-2">
             4. Incident Status
           </label>
           <div id="statusOptions" class="grid grid-cols-2 gap-3 max-w-md">
             <!-- Absent Option (Default / Primary) -->
-            <button type="button" data-value="Absent" class="btn-pill status-btn active py-3 px-4 rounded-xl text-sm font-black flex items-center justify-center gap-2 border-2 border-rose-600 bg-rose-600 text-white shadow-sm">
+            <button type="button" data-value="Absent" class="btn-pill status-btn active py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 border border-[#8c3838] bg-[#8c3838] text-white shadow-xs">
               <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">✕</span>
               <span>Absent</span>
             </button>
 
             <!-- Late Option -->
-            <button type="button" data-value="Late" class="btn-pill status-btn py-3 px-4 rounded-xl text-sm font-black flex items-center justify-center gap-2 border-2 border-slate-200 bg-slate-50 text-slate-700 hover:border-amber-400">
-              <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs">◷</span>
+            <button type="button" data-value="Late" class="btn-pill status-btn py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 border border-[#d7e0d3] bg-white text-[#4a5742] hover:border-[#8c6721]/40 hover:bg-[#fffcf5]">
+              <span class="w-5 h-5 rounded-full bg-[#f3f6f1] text-[#6b7b64] flex items-center justify-center text-xs">◷</span>
               <span>Late</span>
             </button>
           </div>
@@ -209,46 +209,46 @@
         <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2">
           <!-- Student Name Input (Primary) -->
           <div class="sm:col-span-6">
-            <label for="inputStudentName" class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
-              5. Student Name <span class="text-rose-500">*</span>
+            <label for="inputStudentName" class="block text-xs font-bold text-[#44543d] uppercase tracking-wider mb-1">
+              5. Student Name <span class="text-[#a23b3b]">*</span>
             </label>
             <div class="relative">
-              <input id="inputStudentName" type="text" placeholder="Type student full name (e.g. Alex Morgan)..." class="w-full border-2 border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold focus:border-brand-terracotta focus:ring-2 focus:ring-brand-terracotta/20 focus:outline-none transition-all placeholder-slate-400" required autofocus autocomplete="off">
+              <input id="inputStudentName" type="text" placeholder="Type student full name (e.g. Alex Morgan)..." class="w-full border border-[#d0ded0] rounded-xl px-3.5 py-2.5 text-sm font-semibold text-[#2c3726] focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 focus:outline-none transition-all placeholder-[#97a591] bg-white shadow-2xs" required autofocus autocomplete="off">
             </div>
           </div>
 
           <!-- Date -->
           <div class="sm:col-span-3">
-            <label for="inputDate" class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
+            <label for="inputDate" class="block text-xs font-bold text-[#44543d] uppercase tracking-wider mb-1">
               Date
             </label>
-            <input id="inputDate" type="date" class="w-full border-2 border-slate-300 rounded-xl px-3 py-2.5 text-xs font-bold focus:border-brand-terracotta focus:outline-none">
+            <input id="inputDate" type="date" class="w-full border border-[#d0ded0] rounded-xl px-3 py-2.5 text-xs font-bold text-[#2c3726] focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 focus:outline-none bg-white shadow-2xs">
           </div>
 
           <!-- Optional Notes / Reason -->
           <div class="sm:col-span-3">
-            <label for="inputNotes" class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
-              Reason / Notes <span class="text-slate-400 font-normal lowercase">(optional)</span>
+            <label for="inputNotes" class="block text-xs font-bold text-[#44543d] uppercase tracking-wider mb-1">
+              Reason / Notes <span class="text-[#7f8f78] font-normal lowercase">(optional)</span>
             </label>
-            <input id="inputNotes" type="text" placeholder="e.g. Doctor, 15m late..." class="w-full border-2 border-slate-300 rounded-xl px-3 py-2.5 text-xs focus:border-brand-terracotta focus:outline-none">
+            <input id="inputNotes" type="text" placeholder="e.g. Doctor, 15m late..." class="w-full border border-[#d0ded0] rounded-xl px-3 py-2.5 text-xs text-[#2c3726] focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 focus:outline-none placeholder-[#97a591] bg-white shadow-2xs">
           </div>
         </div>
 
         <!-- SUBMIT BUTTON & SUCCESS BANNER -->
         <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div class="flex items-center gap-2">
-            <button type="submit" id="btnSubmitForm" class="w-full sm:w-auto bg-brand-terracotta hover:bg-brand-terracottaDark active:scale-98 text-white font-black text-sm px-7 py-3 rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2">
+            <button type="submit" id="btnSubmitForm" class="w-full sm:w-auto bg-[#425437] hover:bg-[#36452d] active:scale-98 text-white font-bold text-xs sm:text-sm px-7 py-3 rounded-xl shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2">
               <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
               <span>Submit Record</span>
             </button>
 
-            <button type="button" id="btnClearInputs" class="text-slate-400 hover:text-slate-600 text-xs font-bold px-3 py-2 rounded-lg cursor-pointer">
+            <button type="button" id="btnClearInputs" class="text-[#708068] hover:text-[#33422a] text-xs font-semibold px-3 py-2 rounded-lg cursor-pointer">
               Clear Name
             </button>
           </div>
 
           <!-- Status Toast / Feedback -->
-          <div id="submitFeedback" class="hidden text-xs font-bold px-3 py-2 rounded-xl border flex items-center gap-2 transition-all">
+          <div id="submitFeedback" class="hidden text-xs font-semibold px-3 py-2 rounded-xl border flex items-center gap-2 transition-all">
             <!-- Dynamically populated -->
           </div>
         </div>
@@ -257,36 +257,36 @@
     </section>
 
     <!-- RECENT SUBMISSIONS / DATABASE FEED -->
-    <section class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-[#dfe6dc] overflow-hidden">
       <!-- Toolbar -->
-      <div class="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div class="p-4 sm:p-5 bg-[#f8faf7] border-b border-[#dfe6dc] flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
-          <h3 class="text-sm sm:text-base font-black text-slate-800 tracking-tight flex items-center gap-2">
+          <h3 class="text-sm sm:text-base font-bold text-[#2e3b28] tracking-tight flex items-center gap-2">
             <span>Attendance Incidents Log</span>
-            <span id="logCountBadge" class="bg-slate-200 text-slate-700 text-xs px-2 py-0.5 rounded-full font-bold">0 records</span>
+            <span id="logCountBadge" class="bg-[#e9f0e6] text-[#425437] text-xs px-2.5 py-0.5 rounded-full font-semibold">0 records</span>
           </h3>
-          <p class="text-xs text-slate-500">Live feed of all reported late and absent students.</p>
+          <p class="text-xs text-[#6e7d67]">Live feed of reported absence and late incidents.</p>
         </div>
 
         <!-- Filter & Export Controls -->
         <div class="flex items-center flex-wrap gap-2">
           <!-- Search input -->
-          <input id="searchLogInput" type="search" placeholder="Search student..." class="border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-brand-terracotta w-36 sm:w-44">
+          <input id="searchLogInput" type="search" placeholder="Search student..." class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] focus:outline-none focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 w-36 sm:w-44 placeholder-[#97a591]">
 
           <!-- Status Filter -->
-          <select id="filterStatusSelect" class="border border-slate-300 rounded-lg px-2 py-1.5 text-xs bg-white font-semibold cursor-pointer">
+          <select id="filterStatusSelect" class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] font-semibold cursor-pointer focus:outline-none focus:border-[#4d6042]">
             <option value="all">All Statuses</option>
             <option value="Absent">Absent Only</option>
             <option value="Late">Late Only</option>
           </select>
 
           <!-- Copy for Sheets Button -->
-          <button id="btnCopyTableForSheets" type="button" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition-all flex items-center gap-1.5 cursor-pointer" title="Copy all records to clipboard for pasting into Google Sheets">
+          <button id="btnCopyTableForSheets" type="button" class="bg-[#405c3d] hover:bg-[#344b31] active:bg-[#2a3e28] text-white font-semibold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer" title="Copy all records to clipboard for pasting into Google Sheets">
             <span>📋 Copy for Sheets</span>
           </button>
 
           <!-- Export CSV -->
-          <button id="btnExportCsv" type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-2xs transition-all cursor-pointer" title="Download CSV">
+          <button id="btnExportCsv" type="button" class="bg-white hover:bg-[#f4f7f2] text-[#3e4d38] border border-[#d0ded0] font-semibold px-2.5 py-1.5 rounded-lg text-xs shadow-2xs transition-all cursor-pointer" title="Download CSV">
             📥 CSV
           </button>
         </div>
@@ -296,7 +296,7 @@
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs">
           <thead>
-            <tr class="bg-slate-100/75 border-b border-slate-200 text-slate-600 uppercase font-black tracking-wider text-[11px] select-none">
+            <tr class="bg-[#f2f6ef]/80 border-b border-[#dfe6dc] text-[#55644d] uppercase font-bold tracking-wider text-[11px] select-none">
               <th class="py-2.5 px-3">Date &amp; Time</th>
               <th class="py-2.5 px-3">Student Name</th>
               <th class="py-2.5 px-2">Status</th>
@@ -307,19 +307,19 @@
               <th class="py-2.5 px-2 text-center w-12 no-print"></th>
             </tr>
           </thead>
-          <tbody id="recordsTableBody" class="divide-y divide-slate-100 text-slate-700">
+          <tbody id="recordsTableBody" class="divide-y divide-[#edf2eb] text-[#33412c]">
             <!-- Dynamically populated -->
           </tbody>
         </table>
       </div>
 
       <!-- Footer Info -->
-      <div class="p-3 bg-slate-50 border-t border-slate-200 text-xs flex flex-wrap items-center justify-between text-slate-500 gap-2">
+      <div class="p-3.5 bg-[#f8faf7] border-t border-[#dfe6dc] text-xs flex flex-wrap items-center justify-between text-[#6a7964] gap-2">
         <div class="flex items-center gap-3">
-          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Absent</span>
-          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Late</span>
+          <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#8c3838]"></span> Absent</span>
+          <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#8c6721]"></span> Late</span>
         </div>
-        <button id="btnClearAllRecords" type="button" class="text-rose-600 hover:underline text-[11px] font-bold cursor-pointer no-print">
+        <button id="btnClearAllRecords" type="button" class="text-[#a23b3b] hover:underline text-[11px] font-semibold cursor-pointer no-print">
           Clear All Records
         </button>
       </div>
@@ -327,57 +327,145 @@
 
   </main>
 
-  <!-- GOOGLE SHEETS SETUP MODAL -->
-  <div id="sheetsModal" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden no-print">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-slate-200">
-      <div class="flex justify-between items-center mb-3 border-b pb-2">
-        <div class="flex items-center gap-2">
-          <div class="w-7 h-7 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
-            📊
+  <!-- GOOGLE FORMS & SHEETS SETUP MODAL -->
+  <div id="formsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 z-50 hidden no-print">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-5 sm:p-6 shadow-2xl border border-[#dfe6dc] max-h-[90vh] overflow-y-auto">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center mb-3 pb-3 border-b border-[#eaf0e6]">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-xl bg-[#ecf2e7] text-[#425437] flex items-center justify-center font-bold text-base shadow-xs">
+            📝
           </div>
-          <h3 class="font-black text-slate-800 text-base">Google Sheets Integration</h3>
+          <div>
+            <h3 class="font-bold text-[#2e3b28] text-base leading-tight">Google Forms &amp; Sheets Setup</h3>
+            <p class="text-[11px] text-[#6e7d67]">Multi-user concurrent database connection</p>
+          </div>
         </div>
-        <button id="btnCloseSheetsModal" type="button" class="text-slate-400 hover:text-slate-600 text-xl font-bold cursor-pointer">&times;</button>
+        <button id="btnCloseFormsModal" type="button" class="text-[#788871] hover:text-[#2e3b28] p-1 text-xl font-bold rounded-lg cursor-pointer leading-none">&times;</button>
       </div>
 
-      <div class="space-y-4 text-xs text-slate-600">
-        <!-- Method 1: Instant Copy -->
-        <div class="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200">
-          <h4 class="font-black text-emerald-900 text-xs mb-1">Option 1: Instant Copy &amp; Paste (Zero Setup)</h4>
-          <p class="text-[11px] text-emerald-800 mb-2">Click the button below to copy all logged records. Open any Google Sheet, select cell A1, and press <kbd class="bg-emerald-200 px-1 rounded font-mono">Cmd+V</kbd> (or <kbd class="bg-emerald-200 px-1 rounded font-mono">Ctrl+V</kbd>).</p>
-          <button id="btnModalCopySheets" type="button" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs shadow-xs transition-all cursor-pointer">
-            📋 Copy All Records to Clipboard
+      <!-- Why Google Forms Banner -->
+      <div class="p-3.5 bg-[#f4f7f1] rounded-xl border border-[#dce5d6] text-xs text-[#2c3726] space-y-1 mb-4">
+        <div class="font-bold flex items-center gap-1.5 text-[#3b4c33]">
+          <span>⚡</span>
+          <span>Why Google Forms solves multi-user submissions:</span>
+        </div>
+        <p class="text-[11px] text-[#4d5e44] leading-relaxed">
+          When multiple teachers log attendance from their phones simultaneously, direct spreadsheet writing can conflict. Google Forms queues and processes <strong>hundreds of simultaneous entries</strong> with zero collisions, and automatically streams every record straight into your linked <strong>Google Sheet</strong> in real time.
+        </p>
+      </div>
+
+      <!-- STEP BY STEP GUIDE -->
+      <div class="space-y-4 text-xs text-[#33412c]">
+
+        <!-- 4 Steps Overview -->
+        <div class="space-y-2 border-b border-[#eaf0e6] pb-3">
+          <h4 class="font-bold text-[#33412c] text-xs uppercase tracking-wider">Quick Setup (2 Minutes):</h4>
+          <ol class="list-decimal list-inside space-y-1 text-[11px] text-[#55644d] leading-relaxed">
+            <li>Create a new Google Form named <strong>"GSEA Attendance"</strong> with 7 questions:
+              <span class="font-mono text-[10px] bg-[#edf2e8] px-1 py-0.5 rounded text-[#33412c]">Promotion</span>, 
+              <span class="font-mono text-[10px] bg-[#edf2e8] px-1 py-0.5 rounded text-[#33412c]">Class Type</span>, 
+              <span class="font-mono text-[10px] bg-[#edf2e8] px-1 py-0.5 rounded text-[#33412c]">Group</span>, 
+              <span class="font-mono text-[10px] bg-[#edf2e8] px-1 py-0.5 rounded text-[#33412c]">Status</span>, 
+              <span class="font-mono text-[10px] bg-[#edf2e8] px-1 py-0.5 rounded text-[#33412c]">Student Name</span>, 
+              <span class="font-mono text-[10px] bg-[#edf2e8] px-1 py-0.5 rounded text-[#33412c]">Date</span>, 
+              <span class="font-mono text-[10px] bg-[#edf2e8] px-1 py-0.5 rounded text-[#33412c]">Notes</span>.
+            </li>
+            <li>In your Google Form, click the <strong>Responses</strong> tab &rarr; click <strong>Link to Sheets</strong> (green icon) to create your spreadsheet.</li>
+            <li>In the Google Form, click the <strong>&vellip; (three dots)</strong> at the top right &rarr; select <strong>"Get pre-filled link"</strong>. Fill in quick sample text for all 7 items, then click <strong>Get link</strong> (or <strong>Copy link</strong>).</li>
+            <li>Paste that pre-filled link below and click <strong>Auto-Connect</strong>. That's it!</li>
+          </ol>
+        </div>
+
+        <!-- Pre-filled Link Input & Auto Connect -->
+        <div class="p-3.5 bg-[#f8faf7] rounded-xl border border-[#dfe6dc] space-y-2.5">
+          <label for="inputPrefillUrl" class="block font-bold text-[#33412c] text-xs">
+            Paste your Google Form "Pre-filled Link" here:
+          </label>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input id="inputPrefillUrl" type="url" placeholder="https://docs.google.com/forms/d/e/.../viewform?usp=pp_url&entry.123=..." class="flex-1 border border-[#d0ded0] rounded-lg px-3 py-2 text-xs font-mono bg-white text-[#2c3726] focus:ring-2 focus:ring-[#4d6042]/15 focus:border-[#4d6042] focus:outline-none">
+            <button id="btnAutoParsePrefill" type="button" class="bg-[#425437] hover:bg-[#36452d] active:bg-[#2d3a26] text-white font-bold px-4 py-2 rounded-lg text-xs transition-all cursor-pointer whitespace-nowrap shadow-xs">
+              ⚡ Auto-Connect
+            </button>
+          </div>
+          <div id="parseStatusMsg" class="hidden text-[11px] font-semibold p-2.5 rounded-lg"></div>
+        </div>
+
+        <!-- Current Configuration / Status -->
+        <div id="formConfigCard" class="p-3.5 bg-[#f8faf7] rounded-xl border border-[#dfe6dc] space-y-2">
+          <div class="flex items-center justify-between">
+            <h5 class="font-bold text-[#33412c] text-xs flex items-center gap-1.5">
+              <span>Connection Status:</span>
+              <span id="formConfigBadge" class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#e9f0e6] text-[#425437]">Not Connected</span>
+            </h5>
+            <button id="btnToggleAdvanced" type="button" class="text-[11px] font-semibold text-[#5a6b52] hover:text-[#2e3b28] cursor-pointer">
+              View Fields ▼
+            </button>
+          </div>
+
+          <!-- Fields Details (Collapsible) -->
+          <div id="advancedFieldsSection" class="hidden pt-2 border-t border-[#dfe6dc] space-y-2 text-[11px]">
+            <div>
+              <label class="block font-bold text-[#55644d] text-[10px] uppercase">Form Response URL</label>
+              <input id="cfgFormUrl" type="text" class="w-full border border-[#d0ded0] rounded p-1.5 text-[11px] font-mono bg-white text-[#2c3726] focus:border-[#4d6042] focus:outline-none" placeholder="https://docs.google.com/forms/d/e/.../formResponse">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block font-bold text-[#55644d] text-[10px] uppercase">Promotion Field</label>
+                <input id="cfgEntryPromotion" type="text" class="w-full border border-[#d0ded0] rounded p-1.5 text-[11px] font-mono bg-white text-[#2c3726] focus:border-[#4d6042] focus:outline-none" placeholder="entry.123456">
+              </div>
+              <div>
+                <label class="block font-bold text-[#55644d] text-[10px] uppercase">Class Type Field</label>
+                <input id="cfgEntryClassType" type="text" class="w-full border border-[#d0ded0] rounded p-1.5 text-[11px] font-mono bg-white text-[#2c3726] focus:border-[#4d6042] focus:outline-none" placeholder="entry.234567">
+              </div>
+              <div>
+                <label class="block font-bold text-[#55644d] text-[10px] uppercase">Group Field</label>
+                <input id="cfgEntryGroup" type="text" class="w-full border border-[#d0ded0] rounded p-1.5 text-[11px] font-mono bg-white text-[#2c3726] focus:border-[#4d6042] focus:outline-none" placeholder="entry.345678">
+              </div>
+              <div>
+                <label class="block font-bold text-[#55644d] text-[10px] uppercase">Status Field</label>
+                <input id="cfgEntryStatus" type="text" class="w-full border border-[#d0ded0] rounded p-1.5 text-[11px] font-mono bg-white text-[#2c3726] focus:border-[#4d6042] focus:outline-none" placeholder="entry.456789">
+              </div>
+              <div>
+                <label class="block font-bold text-[#55644d] text-[10px] uppercase">Student Name Field</label>
+                <input id="cfgEntryStudentName" type="text" class="w-full border border-[#d0ded0] rounded p-1.5 text-[11px] font-mono bg-white text-[#2c3726] focus:border-[#4d6042] focus:outline-none" placeholder="entry.567890">
+              </div>
+              <div>
+                <label class="block font-bold text-[#55644d] text-[10px] uppercase">Date Field</label>
+                <input id="cfgEntryDate" type="text" class="w-full border border-[#d0ded0] rounded p-1.5 text-[11px] font-mono bg-white text-[#2c3726] focus:border-[#4d6042] focus:outline-none" placeholder="entry.678901">
+              </div>
+            </div>
+            <div>
+              <label class="block font-bold text-[#55644d] text-[10px] uppercase">Notes Field (Optional)</label>
+              <input id="cfgEntryNotes" type="text" class="w-full border border-[#d0ded0] rounded p-1.5 text-[11px] font-mono bg-white text-[#2c3726] focus:border-[#4d6042] focus:outline-none" placeholder="entry.789012">
+            </div>
+            <button id="btnSaveManualConfig" type="button" class="w-full bg-[#425437] hover:bg-[#36452d] text-white font-bold py-1.5 rounded text-xs cursor-pointer">
+              Save Fields Manually
+            </button>
+          </div>
+
+          <!-- Action Buttons for Config -->
+          <div class="flex items-center gap-2 pt-1">
+            <button id="btnTestFormSubmission" type="button" class="flex-1 bg-[#405c3d] hover:bg-[#344b31] active:bg-[#2a3e28] text-white font-bold py-2 px-3 rounded-lg text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-xs">
+              <span>🧪 Send Test Row to Google Sheet</span>
+            </button>
+            <button id="btnDisconnectForm" type="button" class="text-[#a23b3b] hover:text-[#882b2b] text-xs font-semibold px-3 py-2 cursor-pointer">
+              Disconnect
+            </button>
+          </div>
+        </div>
+
+        <!-- Offline / Manual Backup Section -->
+        <div class="p-3 bg-[#f2f6ef] rounded-xl border border-[#dfe6dc] flex items-center justify-between gap-2">
+          <div>
+            <div class="font-bold text-[#33412c] text-xs">Offline Backup Clipboard</div>
+            <div class="text-[10px] text-[#6e7d67]">Copy all entries anytime to paste manually into Google Sheets.</div>
+          </div>
+          <button id="btnModalCopySheets" type="button" class="bg-white hover:bg-[#f4f7f2] text-[#33412c] border border-[#d0ded0] font-semibold px-3 py-1.5 rounded-lg text-xs cursor-pointer shrink-0">
+            📋 Copy for Sheets
           </button>
         </div>
 
-        <!-- Method 2: Google Apps Script Web App -->
-        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-          <h4 class="font-black text-slate-800 text-xs">Option 2: Live Google Sheets Auto-Sync (Optional)</h4>
-          <p class="text-[11px] text-slate-500 leading-relaxed">
-            To automatically send every submission into your Google Sheet:
-            <br>1. Open your Google Sheet → click <strong>Extensions > Apps Script</strong>.
-            <br>2. Replace code with this snippet:
-          </p>
-          <pre class="bg-slate-900 text-slate-100 p-2.5 rounded-lg text-[10px] font-mono overflow-x-auto select-all">function doPost(e) {
-  var d = JSON.parse(e.postData.contents);
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["Timestamp", "Date", "Promotion", "Class Type", "Group", "Status", "Student Name", "Notes"]);
-  }
-  sheet.appendRow([new Date(), d.date, d.promotion, d.classType, d.group, d.status, d.studentName, d.notes]);
-  return ContentService.createTextOutput("OK");
-}</pre>
-          <p class="text-[11px] text-slate-500">
-            3. Click <strong>Deploy > New deployment > Web app</strong> (set access to <em>"Anyone"</em>).
-            <br>4. Paste your Web App URL below:
-          </p>
-          <div>
-            <input id="inputSheetsWebhook" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full border border-slate-300 rounded-lg p-2 text-xs font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none">
-          </div>
-          <button id="btnSaveSheetsWebhook" type="button" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 rounded-lg text-xs cursor-pointer">
-            Save Google Sheet URL
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -385,11 +473,33 @@
   <!-- APPLICATION JAVASCRIPT -->
   <script>
     const STORAGE_KEY = "gsea_attendance_incident_log_v1";
-    const WEBHOOK_KEY = "gsea_sheets_incident_webhook_v1";
+    const GFORM_CONFIG_KEY = "gsea_form_config_v2";
 
     // Application State
     let records = loadRecords();
-    let sheetsWebhookUrl = localStorage.getItem(WEBHOOK_KEY) || "";
+    let gformConfig = getGformConfig();
+
+    function getGformConfig() {
+      const stored = localStorage.getItem(GFORM_CONFIG_KEY);
+      if (stored) {
+        try { return JSON.parse(stored); } catch (e) {}
+      }
+      return null;
+    }
+
+    function saveGformConfig(cfg) {
+      gformConfig = cfg;
+      localStorage.setItem(GFORM_CONFIG_KEY, JSON.stringify(cfg));
+      updateFormConfigUI();
+      updateStats();
+    }
+
+    function disconnectGform() {
+      gformConfig = null;
+      localStorage.removeItem(GFORM_CONFIG_KEY);
+      updateFormConfigUI();
+      updateStats();
+    }
 
     // Load Records from LocalStorage
     function loadRecords() {
@@ -419,11 +529,11 @@
     document.querySelectorAll(".promotion-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".promotion-btn").forEach(b => {
-          b.classList.remove("active", "bg-brand-terracotta", "text-white", "border-brand-terracotta", "shadow-xs");
-          b.classList.add("bg-slate-50", "text-slate-700", "border-slate-200");
+          b.classList.remove("active", "bg-[#48593e]", "text-white", "border-[#48593e]", "shadow-xs");
+          b.classList.add("bg-white", "text-[#3f4d38]", "border-[#d7e0d3]");
         });
-        btn.classList.add("active", "bg-brand-terracotta", "text-white", "border-brand-terracotta", "shadow-xs");
-        btn.classList.remove("bg-slate-50", "text-slate-700", "border-slate-200");
+        btn.classList.add("active", "bg-[#48593e]", "text-white", "border-[#48593e]", "shadow-xs");
+        btn.classList.remove("bg-white", "text-[#3f4d38]", "border-[#d7e0d3]");
         document.getElementById("inputPromotion").value = btn.getAttribute("data-value");
       });
     });
@@ -432,14 +542,14 @@
     document.querySelectorAll(".classtype-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".classtype-btn").forEach(b => {
-          b.classList.remove("active", "bg-brand-teal", "bg-brand-forest", "text-white", "shadow-xs");
-          b.classList.add("bg-slate-50", "text-slate-700", "border-slate-200");
+          b.classList.remove("active", "bg-[#4a5f4e]", "border-[#4a5f4e]", "bg-[#556644]", "border-[#556644]", "text-white", "shadow-xs");
+          b.classList.add("bg-white", "text-[#3f4d38]", "border-[#d7e0d3]");
         });
         const val = btn.getAttribute("data-value");
-        const activeColor = val === "AAS" ? "bg-brand-teal" : "bg-brand-forest";
-        const borderColor = val === "AAS" ? "border-brand-teal" : "border-brand-forest";
+        const activeColor = val === "AAS" ? "bg-[#4a5f4e]" : "bg-[#556644]";
+        const borderColor = val === "AAS" ? "border-[#4a5f4e]" : "border-[#556644]";
         btn.classList.add("active", activeColor, borderColor, "text-white", "shadow-xs");
-        btn.classList.remove("bg-slate-50", "text-slate-700", "border-slate-200");
+        btn.classList.remove("bg-white", "text-[#3f4d38]", "border-[#d7e0d3]");
         document.getElementById("inputClassType").value = val;
       });
     });
@@ -448,11 +558,11 @@
     document.querySelectorAll(".group-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".group-btn").forEach(b => {
-          b.classList.remove("active", "bg-brand-terracotta", "text-white", "border-brand-terracotta", "shadow-xs");
-          b.classList.add("bg-slate-50", "text-slate-700", "border-slate-200");
+          b.classList.remove("active", "bg-[#48593e]", "text-white", "border-[#48593e]", "shadow-xs");
+          b.classList.add("bg-white", "text-[#3f4d38]", "border-[#d7e0d3]");
         });
-        btn.classList.add("active", "bg-brand-terracotta", "text-white", "border-brand-terracotta", "shadow-xs");
-        btn.classList.remove("bg-slate-50", "text-slate-700", "border-slate-200");
+        btn.classList.add("active", "bg-[#48593e]", "text-white", "border-[#48593e]", "shadow-xs");
+        btn.classList.remove("bg-white", "text-[#3f4d38]", "border-[#d7e0d3]");
         document.getElementById("inputGroup").value = btn.getAttribute("data-value");
       });
     });
@@ -461,19 +571,19 @@
     document.querySelectorAll(".status-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".status-btn").forEach(b => {
-          b.classList.remove("active", "bg-rose-600", "border-rose-600", "bg-amber-500", "border-amber-500", "text-white", "shadow-sm");
-          b.classList.add("bg-slate-50", "text-slate-700", "border-slate-200");
-          b.querySelector("span:first-child").className = "w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs";
+          b.classList.remove("active", "bg-[#8c3838]", "border-[#8c3838]", "bg-[#8c6721]", "border-[#8c6721]", "text-white", "shadow-xs");
+          b.classList.add("bg-white", "text-[#4a5742]", "border-[#d7e0d3]");
+          b.querySelector("span:first-child").className = "w-5 h-5 rounded-full bg-[#f3f6f1] text-[#6b7b64] flex items-center justify-center text-xs";
         });
         const val = btn.getAttribute("data-value");
         if (val === "Absent") {
-          btn.classList.add("active", "bg-rose-600", "border-rose-600", "text-white", "shadow-sm");
+          btn.classList.add("active", "bg-[#8c3838]", "border-[#8c3838]", "text-white", "shadow-xs");
           btn.querySelector("span:first-child").className = "w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-xs";
         } else {
-          btn.classList.add("active", "bg-amber-500", "border-amber-500", "text-white", "shadow-sm");
+          btn.classList.add("active", "bg-[#8c6721]", "border-[#8c6721]", "text-white", "shadow-xs");
           btn.querySelector("span:first-child").className = "w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-xs";
         }
-        btn.classList.remove("bg-slate-50", "text-slate-700", "border-slate-200");
+        btn.classList.remove("bg-white", "text-[#4a5742]", "border-[#d7e0d3]");
         document.getElementById("inputStatus").value = val;
       });
     });
@@ -526,24 +636,31 @@
       document.getElementById("inputNotes").value = "";
       document.getElementById("inputStudentName").focus();
 
-      // Push to Google Sheets if configured
-      await syncRecordToGoogleSheets(newRecord);
+      // Push to Google Form (and through to Google Sheets) if configured
+      if (gformConfig && gformConfig.formUrl) {
+        submitToGoogleForm(newRecord);
+      }
     });
 
     function showFeedbackToast(record) {
       const toast = document.getElementById("submitFeedback");
       const isAbsent = record.status === "Absent";
-      toast.className = `text-xs font-bold px-3.5 py-2 rounded-xl border flex items-center gap-2 ${
-        isAbsent ? 'bg-rose-50 text-rose-800 border-rose-200' : 'bg-amber-50 text-amber-800 border-amber-200'
+      const isConnected = gformConfig && gformConfig.formUrl;
+      const cloudStatus = isConnected 
+        ? `<span class="text-[#3b5936] font-bold ml-1">✓ Sent to Google Form &amp; Sheet</span>`
+        : `<span class="text-[#6c7b66] font-normal ml-1">(Saved locally)</span>`;
+
+      toast.className = `text-xs font-semibold px-3.5 py-2 rounded-xl border flex items-center gap-2 ${
+        isAbsent ? 'bg-[#fef4f4] text-[#8c2d2d] border-[#f9d5d5]' : 'bg-[#fefaf0] text-[#82560e] border-[#fae7bc]'
       }`;
       toast.innerHTML = `
         <span>${isAbsent ? '✕' : '◷'}</span>
-        <span>Logged: <strong>${record.studentName}</strong> (${record.status}) for ${record.promotion} ${record.classType} Grp ${record.group}</span>
+        <span>Logged: <strong>${record.studentName}</strong> (${record.status}) for ${record.promotion} ${record.classType} Grp ${record.group}${cloudStatus}</span>
       `;
       toast.classList.remove("hidden");
       setTimeout(() => {
         toast.classList.add("hidden");
-      }, 4000);
+      }, 4500);
     }
 
     // =========================================================================
@@ -570,7 +687,7 @@
       if (filtered.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="8" class="py-8 text-center text-slate-400 text-xs">
+            <td colspan="8" class="py-8 text-center text-[#788871] text-xs">
               ${records.length === 0 ? 'No attendance incidents recorded yet. Use the form above to log absence or late.' : 'No records matching your search/filter.'}
             </td>
           </tr>
@@ -581,36 +698,36 @@
       tbody.innerHTML = filtered.map((r, index) => {
         const isAbsent = r.status === "Absent";
         const statusBadge = isAbsent
-          ? `<span class="inline-flex items-center gap-1 bg-rose-50 border border-rose-200 text-rose-700 font-bold px-2 py-0.5 rounded-full text-[10px]">✕ Absent</span>`
-          : `<span class="inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-700 font-bold px-2 py-0.5 rounded-full text-[10px]">◷ Late</span>`;
+          ? `<span class="inline-flex items-center gap-1 bg-[#fef2f2] border border-[#fbd3d3] text-[#933434] font-semibold px-2.5 py-0.5 rounded-full text-[10px]">✕ Absent</span>`
+          : `<span class="inline-flex items-center gap-1 bg-[#fef9ed] border border-[#f8e6bc] text-[#8a6316] font-semibold px-2.5 py-0.5 rounded-full text-[10px]">◷ Late</span>`;
 
         return `
-          <tr class="${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'} hover:bg-slate-100/60 transition-colors">
-            <td class="py-2 px-3 text-slate-500 font-mono text-[11px] whitespace-nowrap">
-              ${r.date} <span class="text-slate-400">(${r.time || ''})</span>
+          <tr class="${index % 2 === 0 ? 'bg-white' : 'bg-[#fafcfa]'} hover:bg-[#f2f6ef]/60 transition-colors">
+            <td class="py-2.5 px-3 text-[#6e7d67] font-mono text-[11px] whitespace-nowrap">
+              ${r.date} <span class="text-[#96a58f]">(${r.time || ''})</span>
             </td>
-            <td class="py-2 px-3 font-bold text-slate-900 text-xs">
+            <td class="py-2.5 px-3 font-bold text-[#283324] text-xs">
               ${r.studentName}
             </td>
-            <td class="py-2 px-2 whitespace-nowrap">
+            <td class="py-2.5 px-2 whitespace-nowrap">
               ${statusBadge}
             </td>
-            <td class="py-2 px-2 font-bold text-slate-700 text-xs">
+            <td class="py-2.5 px-2 font-semibold text-[#3b4c34] text-xs">
               ${r.promotion}
             </td>
-            <td class="py-2 px-2 text-xs">
-              <span class="font-bold px-1.5 py-0.5 rounded ${r.classType === 'AAS' ? 'bg-brand-teal/10 text-brand-teal' : 'bg-brand-forest/10 text-brand-forest'}">
+            <td class="py-2.5 px-2 text-xs">
+              <span class="font-semibold px-2 py-0.5 rounded ${r.classType === 'AAS' ? 'bg-[#edf3ee] text-[#3e5644]' : 'bg-[#f2f5ed] text-[#4a5a3a]'}">
                 ${r.classType}
               </span>
             </td>
-            <td class="py-2 px-2 font-bold text-slate-700 text-xs">
+            <td class="py-2.5 px-2 font-semibold text-[#3b4c34] text-xs">
               Group ${r.group}
             </td>
-            <td class="py-2 px-3 text-slate-500 italic text-[11px] max-w-[200px] truncate" title="${r.notes || ''}">
-              ${r.notes || '<span class="text-slate-300 not-italic">-</span>'}
+            <td class="py-2.5 px-3 text-[#6e7d67] italic text-[11px] max-w-[200px] truncate" title="${r.notes || ''}">
+              ${r.notes || '<span class="text-[#bcc7b7] not-italic">-</span>'}
             </td>
-            <td class="py-2 px-2 text-center no-print">
-              <button type="button" onclick="deleteRecord('${r.id}')" class="text-slate-300 hover:text-rose-600 p-1 rounded transition-colors cursor-pointer" title="Delete entry">
+            <td class="py-2.5 px-2 text-center no-print">
+              <button type="button" onclick="deleteRecord('${r.id}')" class="text-[#a5b2a0] hover:text-[#933434] p-1 rounded transition-colors cursor-pointer" title="Delete entry">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
               </button>
             </td>
@@ -639,7 +756,7 @@
       saveRecords();
     });
 
-    // Update Statistics Bar
+    // Update Statistics Bar & Header
     function updateStats() {
       const today = new Date().toISOString().split("T")[0];
       const todayRecords = records.filter(r => r.date === today);
@@ -648,17 +765,207 @@
       document.getElementById("statLateToday").textContent = todayRecords.filter(r => r.status === "Late").length;
       document.getElementById("statAbsentToday").textContent = todayRecords.filter(r => r.status === "Absent").length;
 
-      const webhook = localStorage.getItem(WEBHOOK_KEY);
-      const sheetsStat = document.getElementById("statSheetsStatus");
-      const headerStat = document.getElementById("headerSheetsStatus");
-      if (webhook && webhook.startsWith("http")) {
-        sheetsStat.textContent = "Auto-Sync Active";
-        sheetsStat.className = "text-xs sm:text-sm font-bold text-emerald-600 truncate max-w-[130px]";
-        headerStat.textContent = "Google Sheets: Connected";
+      const statEl = document.getElementById("statFormStatus");
+      const iconEl = document.getElementById("statFormIcon");
+      const headerEl = document.getElementById("headerFormStatus");
+
+      if (gformConfig && gformConfig.formUrl) {
+        statEl.textContent = "Synced to Sheets";
+        statEl.className = "text-xs sm:text-sm font-semibold text-[#3b5936] truncate max-w-[130px]";
+        iconEl.className = "w-9 h-9 rounded-lg bg-[#eaf0e6] text-[#3b5936] flex items-center justify-center font-bold text-sm";
+        headerEl.textContent = "Google Form: Connected";
       } else {
-        sheetsStat.textContent = "Local Only";
-        sheetsStat.className = "text-xs sm:text-sm font-bold text-slate-600 truncate max-w-[130px]";
-        headerStat.textContent = "Google Sheets";
+        statEl.textContent = "Local Only";
+        statEl.className = "text-xs sm:text-sm font-semibold text-[#5a6b52] truncate max-w-[130px]";
+        iconEl.className = "w-9 h-9 rounded-lg bg-[#edf2e8] text-[#5a6b52] flex items-center justify-center font-bold text-sm";
+        headerEl.textContent = "Google Form & Sheets";
+      }
+    }
+
+    // =========================================================================
+    // GOOGLE FORMS SUBMISSION & INTEGRATION
+    // =========================================================================
+
+    async function submitToGoogleForm(rec) {
+      if (!gformConfig || !gformConfig.formUrl) return false;
+
+      const formUrl = gformConfig.formUrl.replace(/\/viewform.*$/, '/formResponse');
+      const params = new URLSearchParams();
+
+      if (gformConfig.entryPromotion) params.append(gformConfig.entryPromotion, rec.promotion);
+      if (gformConfig.entryClassType) params.append(gformConfig.entryClassType, rec.classType);
+      if (gformConfig.entryGroup) params.append(gformConfig.entryGroup, rec.group);
+      if (gformConfig.entryStatus) params.append(gformConfig.entryStatus, rec.status);
+      if (gformConfig.entryStudentName) params.append(gformConfig.entryStudentName, rec.studentName);
+      if (gformConfig.entryDate) params.append(gformConfig.entryDate, rec.date);
+      if (gformConfig.entryNotes && rec.notes) params.append(gformConfig.entryNotes, rec.notes);
+
+      try {
+        await fetch(formUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: params.toString()
+        });
+        return true;
+      } catch (err) {
+        try {
+          submitViaHiddenIframe(formUrl, params);
+          return true;
+        } catch (e2) {
+          console.warn("Could not submit to Google Form:", err, e2);
+          return false;
+        }
+      }
+    }
+
+    function submitViaHiddenIframe(formUrl, params) {
+      let iframe = document.getElementById("gform_hidden_iframe");
+      if (!iframe) {
+        iframe = document.createElement("iframe");
+        iframe.id = "gform_hidden_iframe";
+        iframe.name = "gform_hidden_iframe";
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+      }
+
+      const form = document.createElement("form");
+      form.target = "gform_hidden_iframe";
+      form.action = formUrl;
+      form.method = "POST";
+      form.style.display = "none";
+
+      for (const [key, value] of params.entries()) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
+      }
+
+      document.body.appendChild(form);
+      form.submit();
+      setTimeout(() => {
+        form.remove();
+      }, 1000);
+    }
+
+    // Parse Google Form pre-filled link
+    function parseGoogleFormPrefillUrl(urlStr) {
+      try {
+        const trimmed = urlStr.trim();
+        if (!trimmed.includes("google.com/forms")) {
+          return { error: "Please enter a valid Google Forms URL (e.g. https://docs.google.com/forms/...)" };
+        }
+        const url = new URL(trimmed);
+        const formUrl = url.origin + url.pathname.replace(/\/viewform.*$/, "/formResponse");
+        const params = new URLSearchParams(url.search);
+
+        const entries = [];
+        for (const [key, val] of params.entries()) {
+          if (key.startsWith("entry.")) {
+            entries.push({ key, val: decodeURIComponent(val).trim() });
+          }
+        }
+
+        if (entries.length === 0) {
+          return {
+            error: "No 'entry.XXXXX' fields found in this link! Make sure to click ⋮ > 'Get pre-filled link', fill sample answers into questions, and copy that link."
+          };
+        }
+
+        const config = {
+          formUrl: formUrl,
+          entryPromotion: "",
+          entryClassType: "",
+          entryGroup: "",
+          entryStatus: "",
+          entryStudentName: "",
+          entryDate: "",
+          entryNotes: ""
+        };
+
+        const pool = [...entries];
+
+        function matchAndTake(predicate, field) {
+          const idx = pool.findIndex(predicate);
+          if (idx !== -1) {
+            config[field] = pool[idx].key;
+            pool.splice(idx, 1);
+          }
+        }
+
+        // Match Promotion
+        matchAndTake(e => /^gsea/i.test(e.val) || ['24b','25a','25b','26a'].some(p => e.val.toLowerCase().includes(p)), 'entryPromotion');
+
+        // Match Class Type
+        matchAndTake(e => ['aas', 'ag'].includes(e.val.toLowerCase()), 'entryClassType');
+
+        // Match Group
+        matchAndTake(e => ['a', 'b', 'c', 'd'].includes(e.val.toLowerCase()), 'entryGroup');
+
+        // Match Status
+        matchAndTake(e => ['absent', 'late'].includes(e.val.toLowerCase()), 'entryStatus');
+
+        // Match Date
+        matchAndTake(e => /^\d{4}-\d{2}-\d{2}$/.test(e.val) || /date/i.test(e.val), 'entryDate');
+
+        // Match Student Name
+        matchAndTake(e => /student|alex|john|jane|morgan|name/i.test(e.val), 'entryStudentName');
+
+        // Match Notes
+        matchAndTake(e => /note|doctor|sick|reason/i.test(e.val), 'entryNotes');
+
+        // Sequential fallback for remaining unmatched fields
+        const allFields = ['entryPromotion', 'entryClassType', 'entryGroup', 'entryStatus', 'entryStudentName', 'entryDate', 'entryNotes'];
+        for (const f of allFields) {
+          if (!config[f] && pool.length > 0) {
+            config[f] = pool.shift().key;
+          }
+        }
+
+        return { config: config, entryCount: entries.length };
+      } catch (err) {
+        return { error: "Could not parse URL. Please verify the link format." };
+      }
+    }
+
+    // Modal UI Helper to show current config
+    function updateFormConfigUI() {
+      const badge = document.getElementById("formConfigBadge");
+      const urlInput = document.getElementById("cfgFormUrl");
+      const promoInput = document.getElementById("cfgEntryPromotion");
+      const classInput = document.getElementById("cfgEntryClassType");
+      const groupInput = document.getElementById("cfgEntryGroup");
+      const statusInput = document.getElementById("cfgEntryStatus");
+      const nameInput = document.getElementById("cfgEntryStudentName");
+      const dateInput = document.getElementById("cfgEntryDate");
+      const notesInput = document.getElementById("cfgEntryNotes");
+
+      if (gformConfig && gformConfig.formUrl) {
+        badge.textContent = "✓ Connected (Streaming to Sheet)";
+        badge.className = "text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-[#e6efe1] text-[#34442b]";
+        urlInput.value = gformConfig.formUrl || "";
+        promoInput.value = gformConfig.entryPromotion || "";
+        classInput.value = gformConfig.entryClassType || "";
+        groupInput.value = gformConfig.entryGroup || "";
+        statusInput.value = gformConfig.entryStatus || "";
+        nameInput.value = gformConfig.entryStudentName || "";
+        dateInput.value = gformConfig.entryDate || "";
+        notesInput.value = gformConfig.entryNotes || "";
+      } else {
+        badge.textContent = "Not Connected";
+        badge.className = "text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-[#eaf0e6] text-[#55644d]";
+        urlInput.value = "";
+        promoInput.value = "";
+        classInput.value = "";
+        groupInput.value = "";
+        statusInput.value = "";
+        nameInput.value = "";
+        dateInput.value = "";
+        notesInput.value = "";
       }
     }
 
@@ -725,45 +1032,123 @@
       document.body.removeChild(link);
     });
 
-    // Google Sheets Auto-Sync Webhook
-    async function syncRecordToGoogleSheets(rec) {
-      const webhook = localStorage.getItem(WEBHOOK_KEY);
-      if (!webhook || !webhook.startsWith("http")) return;
+    // =========================================================================
+    // MODAL EVENT LISTENERS & INITIALIZATION
+    // =========================================================================
+    const formsModal = document.getElementById("formsModal");
+    document.getElementById("btnOpenFormsModal").addEventListener("click", () => {
+      updateFormConfigUI();
+      formsModal.classList.remove("hidden");
+    });
+    document.getElementById("btnCloseFormsModal").addEventListener("click", () => {
+      formsModal.classList.add("hidden");
+    });
+
+    // Toggle advanced fields
+    document.getElementById("btnToggleAdvanced").addEventListener("click", () => {
+      const adv = document.getElementById("advancedFieldsSection");
+      const btn = document.getElementById("btnToggleAdvanced");
+      adv.classList.toggle("hidden");
+      btn.textContent = adv.classList.contains("hidden") ? "View Fields ▼" : "Hide Fields ▲";
+    });
+
+    // Auto-Parse Prefill button
+    document.getElementById("btnAutoParsePrefill").addEventListener("click", () => {
+      const rawUrl = document.getElementById("inputPrefillUrl").value.trim();
+      const statusMsg = document.getElementById("parseStatusMsg");
+      statusMsg.className = "text-[11px] font-bold p-2.5 rounded-lg";
+
+      if (!rawUrl) {
+        statusMsg.classList.remove("hidden");
+        statusMsg.classList.add("bg-[#fef4f4]", "text-[#8c2d2d]", "border", "border-[#f9d5d5]");
+        statusMsg.textContent = "Please paste your Google Form pre-filled link first.";
+        return;
+      }
+
+      const parsed = parseGoogleFormPrefillUrl(rawUrl);
+      if (parsed.error) {
+        statusMsg.classList.remove("hidden");
+        statusMsg.classList.add("bg-[#fef4f4]", "text-[#8c2d2d]", "border", "border-[#f9d5d5]");
+        statusMsg.textContent = parsed.error;
+        return;
+      }
+
+      // Save configuration
+      saveGformConfig(parsed.config);
+
+      statusMsg.classList.remove("hidden");
+      statusMsg.classList.add("bg-[#eef4ec]", "text-[#34472d]", "border", "border-[#d6e3d2]");
+      statusMsg.innerHTML = `✓ Connected successfully! Detected ${parsed.entryCount} form fields. You can now send test records or log attendance.`;
+      document.getElementById("inputPrefillUrl").value = "";
+    });
+
+    // Save manual config
+    document.getElementById("btnSaveManualConfig").addEventListener("click", () => {
+      const cfg = {
+        formUrl: document.getElementById("cfgFormUrl").value.trim(),
+        entryPromotion: document.getElementById("cfgEntryPromotion").value.trim(),
+        entryClassType: document.getElementById("cfgEntryClassType").value.trim(),
+        entryGroup: document.getElementById("cfgEntryGroup").value.trim(),
+        entryStatus: document.getElementById("cfgEntryStatus").value.trim(),
+        entryStudentName: document.getElementById("cfgEntryStudentName").value.trim(),
+        entryDate: document.getElementById("cfgEntryDate").value.trim(),
+        entryNotes: document.getElementById("cfgEntryNotes").value.trim()
+      };
+      if (!cfg.formUrl) {
+        alert("Please enter a Form Response URL.");
+        return;
+      }
+      saveGformConfig(cfg);
+      alert("Manual Google Form fields saved!");
+    });
+
+    // Test Submission button
+    document.getElementById("btnTestFormSubmission").addEventListener("click", async () => {
+      if (!gformConfig || !gformConfig.formUrl) {
+        alert("Please connect your Google Form first by pasting the pre-filled link above.");
+        return;
+      }
+
+      const testRecord = {
+        id: "TEST-" + Date.now(),
+        timestamp: new Date().toISOString(),
+        date: todayStr,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        promotion: "GSEA24B",
+        classType: "AAS",
+        group: "A",
+        status: "Absent",
+        studentName: "Test Student (Verification)",
+        notes: "Automated test connection"
+      };
+
+      const btn = document.getElementById("btnTestFormSubmission");
+      const origText = btn.innerHTML;
+      btn.innerHTML = `<span>⏳ Sending test row...</span>`;
+      btn.disabled = true;
 
       try {
-        await fetch(webhook, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(rec)
-        });
+        await submitToGoogleForm(testRecord);
+        alert("✓ Test row sent to Google Form!\n\nOpen your linked Google Sheet now — you should see 'Test Student (Verification)' in the latest row!");
       } catch (err) {
-        console.warn("Could not sync to Google Sheets:", err);
+        alert("Error sending test row: " + err.message);
+      } finally {
+        btn.innerHTML = origText;
+        btn.disabled = false;
       }
-    }
-
-    // Modal Handling
-    const sheetsModal = document.getElementById("sheetsModal");
-    document.getElementById("btnOpenSheetsModal").addEventListener("click", () => {
-      document.getElementById("inputSheetsWebhook").value = localStorage.getItem(WEBHOOK_KEY) || "";
-      sheetsModal.classList.remove("hidden");
-    });
-    document.getElementById("btnCloseSheetsModal").addEventListener("click", () => {
-      sheetsModal.classList.add("hidden");
     });
 
-    document.getElementById("btnSaveSheetsWebhook").addEventListener("click", () => {
-      const val = document.getElementById("inputSheetsWebhook").value.trim();
-      localStorage.setItem(WEBHOOK_KEY, val);
-      sheetsWebhookUrl = val;
-      updateStats();
-      alert("Google Sheets Web App URL saved!");
-      sheetsModal.classList.add("hidden");
+    // Disconnect form
+    document.getElementById("btnDisconnectForm").addEventListener("click", () => {
+      if (!confirm("Disconnect Google Form integration? (App will operate in offline/local-only mode)")) return;
+      disconnectGform();
+      alert("Google Form disconnected.");
     });
 
     // Initialize UI
     updateStats();
     renderRecordsTable();
+    updateFormConfigUI();
   </script>
 </body>
 </html>
