@@ -3,54 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GSEA Attendance Register Portal - 20 Cohort Registers</title>
+  <title>GSEA Attendance - Absence & Late Reporting</title>
   
+  <!-- Tailwind CSS Compiled via CLI -->
   <link rel="stylesheet" href="output.css">
 
   <style>
-    .glyph-btn {
-      width: 2rem;
-      height: 2rem;
-      border-radius: 0.375rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    /* Custom styling for brand theme and smooth transitions */
+    .btn-pill {
       transition: all 0.15s ease-in-out;
       cursor: pointer;
-      border: 1px solid transparent;
       user-select: none;
-      font-size: 0.75rem;
-      position: relative;
     }
-    .mark-none { background-color: #f8fafc; color: #94a3b8; border-color: #e2e8f0; }
-    .mark-none:hover { background-color: #f1f5f9; color: #64748b; border-color: #cbd5e1; }
-    .mark-P { background-color: #ecfdf5; color: #059669; border-color: #a7f3d0; box-shadow: 0 1px 2px rgba(16, 185, 129, 0.1); }
-    .mark-P:hover { background-color: #d1fae5; color: #047857; }
-    .mark-L { background-color: #fffbeb; color: #d97706; border-color: #fde68a; box-shadow: 0 1px 2px rgba(217, 119, 6, 0.1); }
-    .mark-L:hover { background-color: #fef3c7; color: #b45309; }
-    .mark-A { background-color: #fff1f2; color: #e11d48; border-color: #fecdd3; box-shadow: 0 1px 2px rgba(225, 29, 72, 0.1); }
-    .mark-A:hover { background-color: #ffe4e6; color: #be123c; }
-    .mark-E { background-color: #f0f9ff; color: #0284c7; border-color: #bae6fd; box-shadow: 0 1px 2px rgba(2, 132, 199, 0.1); }
-    .mark-E:hover { background-color: #e0f2fe; color: #0369a1; }
-
-    .col-sticky-student {
-      position: sticky;
-      left: 0;
-      z-index: 10;
-      background-color: #ffffff;
-      box-shadow: 2px 0 5px -2px rgba(0, 0, 0, 0.08);
+    .btn-pill:active {
+      transform: scale(0.97);
     }
-    th.col-sticky-student {
-      z-index: 20;
-      background-color: #f8fafc;
-    }
+    /* Print optimizations */
     @media print {
       body { background: white !important; color: black !important; }
       .no-print { display: none !important; }
-      .main-wrapper { width: 100% !important; max-width: none !important; padding: 0 !important; }
-      .table-scroll-container { overflow: visible !important; }
-      .col-sticky-student { position: static !important; box-shadow: none !important; }
-      .glyph-btn { border: 1px solid #cbd5e1 !important; }
+      .print-full { width: 100% !important; max-width: none !important; }
     }
   </style>
 </head>
@@ -58,252 +30,304 @@
 
   <!-- TOP HEADER -->
   <header class="bg-brand-terracotta text-white shadow-md border-b border-brand-terracottaDark no-print sticky top-0 z-30">
-    <div class="max-w-[1700px] mx-auto px-3 sm:px-6 py-2.5 sm:py-3.5 flex flex-wrap items-center justify-between gap-3">
-      <!-- Title -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand & Title -->
       <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
+        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 shadow-inner">
           <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
           </svg>
         </div>
         <div>
-          <span class="block text-[10px] sm:text-xs font-black tracking-widest text-amber-200 uppercase">
+          <span class="block text-[10px] font-black tracking-widest text-amber-200 uppercase">
             GSEA ATTENDANCE 2026 - 7
           </span>
-          <h1 class="text-sm sm:text-lg font-bold text-white leading-tight">
-            Multi-Cohort Attendance Portal (20 Registers)
+          <h1 class="text-base sm:text-lg font-bold text-white leading-tight">
+            Absence &amp; Late Incident Logger
           </h1>
         </div>
       </div>
 
-      <!-- Header Controls -->
-      <div class="flex items-center flex-wrap gap-2">
-        <!-- Quick Selector Dropdown -->
-        <div class="flex items-center bg-black/20 rounded-lg px-2.5 py-1 border border-white/20">
-          <label for="masterGroupSelector" class="text-[11px] font-bold text-amber-200 mr-2 shrink-0">Selector:</label>
-          <select id="masterGroupSelector" class="bg-transparent text-white font-bold text-xs focus:outline-none cursor-pointer">
-            <option value="sem1_aas_a">Semester 1 AAS Group A</option>
-                  <option value="sem1_aas_b">Semester 1 AAS Group B</option>
-                  <option value="sem2_aas_a">Semester 2 AAS Group A</option>
-                  <option value="sem2_aas_b">Semester 2 AAS Group B</option>
-                  <option value="sem2_aas_c">Semester 2 AAS Group C</option>
-                  <option value="sem3_aas_a">Semester 3 AAS Group A</option>
-                  <option value="sem3_aas_b">Semester 3 AAS Group B</option>
-                  <option value="sem3_aas_c">Semester 3 AAS Group C</option>
-                  <option value="sem4_aas_a">Semester 4 AAS Group A</option>
-                  <option value="sem4_aas_b">Semester 4 AAS Group B</option>
-                  <option value="sem4_aas_c">Semester 4 AAS Group C</option>
-                  <option value="sem4_aas_d">Semester 4 AAS Group D</option>
-                  <option value="sem1_ag_a">Semester 1 AG Group A</option>
-                  <option value="sem1_ag_b">Semester 1 AG Group B</option>
-                  <option value="sem2_ag_a">Semester 2 AG Group A</option>
-                  <option value="sem2_ag_b">Semester 2 AG Group B</option>
-                  <option value="sem4_ag_a">Semester 4 AG Group A</option>
-                  <option value="sem4_ag_b">Semester 4 AG Group B</option>
-                  <option value="sem4_ag_c">Semester 4 AG Group C</option>
-                  <option value="sem4_ag_d">Semester 4 AG Group D</option>
-          </select>
-          <button id="btnOpenSelectedPage" type="button" class="ml-2 bg-white/20 hover:bg-white/30 text-white text-[10px] font-bold px-2 py-0.5 rounded cursor-pointer transition-colors" title="Open this group's standalone page">
-            Open Page ↗
-          </button>
-        </div>
-
-        <!-- Google Sheets Modal Button -->
-        <button id="btnOpenSheetsModal" type="button" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-xs flex items-center gap-1.5 transition-all cursor-pointer">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+      <!-- Header Action Controls -->
+      <div class="flex items-center gap-2">
+        <button id="btnOpenSheetsModal" type="button" class="bg-white/10 hover:bg-white/20 active:bg-white/30 text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-1.5 transition-all cursor-pointer">
+          <svg class="w-3.5 h-3.5 text-emerald-300" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H6v-2h3v2zm0-4H6v-2h3v2zm0-4H6V7h3v2zm9 8h-7v-2h7v2zm0-4h-7v-2h7v2zm0-4h-7V7h7v2z"/>
           </svg>
-          <span>Google Sheets</span>
+          <span id="headerSheetsStatus">Google Sheets</span>
         </button>
 
-        <div class="text-[11px] bg-black/20 text-white border border-white/20 px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5 shrink-0">
+        <div id="localCacheStatus" class="text-[11px] bg-black/20 text-white border border-white/20 px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5 shrink-0" title="All entries are saved offline-first in browser storage">
           <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-          <span>Google Sheets Mode</span>
+          <span>✓ Ready</span>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- MAIN WRAPPER -->
-  <main class="main-wrapper w-full sm:w-[98%] lg:w-[96%] max-w-[1700px] mx-auto px-1 sm:px-3 py-3 sm:py-5 flex-1 space-y-5">
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-6xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-6 flex-1 space-y-5 print-full">
 
-    <!-- COHORT DIRECTORY & SELECTOR CARDS -->
-    <section class="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 no-print">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-slate-100 pb-3">
+    <!-- SUMMARY STATS BAR -->
+    <section class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 no-print">
+      <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
         <div>
-          <h2 class="text-base sm:text-lg font-black text-slate-800 tracking-tight flex items-center gap-2">
-            <span>All 20 Cohort Registers</span>
-            <span class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-bold">AAS &amp; AG</span>
-          </h2>
-          <p class="text-xs text-slate-500">Select any register below to take attendance directly or open its dedicated standalone page.</p>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Total Today</span>
+          <div id="statTotalToday" class="text-xl sm:text-2xl font-black text-slate-800">0</div>
         </div>
-
-        <!-- Filter Tabs -->
-        <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-lg text-xs font-bold text-slate-600">
-          <button type="button" class="filter-tab-btn active px-3 py-1 rounded-md bg-white text-slate-800 shadow-xs cursor-pointer" data-filter="all">All (20)</button>
-          <button type="button" class="filter-tab-btn px-3 py-1 rounded-md text-slate-600 hover:text-slate-900 cursor-pointer" data-filter="AAS">AAS (12)</button>
-          <button type="button" class="filter-tab-btn px-3 py-1 rounded-md text-slate-600 hover:text-slate-900 cursor-pointer" data-filter="AG">AG (8)</button>
-        </div>
+        <div class="w-9 h-9 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-sm">📋</div>
       </div>
 
-      <!-- Cohort Grid -->
-      <div id="cohortGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
-        <!-- Rendered by JS -->
+      <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+        <div>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Late Today</span>
+          <div id="statLateToday" class="text-xl sm:text-2xl font-black text-amber-600">0</div>
+        </div>
+        <div class="w-9 h-9 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-base">◷</div>
+      </div>
+
+      <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+        <div>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Absent Today</span>
+          <div id="statAbsentToday" class="text-xl sm:text-2xl font-black text-rose-600">0</div>
+        </div>
+        <div class="w-9 h-9 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-base">✕</div>
+      </div>
+
+      <div class="bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+        <div>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500">Google Sheets</span>
+          <div id="statSheetsStatus" class="text-xs sm:text-sm font-bold text-slate-600 truncate max-w-[130px]">Local Only</div>
+        </div>
+        <div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-sm">📊</div>
       </div>
     </section>
 
-    <!-- LIVE ATTENDANCE REGISTER (ACTIVE GROUP) -->
-    <section class="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-slate-300 flex flex-col overflow-hidden">
-      <!-- Active Header Banner -->
-      <div class="bg-slate-50 px-4 sm:px-6 py-3.5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <!-- ENTRY FORM CARD -->
+    <section class="bg-white rounded-2xl shadow-md border border-slate-200 p-4 sm:p-6 no-print">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
         <div>
-          <div class="flex items-center gap-2 mb-1">
-            <span id="activeProgramBadge" class="bg-brand-terracotta text-white font-black text-[10px] px-2 py-0.5 rounded uppercase tracking-wider">AAS</span>
-            <span id="activeSemesterTitle" class="font-bold text-slate-600 text-xs">Semester 1 AAS</span>
-          </div>
-          <h3 id="activeRegisterHeading" class="text-lg sm:text-xl font-black text-slate-800 leading-tight">
-            Semester 1 AAS Group A Register
-          </h3>
-        </div>
-
-        <!-- Metric Badges -->
-        <div class="flex items-center gap-2 flex-wrap">
-          <div class="bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-center shadow-2xs">
-            <span class="text-[9px] uppercase font-bold text-slate-400 block">Rate</span>
-            <span id="statAvgRate" class="font-black text-emerald-600 text-sm sm:text-base">0%</span>
-          </div>
-          <div class="bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-center shadow-2xs">
-            <span class="text-[9px] uppercase font-bold text-slate-400 block">Present</span>
-            <span id="statPresentCount" class="font-black text-emerald-600 text-sm sm:text-base">0</span>
-          </div>
-          <div class="bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-center shadow-2xs">
-            <span class="text-[9px] uppercase font-bold text-slate-400 block">Late</span>
-            <span id="statLateCount" class="font-black text-amber-600 text-sm sm:text-base">0</span>
-          </div>
-          <div class="bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-center shadow-2xs">
-            <span class="text-[9px] uppercase font-bold text-slate-400 block">Absent</span>
-            <span id="statAbsentCount" class="font-black text-rose-600 text-sm sm:text-base">0</span>
-          </div>
-          <div class="bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-center shadow-2xs">
-            <span class="text-[9px] uppercase font-bold text-slate-400 block">Students</span>
-            <span id="statStudentCount" class="font-black text-slate-700 text-sm sm:text-base">0</span>
-          </div>
-          <a id="btnLinkToStandalone" href="sem1-aas-group-a.html" class="bg-brand-terracotta hover:bg-brand-terracottaDark text-white font-bold text-xs px-3 py-2 rounded-lg shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer ml-1">
-            <span>Open Standalone Page</span>
-            <span>↗</span>
-          </a>
+          <h2 class="text-base sm:text-lg font-black text-slate-800 tracking-tight flex items-center gap-2">
+            <span>Log Absence or Late Incident</span>
+            <span class="text-xs bg-brand-terracotta/10 text-brand-terracotta px-2 py-0.5 rounded-full font-bold">Fast Entry</span>
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">Select the cohort selectors below and enter the student name.</p>
         </div>
       </div>
 
-      <!-- Register Toolbar -->
-      <div class="bg-white border-b border-slate-200 px-3 sm:px-6 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs no-print">
-        <div class="flex items-center gap-2.5 w-full sm:w-auto">
-          <div class="relative w-full sm:w-64">
-            <input id="studentSearchInput" class="w-full border border-slate-300 rounded-lg pl-8 pr-3 py-1.5 text-xs bg-slate-50 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-terracotta focus:bg-white transition-all" type="search" placeholder="Search name or ID (Esc)...">
-            <svg class="w-3.5 h-3.5 absolute left-2.5 top-2 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      <form id="attendanceForm" class="space-y-4 sm:space-y-5">
+
+        <!-- 3 SELECTORS GRID -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+          <!-- 1. PROMOTION SELECTOR -->
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">
+              1. Promotion
+            </label>
+            <div id="promotionOptions" class="grid grid-cols-2 gap-1.5">
+              <button type="button" data-value="GSEA24B" class="btn-pill promotion-btn active py-2.5 px-3 rounded-lg text-xs font-bold text-center border border-brand-terracotta bg-brand-terracotta text-white shadow-xs">
+                GSEA24B
+              </button>
+              <button type="button" data-value="GSEA25A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+                GSEA25A
+              </button>
+              <button type="button" data-value="GSEA25B" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+                GSEA25B
+              </button>
+              <button type="button" data-value="GSEA26A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+                GSEA26A
+              </button>
+            </div>
+            <input type="hidden" id="inputPromotion" value="GSEA24B">
           </div>
-          <span class="text-slate-400 text-[11px] hidden md:inline">Click cell to toggle status • Right-click for note</span>
+
+          <!-- 2. CLASS TYPE SELECTOR -->
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">
+              2. Class Type
+            </label>
+            <div id="classTypeOptions" class="grid grid-cols-2 gap-1.5">
+              <button type="button" data-value="AAS" class="btn-pill classtype-btn active py-2.5 px-3 rounded-lg text-xs font-bold text-center border border-brand-teal bg-brand-teal text-white shadow-xs">
+                AAS
+              </button>
+              <button type="button" data-value="AG" class="btn-pill classtype-btn py-2.5 px-3 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+                AG
+              </button>
+            </div>
+            <input type="hidden" id="inputClassType" value="AAS">
+            <p class="text-[11px] text-slate-400 mt-2">
+              Applied Animal Sciences (AAS) or Agriculture (AG)
+            </p>
+          </div>
+
+          <!-- 3. GROUP SELECTOR -->
+          <div>
+            <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">
+              3. Group
+            </label>
+            <div id="groupOptions" class="grid grid-cols-4 gap-1.5">
+              <button type="button" data-value="A" class="btn-pill group-btn active py-2.5 px-2 rounded-lg text-xs font-bold text-center border border-brand-terracotta bg-brand-terracotta text-white shadow-xs">
+                A
+              </button>
+              <button type="button" data-value="B" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+                B
+              </button>
+              <button type="button" data-value="C" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+                C
+              </button>
+              <button type="button" data-value="D" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-bold text-center border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100">
+                D
+              </button>
+            </div>
+            <input type="hidden" id="inputGroup" value="A">
+          </div>
         </div>
 
-        <!-- Controls -->
-        <div class="flex items-center flex-wrap gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
-          <label class="text-slate-600 font-semibold text-[11px] shrink-0" for="bulkWeekSelect">Bulk:</label>
-          <select id="bulkWeekSelect" class="border border-slate-300 rounded-lg px-2 py-1 text-xs bg-slate-50 font-medium shrink-0 cursor-pointer"></select>
-          
-          <button id="btnBulkMark" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-xs transition-all shrink-0 cursor-pointer" type="button">
-            Mark All Present
-          </button>
-          
-          <button id="btnAddWeek" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-xs transition-all shrink-0 cursor-pointer" type="button">
-            + Week
+        <!-- STATUS SELECTOR (LATE vs ABSENT) -->
+        <div>
+          <label class="block text-xs font-black uppercase tracking-wider text-slate-600 mb-2">
+            4. Incident Status
+          </label>
+          <div id="statusOptions" class="grid grid-cols-2 gap-3 max-w-md">
+            <!-- Absent Option (Default / Primary) -->
+            <button type="button" data-value="Absent" class="btn-pill status-btn active py-3 px-4 rounded-xl text-sm font-black flex items-center justify-center gap-2 border-2 border-rose-600 bg-rose-600 text-white shadow-sm">
+              <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">✕</span>
+              <span>Absent</span>
+            </button>
+
+            <!-- Late Option -->
+            <button type="button" data-value="Late" class="btn-pill status-btn py-3 px-4 rounded-xl text-sm font-black flex items-center justify-center gap-2 border-2 border-slate-200 bg-slate-50 text-slate-700 hover:border-amber-400">
+              <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs">◷</span>
+              <span>Late</span>
+            </button>
+          </div>
+          <input type="hidden" id="inputStatus" value="Absent">
+        </div>
+
+        <!-- STUDENT NAME & OPTIONAL DETAILS -->
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2">
+          <!-- Student Name Input (Primary) -->
+          <div class="sm:col-span-6">
+            <label for="inputStudentName" class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
+              5. Student Name <span class="text-rose-500">*</span>
+            </label>
+            <div class="relative">
+              <input id="inputStudentName" type="text" placeholder="Type student full name (e.g. Alex Morgan)..." class="w-full border-2 border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-semibold focus:border-brand-terracotta focus:ring-2 focus:ring-brand-terracotta/20 focus:outline-none transition-all placeholder-slate-400" required autofocus autocomplete="off">
+            </div>
+          </div>
+
+          <!-- Date -->
+          <div class="sm:col-span-3">
+            <label for="inputDate" class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
+              Date
+            </label>
+            <input id="inputDate" type="date" class="w-full border-2 border-slate-300 rounded-xl px-3 py-2.5 text-xs font-bold focus:border-brand-terracotta focus:outline-none">
+          </div>
+
+          <!-- Optional Notes / Reason -->
+          <div class="sm:col-span-3">
+            <label for="inputNotes" class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-1">
+              Reason / Notes <span class="text-slate-400 font-normal lowercase">(optional)</span>
+            </label>
+            <input id="inputNotes" type="text" placeholder="e.g. Doctor, 15m late..." class="w-full border-2 border-slate-300 rounded-xl px-3 py-2.5 text-xs focus:border-brand-terracotta focus:outline-none">
+          </div>
+        </div>
+
+        <!-- SUBMIT BUTTON & SUCCESS BANNER -->
+        <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <button type="submit" id="btnSubmitForm" class="w-full sm:w-auto bg-brand-terracotta hover:bg-brand-terracottaDark active:scale-98 text-white font-black text-sm px-7 py-3 rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2">
+              <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span>Submit Record</span>
+            </button>
+
+            <button type="button" id="btnClearInputs" class="text-slate-400 hover:text-slate-600 text-xs font-bold px-3 py-2 rounded-lg cursor-pointer">
+              Clear Name
+            </button>
+          </div>
+
+          <!-- Status Toast / Feedback -->
+          <div id="submitFeedback" class="hidden text-xs font-bold px-3 py-2 rounded-xl border flex items-center gap-2 transition-all">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- RECENT SUBMISSIONS / DATABASE FEED -->
+    <section class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+      <!-- Toolbar -->
+      <div class="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div>
+          <h3 class="text-sm sm:text-base font-black text-slate-800 tracking-tight flex items-center gap-2">
+            <span>Attendance Incidents Log</span>
+            <span id="logCountBadge" class="bg-slate-200 text-slate-700 text-xs px-2 py-0.5 rounded-full font-bold">0 records</span>
+          </h3>
+          <p class="text-xs text-slate-500">Live feed of all reported late and absent students.</p>
+        </div>
+
+        <!-- Filter & Export Controls -->
+        <div class="flex items-center flex-wrap gap-2">
+          <!-- Search input -->
+          <input id="searchLogInput" type="search" placeholder="Search student..." class="border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-brand-terracotta w-36 sm:w-44">
+
+          <!-- Status Filter -->
+          <select id="filterStatusSelect" class="border border-slate-300 rounded-lg px-2 py-1.5 text-xs bg-white font-semibold cursor-pointer">
+            <option value="all">All Statuses</option>
+            <option value="Absent">Absent Only</option>
+            <option value="Late">Late Only</option>
+          </select>
+
+          <!-- Copy for Sheets Button -->
+          <button id="btnCopyTableForSheets" type="button" class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-xs transition-all flex items-center gap-1.5 cursor-pointer" title="Copy all records to clipboard for pasting into Google Sheets">
+            <span>📋 Copy for Sheets</span>
           </button>
 
-          <button id="btnOpenStudentModal" class="bg-brand-terracotta hover:bg-brand-terracottaDark text-white font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-xs transition-all shrink-0 cursor-pointer" type="button">
-            + Student
-          </button>
-
-          <button id="btnCopyForSheets" class="bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 border border-slate-300 font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-2xs transition-all shrink-0 cursor-pointer" type="button" title="Copy table to clipboard for Google Sheets">
-            📋 Copy for Sheets
-          </button>
-
-          <button id="btnExportCsv" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-2xs transition-all shrink-0 cursor-pointer" type="button">
+          <!-- Export CSV -->
+          <button id="btnExportCsv" type="button" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-2xs transition-all cursor-pointer" title="Download CSV">
             📥 CSV
           </button>
         </div>
       </div>
 
-      <!-- Register Grid Table -->
-      <div class="table-scroll-container overflow-x-auto overflow-y-visible border-b border-slate-200">
-        <table class="w-full text-left border-collapse min-w-[700px]">
+      <!-- Table View -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
           <thead>
-            <tr id="tableHeaderRow" class="bg-slate-50 border-b border-slate-200 text-slate-600 select-none"></tr>
+            <tr class="bg-slate-100/75 border-b border-slate-200 text-slate-600 uppercase font-black tracking-wider text-[11px] select-none">
+              <th class="py-2.5 px-3">Date &amp; Time</th>
+              <th class="py-2.5 px-3">Student Name</th>
+              <th class="py-2.5 px-2">Status</th>
+              <th class="py-2.5 px-2">Promotion</th>
+              <th class="py-2.5 px-2">Class</th>
+              <th class="py-2.5 px-2">Group</th>
+              <th class="py-2.5 px-3">Reason / Notes</th>
+              <th class="py-2.5 px-2 text-center w-12 no-print"></th>
+            </tr>
           </thead>
-          <tbody id="attendanceGrid" class="divide-y divide-slate-100 text-slate-700 font-sans"></tbody>
+          <tbody id="recordsTableBody" class="divide-y divide-slate-100 text-slate-700">
+            <!-- Dynamically populated -->
+          </tbody>
         </table>
       </div>
 
-      <!-- Footer -->
-      <div class="bg-slate-50 p-3 sm:p-4 border-t border-slate-200 text-xs flex flex-wrap items-center justify-between gap-3 text-slate-500">
-        <div class="flex items-center flex-wrap gap-4 font-medium">
-          <span class="font-bold text-slate-700">Status Cycle:</span>
-          <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-emerald-100 text-emerald-800 text-[10px] flex items-center justify-center font-bold">✓</span> Present (1.0)</span>
-          <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-amber-100 text-amber-800 text-[10px] flex items-center justify-center font-bold">◷</span> Late (0.5)</span>
-          <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-rose-100 text-rose-800 text-[10px] flex items-center justify-center font-bold">✕</span> Absent (0.0)</span>
-          <span class="flex items-center gap-1"><span class="w-3.5 h-3.5 rounded bg-sky-100 text-sky-800 text-[10px] flex items-center justify-center font-bold">E</span> Excused</span>
+      <!-- Footer Info -->
+      <div class="p-3 bg-slate-50 border-t border-slate-200 text-xs flex flex-wrap items-center justify-between text-slate-500 gap-2">
+        <div class="flex items-center gap-3">
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Absent</span>
+          <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Late</span>
         </div>
-        <div class="text-[11px] text-slate-400">
-          Saved in browser storage • Google Sheets ready
-        </div>
+        <button id="btnClearAllRecords" type="button" class="text-rose-600 hover:underline text-[11px] font-bold cursor-pointer no-print">
+          Clear All Records
+        </button>
       </div>
     </section>
+
   </main>
 
-  <!-- MODAL: ADD STUDENT -->
-  <div id="studentModal" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden no-print">
-    <div class="bg-white rounded-xl max-w-sm w-full p-5 shadow-2xl border border-slate-200">
-      <div class="flex justify-between items-center mb-4 border-b pb-2">
-        <h3 class="font-bold text-slate-800 text-base">Enroll Student</h3>
-        <button id="btnCloseModal" type="button" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">&times;</button>
-      </div>
-      <form id="addStudentForm" class="space-y-3">
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1" for="newStudentId">Student ID</label>
-          <input id="newStudentId" type="text" placeholder="e.g. STD-2041" class="w-full border border-slate-300 rounded-lg p-2 text-xs font-mono uppercase focus:ring-2 focus:ring-brand-terracotta focus:outline-none" required>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1" for="newStudentName">Full Name</label>
-          <input id="newStudentName" type="text" placeholder="e.g. Alex Henderson" class="w-full border border-slate-300 rounded-lg p-2 text-xs focus:ring-2 focus:ring-brand-terracotta focus:outline-none" required>
-        </div>
-        <div class="flex justify-end gap-2 pt-2">
-          <button id="btnCancelStudent" type="button" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs text-slate-600 hover:bg-slate-50 cursor-pointer">Cancel</button>
-          <button type="submit" class="px-3 py-1.5 rounded-lg bg-brand-terracotta hover:bg-brand-terracottaDark text-white font-bold text-xs shadow-xs cursor-pointer">Enroll</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: NOTE EDITOR -->
-  <div id="noteModal" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden no-print">
-    <div class="bg-white rounded-xl max-w-md w-full p-5 shadow-2xl border border-slate-200">
-      <div class="flex justify-between items-center mb-2">
-        <h3 class="font-bold text-slate-800 text-sm">Attendance Note</h3>
-        <button id="btnCloseNoteModal" type="button" class="text-slate-400 hover:text-slate-600 text-lg cursor-pointer">&times;</button>
-      </div>
-      <p id="noteModalStudentInfo" class="text-xs text-slate-500 mb-3 font-medium"></p>
-      <form id="noteForm">
-        <textarea id="noteTextInput" rows="3" placeholder="Enter attendance note..." class="w-full border border-slate-300 rounded-lg p-2.5 text-xs focus:ring-2 focus:ring-brand-terracotta focus:outline-none mb-3"></textarea>
-        <div class="flex justify-between items-center">
-          <button id="btnDeleteNote" type="button" class="text-rose-600 hover:underline text-xs font-bold cursor-pointer">Clear Note</button>
-          <div class="flex gap-2">
-            <button id="btnCancelNote" type="button" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs text-slate-600 hover:bg-slate-50 cursor-pointer">Cancel</button>
-            <button type="submit" class="px-3 py-1.5 rounded-lg bg-brand-terracotta hover:bg-brand-terracottaDark text-white font-bold text-xs shadow-xs cursor-pointer">Save Note</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: GOOGLE SHEETS -->
+  <!-- GOOGLE SHEETS SETUP MODAL -->
   <div id="sheetsModal" class="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 z-50 hidden no-print">
     <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl border border-slate-200">
       <div class="flex justify-between items-center mb-3 border-b pb-2">
@@ -317,463 +341,357 @@
       </div>
 
       <div class="space-y-4 text-xs text-slate-600">
-        <!-- Option 1: Instant Copy -->
+        <!-- Method 1: Instant Copy -->
         <div class="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200">
-          <h4 class="font-bold text-emerald-900 text-xs mb-1">Option 1: 1-Click Copy &amp; Paste (No Setup)</h4>
-          <p class="text-[11px] text-emerald-800 mb-2">Click below to copy this register to your clipboard, then open your Google Sheet, click cell A1, and press <kbd class="bg-emerald-200 px-1 rounded font-mono">Cmd+V</kbd> or <kbd class="bg-emerald-200 px-1 rounded font-mono">Ctrl+V</kbd>.</p>
+          <h4 class="font-black text-emerald-900 text-xs mb-1">Option 1: Instant Copy &amp; Paste (Zero Setup)</h4>
+          <p class="text-[11px] text-emerald-800 mb-2">Click the button below to copy all logged records. Open any Google Sheet, select cell A1, and press <kbd class="bg-emerald-200 px-1 rounded font-mono">Cmd+V</kbd> (or <kbd class="bg-emerald-200 px-1 rounded font-mono">Ctrl+V</kbd>).</p>
           <button id="btnModalCopySheets" type="button" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-xs shadow-xs transition-all cursor-pointer">
-            📋 Copy Active Register to Clipboard
+            📋 Copy All Records to Clipboard
           </button>
         </div>
 
-        <!-- Option 2: Apps Script Web App -->
+        <!-- Method 2: Google Apps Script Web App -->
         <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-          <h4 class="font-bold text-slate-800 text-xs">Option 2: Direct Google Sheet Web App Sync (Optional)</h4>
+          <h4 class="font-black text-slate-800 text-xs">Option 2: Live Google Sheets Auto-Sync (Optional)</h4>
           <p class="text-[11px] text-slate-500 leading-relaxed">
-            Want changes to automatically push into Google Sheets? Add this free 10-line Apps Script in your Google Sheet (<span class="font-mono text-slate-700">Extensions > Apps Script</span>):
+            To automatically send every submission into your Google Sheet:
+            <br>1. Open your Google Sheet → click <strong>Extensions > Apps Script</strong>.
+            <br>2. Replace code with this snippet:
           </p>
           <pre class="bg-slate-900 text-slate-100 p-2.5 rounded-lg text-[10px] font-mono overflow-x-auto select-all">function doPost(e) {
   var d = JSON.parse(e.postData.contents);
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sh = ss.getSheetByName(d.group) || ss.insertSheet(d.group);
-  sh.clear();
-  sh.appendRow(d.headers);
-  d.rows.forEach(function(r) { sh.appendRow(r); });
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["Timestamp", "Date", "Promotion", "Class Type", "Group", "Status", "Student Name", "Notes"]);
+  }
+  sheet.appendRow([new Date(), d.date, d.promotion, d.classType, d.group, d.status, d.studentName, d.notes]);
   return ContentService.createTextOutput("OK");
 }</pre>
+          <p class="text-[11px] text-slate-500">
+            3. Click <strong>Deploy > New deployment > Web app</strong> (set access to <em>"Anyone"</em>).
+            <br>4. Paste your Web App URL below:
+          </p>
           <div>
-            <label class="block font-bold text-slate-700 mb-1" for="inputSheetsWebhook">Your Apps Script Web App URL:</label>
             <input id="inputSheetsWebhook" type="url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full border border-slate-300 rounded-lg p-2 text-xs font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none">
           </div>
-          <button id="btnSaveSheetsWebhook" type="button" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-1.5 rounded-lg text-xs cursor-pointer">
-            Save Web App URL &amp; Sync Now
+          <button id="btnSaveSheetsWebhook" type="button" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-2 rounded-lg text-xs cursor-pointer">
+            Save Google Sheet URL
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- JAVASCRIPT MASTER LOGIC -->
+  <!-- APPLICATION JAVASCRIPT -->
   <script>
-    const GROUPS = [{"id":"sem1_aas_a","file":"sem1-aas-group-a.html","semester":"Semester 1 AAS","semShort":"Sem 1 AAS","program":"AAS","group":"A","title":"Semester 1 AAS Group A","color":"bg-brand-terracotta","border":"border-brand-terracotta","headerColor":"bg-[#b85d42]"},{"id":"sem1_aas_b","file":"sem1-aas-group-b.html","semester":"Semester 1 AAS","semShort":"Sem 1 AAS","program":"AAS","group":"B","title":"Semester 1 AAS Group B","color":"bg-brand-terracotta","border":"border-brand-terracotta","headerColor":"bg-[#b85d42]"},{"id":"sem2_aas_a","file":"sem2-aas-group-a.html","semester":"Semester 2 AAS","semShort":"Sem 2 AAS","program":"AAS","group":"A","title":"Semester 2 AAS Group A","color":"bg-brand-teal","border":"border-brand-teal","headerColor":"bg-[#3b6284]"},{"id":"sem2_aas_b","file":"sem2-aas-group-b.html","semester":"Semester 2 AAS","semShort":"Sem 2 AAS","program":"AAS","group":"B","title":"Semester 2 AAS Group B","color":"bg-brand-teal","border":"border-brand-teal","headerColor":"bg-[#3b6284]"},{"id":"sem2_aas_c","file":"sem2-aas-group-c.html","semester":"Semester 2 AAS","semShort":"Sem 2 AAS","program":"AAS","group":"C","title":"Semester 2 AAS Group C","color":"bg-brand-teal","border":"border-brand-teal","headerColor":"bg-[#3b6284]"},{"id":"sem3_aas_a","file":"sem3-aas-group-a.html","semester":"Semester 3 AAS","semShort":"Sem 3 AAS","program":"AAS","group":"A","title":"Semester 3 AAS Group A","color":"bg-purple-700","border":"border-purple-600","headerColor":"bg-[#7e22ce]"},{"id":"sem3_aas_b","file":"sem3-aas-group-b.html","semester":"Semester 3 AAS","semShort":"Sem 3 AAS","program":"AAS","group":"B","title":"Semester 3 AAS Group B","color":"bg-purple-700","border":"border-purple-600","headerColor":"bg-[#7e22ce]"},{"id":"sem3_aas_c","file":"sem3-aas-group-c.html","semester":"Semester 3 AAS","semShort":"Sem 3 AAS","program":"AAS","group":"C","title":"Semester 3 AAS Group C","color":"bg-purple-700","border":"border-purple-600","headerColor":"bg-[#7e22ce]"},{"id":"sem4_aas_a","file":"sem4-aas-group-a.html","semester":"Semester 4 AAS","semShort":"Sem 4 AAS","program":"AAS","group":"A","title":"Semester 4 AAS Group A","color":"bg-indigo-700","border":"border-indigo-600","headerColor":"bg-[#4338ca]"},{"id":"sem4_aas_b","file":"sem4-aas-group-b.html","semester":"Semester 4 AAS","semShort":"Sem 4 AAS","program":"AAS","group":"B","title":"Semester 4 AAS Group B","color":"bg-indigo-700","border":"border-indigo-600","headerColor":"bg-[#4338ca]"},{"id":"sem4_aas_c","file":"sem4-aas-group-c.html","semester":"Semester 4 AAS","semShort":"Sem 4 AAS","program":"AAS","group":"C","title":"Semester 4 AAS Group C","color":"bg-indigo-700","border":"border-indigo-600","headerColor":"bg-[#4338ca]"},{"id":"sem4_aas_d","file":"sem4-aas-group-d.html","semester":"Semester 4 AAS","semShort":"Sem 4 AAS","program":"AAS","group":"D","title":"Semester 4 AAS Group D","color":"bg-indigo-700","border":"border-indigo-600","headerColor":"bg-[#4338ca]"},{"id":"sem1_ag_a","file":"sem1-ag-group-a.html","semester":"Semester 1 AG","semShort":"Sem 1 AG","program":"AG","group":"A","title":"Semester 1 AG Group A","color":"bg-brand-mustard","border":"border-brand-mustard","headerColor":"bg-[#c29b38]"},{"id":"sem1_ag_b","file":"sem1-ag-group-b.html","semester":"Semester 1 AG","semShort":"Sem 1 AG","program":"AG","group":"B","title":"Semester 1 AG Group B","color":"bg-brand-mustard","border":"border-brand-mustard","headerColor":"bg-[#c29b38]"},{"id":"sem2_ag_a","file":"sem2-ag-group-a.html","semester":"Semester 2 AG","semShort":"Sem 2 AG","program":"AG","group":"A","title":"Semester 2 AG Group A","color":"bg-brand-forest","border":"border-brand-forest","headerColor":"bg-[#57723c]"},{"id":"sem2_ag_b","file":"sem2-ag-group-b.html","semester":"Semester 2 AG","semShort":"Sem 2 AG","program":"AG","group":"B","title":"Semester 2 AG Group B","color":"bg-brand-forest","border":"border-brand-forest","headerColor":"bg-[#57723c]"},{"id":"sem4_ag_a","file":"sem4-ag-group-a.html","semester":"Semester 4 AG","semShort":"Sem 4 AG","program":"AG","group":"A","title":"Semester 4 AG Group A","color":"bg-teal-700","border":"border-teal-600","headerColor":"bg-[#0f766e]"},{"id":"sem4_ag_b","file":"sem4-ag-group-b.html","semester":"Semester 4 AG","semShort":"Sem 4 AG","program":"AG","group":"B","title":"Semester 4 AG Group B","color":"bg-teal-700","border":"border-teal-600","headerColor":"bg-[#0f766e]"},{"id":"sem4_ag_c","file":"sem4-ag-group-c.html","semester":"Semester 4 AG","semShort":"Sem 4 AG","program":"AG","group":"C","title":"Semester 4 AG Group C","color":"bg-teal-700","border":"border-teal-600","headerColor":"bg-[#0f766e]"},{"id":"sem4_ag_d","file":"sem4-ag-group-d.html","semester":"Semester 4 AG","semShort":"Sem 4 AG","program":"AG","group":"D","title":"Semester 4 AG Group D","color":"bg-teal-700","border":"border-teal-600","headerColor":"bg-[#0f766e]"}];
-    const SEED_STUDENTS_BY_GROUP = {"A":[{"id":"STD-1001","name":"Alex Morgan"},{"id":"STD-1002","name":"David Chen"},{"id":"STD-1003","name":"Emma Watson"},{"id":"STD-1004","name":"Lucas Garcia"},{"id":"STD-1005","name":"Sofia Rossi"},{"id":"STD-1006","name":"Liam Tremblay"}],"B":[{"id":"STD-1101","name":"Noah Al-Mansoor"},{"id":"STD-1102","name":"Camille Dubois"},{"id":"STD-1103","name":"Elena Kowalski"},{"id":"STD-1104","name":"Marcus Vance"},{"id":"STD-1105","name":"Chloe Bennett"},{"id":"STD-1106","name":"Tariq Evans"}],"C":[{"id":"STD-1201","name":"Olivia Zhang"},{"id":"STD-1202","name":"Mateo Hernandez"},{"id":"STD-1203","name":"Aisha Bello"},{"id":"STD-1204","name":"Julian Rossi"},{"id":"STD-1205","name":"Priya Sharma"},{"id":"STD-1206","name":"Ethan Brooks"}],"D":[{"id":"STD-1301","name":"Daniel Kim"},{"id":"STD-1302","name":"Zara Larsson"},{"id":"STD-1303","name":"Samuel O'Connor"},{"id":"STD-1304","name":"Mia Lindholm"},{"id":"STD-1305","name":"Felipe Santos"},{"id":"STD-1306","name":"Grace Hopper"}]};
-    const DEFAULT_WEEKS = [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41];
+    const STORAGE_KEY = "gsea_attendance_incident_log_v1";
+    const WEBHOOK_KEY = "gsea_sheets_incident_webhook_v1";
 
-    let currentGroupId = GROUPS[0].id;
-    let currentFilter = "all";
-    let searchQuery = "";
-    let activeEditingNoteKey = null;
+    // Application State
+    let records = loadRecords();
+    let sheetsWebhookUrl = localStorage.getItem(WEBHOOK_KEY) || "";
 
-    // Attendance Glyphs
-    const statusCycle = ["", "P", "L", "A", "E"];
-    const glyphMap = {
-      "": "-",
-      "P": '<svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>',
-      "L": '<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
-      "A": '<svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>',
-      "E": '<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>'
-    };
-
-    function getGroupObj(id) {
-      return GROUPS.find(g => g.id === id) || GROUPS[0];
-    }
-
-    function getStorageKey(groupId) {
-      return "gsea_attendance_" + groupId + "_v1";
-    }
-
-    function loadRegister(groupId) {
-      const key = getStorageKey(groupId);
-      const stored = localStorage.getItem(key);
+    // Load Records from LocalStorage
+    function loadRecords() {
+      const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         try { return JSON.parse(stored); } catch (e) {}
       }
-      const gObj = getGroupObj(groupId);
-      const seedList = SEED_STUDENTS_BY_GROUP[gObj.group] || SEED_STUDENTS_BY_GROUP["A"];
-      const initial = {
-        weeks: [...DEFAULT_WEEKS],
-        students: JSON.parse(JSON.stringify(seedList)),
-        attendance: {},
-        notes: {}
+      return [];
+    }
+
+    // Save Records to LocalStorage
+    function saveRecords() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      updateStats();
+      renderRecordsTable();
+    }
+
+    // Set Default Date Today
+    const todayStr = new Date().toISOString().split("T")[0];
+    document.getElementById("inputDate").value = todayStr;
+
+    // =========================================================================
+    // SELECTOR BUTTON HANDLERS (Promotion, Class Type, Group, Status)
+    // =========================================================================
+
+    // 1. Promotion Selector
+    document.querySelectorAll(".promotion-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".promotion-btn").forEach(b => {
+          b.classList.remove("active", "bg-brand-terracotta", "text-white", "border-brand-terracotta", "shadow-xs");
+          b.classList.add("bg-slate-50", "text-slate-700", "border-slate-200");
+        });
+        btn.classList.add("active", "bg-brand-terracotta", "text-white", "border-brand-terracotta", "shadow-xs");
+        btn.classList.remove("bg-slate-50", "text-slate-700", "border-slate-200");
+        document.getElementById("inputPromotion").value = btn.getAttribute("data-value");
+      });
+    });
+
+    // 2. Class Type Selector (AAS vs AG)
+    document.querySelectorAll(".classtype-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".classtype-btn").forEach(b => {
+          b.classList.remove("active", "bg-brand-teal", "bg-brand-forest", "text-white", "shadow-xs");
+          b.classList.add("bg-slate-50", "text-slate-700", "border-slate-200");
+        });
+        const val = btn.getAttribute("data-value");
+        const activeColor = val === "AAS" ? "bg-brand-teal" : "bg-brand-forest";
+        const borderColor = val === "AAS" ? "border-brand-teal" : "border-brand-forest";
+        btn.classList.add("active", activeColor, borderColor, "text-white", "shadow-xs");
+        btn.classList.remove("bg-slate-50", "text-slate-700", "border-slate-200");
+        document.getElementById("inputClassType").value = val;
+      });
+    });
+
+    // 3. Group Selector (A, B, C, D)
+    document.querySelectorAll(".group-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".group-btn").forEach(b => {
+          b.classList.remove("active", "bg-brand-terracotta", "text-white", "border-brand-terracotta", "shadow-xs");
+          b.classList.add("bg-slate-50", "text-slate-700", "border-slate-200");
+        });
+        btn.classList.add("active", "bg-brand-terracotta", "text-white", "border-brand-terracotta", "shadow-xs");
+        btn.classList.remove("bg-slate-50", "text-slate-700", "border-slate-200");
+        document.getElementById("inputGroup").value = btn.getAttribute("data-value");
+      });
+    });
+
+    // 4. Status Selector (Late vs Absent)
+    document.querySelectorAll(".status-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".status-btn").forEach(b => {
+          b.classList.remove("active", "bg-rose-600", "border-rose-600", "bg-amber-500", "border-amber-500", "text-white", "shadow-sm");
+          b.classList.add("bg-slate-50", "text-slate-700", "border-slate-200");
+          b.querySelector("span:first-child").className = "w-5 h-5 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs";
+        });
+        const val = btn.getAttribute("data-value");
+        if (val === "Absent") {
+          btn.classList.add("active", "bg-rose-600", "border-rose-600", "text-white", "shadow-sm");
+          btn.querySelector("span:first-child").className = "w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-xs";
+        } else {
+          btn.classList.add("active", "bg-amber-500", "border-amber-500", "text-white", "shadow-sm");
+          btn.querySelector("span:first-child").className = "w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-xs";
+        }
+        btn.classList.remove("bg-slate-50", "text-slate-700", "border-slate-200");
+        document.getElementById("inputStatus").value = val;
+      });
+    });
+
+    // Clear name button
+    document.getElementById("btnClearInputs").addEventListener("click", () => {
+      document.getElementById("inputStudentName").value = "";
+      document.getElementById("inputNotes").value = "";
+      document.getElementById("inputStudentName").focus();
+    });
+
+    // =========================================================================
+    // FORM SUBMIT HANDLER
+    // =========================================================================
+    document.getElementById("attendanceForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const studentName = document.getElementById("inputStudentName").value.trim();
+      if (!studentName) return;
+
+      const promotion = document.getElementById("inputPromotion").value;
+      const classType = document.getElementById("inputClassType").value;
+      const group = document.getElementById("inputGroup").value;
+      const status = document.getElementById("inputStatus").value;
+      const date = document.getElementById("inputDate").value || todayStr;
+      const notes = document.getElementById("inputNotes").value.trim();
+
+      const newRecord = {
+        id: "REC-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+        timestamp: new Date().toISOString(),
+        date: date,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        promotion: promotion,
+        classType: classType,
+        group: group,
+        status: status,
+        studentName: studentName,
+        notes: notes
       };
-      localStorage.setItem(key, JSON.stringify(initial));
-      return initial;
+
+      // Add to beginning of records list
+      records.unshift(newRecord);
+      saveRecords();
+
+      // Show Feedback Toast
+      showFeedbackToast(newRecord);
+
+      // Reset Student Name & Notes for rapid next entry
+      document.getElementById("inputStudentName").value = "";
+      document.getElementById("inputNotes").value = "";
+      document.getElementById("inputStudentName").focus();
+
+      // Push to Google Sheets if configured
+      await syncRecordToGoogleSheets(newRecord);
+    });
+
+    function showFeedbackToast(record) {
+      const toast = document.getElementById("submitFeedback");
+      const isAbsent = record.status === "Absent";
+      toast.className = `text-xs font-bold px-3.5 py-2 rounded-xl border flex items-center gap-2 ${
+        isAbsent ? 'bg-rose-50 text-rose-800 border-rose-200' : 'bg-amber-50 text-amber-800 border-amber-200'
+      }`;
+      toast.innerHTML = `
+        <span>${isAbsent ? '✕' : '◷'}</span>
+        <span>Logged: <strong>${record.studentName}</strong> (${record.status}) for ${record.promotion} ${record.classType} Grp ${record.group}</span>
+      `;
+      toast.classList.remove("hidden");
+      setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 4000);
     }
 
-    function saveActiveRegister(reg) {
-      localStorage.setItem(getStorageKey(currentGroupId), JSON.stringify(reg));
-      renderCohortCards();
-    }
+    // =========================================================================
+    // RECENT RECORDS FEED & TABLE
+    // =========================================================================
+    function renderRecordsTable() {
+      const tbody = document.getElementById("recordsTableBody");
+      const searchQuery = document.getElementById("searchLogInput").value.trim().toLowerCase();
+      const statusFilter = document.getElementById("filterStatusSelect").value;
 
-    // Active Register State
-    let activeRegister = loadRegister(currentGroupId);
-
-    function selectGroup(groupId) {
-      currentGroupId = groupId;
-      activeRegister = loadRegister(groupId);
-      
-      const g = getGroupObj(groupId);
-      document.getElementById("masterGroupSelector").value = groupId;
-      document.getElementById("activeProgramBadge").textContent = g.program;
-      document.getElementById("activeProgramBadge").className = `${g.color} text-white font-black text-[10px] px-2 py-0.5 rounded uppercase tracking-wider`;
-      document.getElementById("activeSemesterTitle").textContent = g.semester;
-      document.getElementById("activeRegisterHeading").textContent = `${g.title} Register`;
-      document.getElementById("btnLinkToStandalone").href = g.file;
-
-      renderTable();
-      renderCohortCards();
-    }
-
-    // Render Cohort Directory Cards
-    function renderCohortCards() {
-      const container = document.getElementById("cohortGrid");
-      const filtered = GROUPS.filter(g => {
-        if (currentFilter === "all") return true;
-        return g.program === currentFilter;
+      const filtered = records.filter(r => {
+        if (statusFilter !== "all" && r.status !== statusFilter) return false;
+        if (searchQuery) {
+          const matchName = r.studentName.toLowerCase().includes(searchQuery);
+          const matchNotes = (r.notes || "").toLowerCase().includes(searchQuery);
+          const matchPromo = r.promotion.toLowerCase().includes(searchQuery);
+          if (!matchName && !matchNotes && !matchPromo) return false;
+        }
+        return true;
       });
 
-      container.innerHTML = filtered.map(g => {
-        const isCurrent = g.id === currentGroupId;
-        const reg = loadRegister(g.id);
-        const studentCount = reg.students?.length || 0;
-        
-        let marked = 0, score = 0;
-        reg.students.forEach(s => {
-          reg.weeks.forEach(w => {
-            const v = reg.attendance[`${s.id}_W${w}`];
-            if (v === "P") { marked++; score += 1; }
-            else if (v === "L") { marked++; score += 0.5; }
-            else if (v === "A") { marked++; }
-          });
-        });
-        const rate = marked > 0 ? Math.round((score / marked) * 100) : 0;
+      document.getElementById("logCountBadge").textContent = `${filtered.length} record(s)`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="py-8 text-center text-slate-400 text-xs">
+              ${records.length === 0 ? 'No attendance incidents recorded yet. Use the form above to log absence or late.' : 'No records matching your search/filter.'}
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((r, index) => {
+        const isAbsent = r.status === "Absent";
+        const statusBadge = isAbsent
+          ? `<span class="inline-flex items-center gap-1 bg-rose-50 border border-rose-200 text-rose-700 font-bold px-2 py-0.5 rounded-full text-[10px]">✕ Absent</span>`
+          : `<span class="inline-flex items-center gap-1 bg-amber-50 border border-amber-200 text-amber-700 font-bold px-2 py-0.5 rounded-full text-[10px]">◷ Late</span>`;
 
         return `
-          <div class="rounded-xl border ${isCurrent ? 'ring-2 ring-brand-terracotta border-brand-terracotta bg-amber-50/30' : 'border-slate-200 bg-white hover:border-slate-300'} p-3 flex flex-col justify-between transition-all shadow-2xs">
-            <div>
-              <div class="flex items-center justify-between mb-1.5">
-                <span class="${g.color} text-white text-[9px] font-black px-1.5 py-0.2 rounded uppercase tracking-wider">${g.program}</span>
-                <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded">Group ${g.group}</span>
-              </div>
-              <h4 class="font-black text-xs text-slate-800 leading-tight mb-2 truncate" title="${g.title}">
-                ${g.title}
-              </h4>
-              <div class="flex items-center justify-between text-[11px] text-slate-500 mb-3 bg-slate-50 p-1.5 rounded-lg border border-slate-100">
-                <span>👥 ${studentCount} Students</span>
-                <span class="font-bold ${rate >= 75 ? 'text-emerald-700' : 'text-amber-700'}">${rate}% Rate</span>
-              </div>
-            </div>
-            <div class="flex items-center gap-1.5 pt-1">
-              <button type="button" onclick="selectGroup('${g.id}')" class="flex-1 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold transition-colors cursor-pointer">
-                ${isCurrent ? 'Active ✓' : 'View'}
+          <tr class="${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'} hover:bg-slate-100/60 transition-colors">
+            <td class="py-2 px-3 text-slate-500 font-mono text-[11px] whitespace-nowrap">
+              ${r.date} <span class="text-slate-400">(${r.time || ''})</span>
+            </td>
+            <td class="py-2 px-3 font-bold text-slate-900 text-xs">
+              ${r.studentName}
+            </td>
+            <td class="py-2 px-2 whitespace-nowrap">
+              ${statusBadge}
+            </td>
+            <td class="py-2 px-2 font-bold text-slate-700 text-xs">
+              ${r.promotion}
+            </td>
+            <td class="py-2 px-2 text-xs">
+              <span class="font-bold px-1.5 py-0.5 rounded ${r.classType === 'AAS' ? 'bg-brand-teal/10 text-brand-teal' : 'bg-brand-forest/10 text-brand-forest'}">
+                ${r.classType}
+              </span>
+            </td>
+            <td class="py-2 px-2 font-bold text-slate-700 text-xs">
+              Group ${r.group}
+            </td>
+            <td class="py-2 px-3 text-slate-500 italic text-[11px] max-w-[200px] truncate" title="${r.notes || ''}">
+              ${r.notes || '<span class="text-slate-300 not-italic">-</span>'}
+            </td>
+            <td class="py-2 px-2 text-center no-print">
+              <button type="button" onclick="deleteRecord('${r.id}')" class="text-slate-300 hover:text-rose-600 p-1 rounded transition-colors cursor-pointer" title="Delete entry">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
               </button>
-              <a href="${g.file}" class="py-1 px-2 rounded bg-brand-terracotta hover:bg-brand-terracottaDark text-white text-[10px] font-bold transition-colors flex items-center gap-0.5 cursor-pointer" title="Open standalone page">
-                Page ↗
-              </a>
-            </div>
-          </div>
+            </td>
+          </tr>
         `;
       }).join("");
     }
 
-    // Filter Tabs
-    document.querySelectorAll(".filter-tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".filter-tab-btn").forEach(b => {
-          b.classList.remove("active", "bg-white", "text-slate-800", "shadow-xs");
-          b.classList.add("text-slate-600");
-        });
-        btn.classList.add("active", "bg-white", "text-slate-800", "shadow-xs");
-        btn.classList.remove("text-slate-600");
-        currentFilter = btn.getAttribute("data-filter");
-        renderCohortCards();
-      });
-    });
-
-    // Selector Dropdown
-    document.getElementById("masterGroupSelector").addEventListener("change", (e) => {
-      selectGroup(e.target.value);
-    });
-    document.getElementById("btnOpenSelectedPage").addEventListener("click", () => {
-      const g = getGroupObj(document.getElementById("masterGroupSelector").value);
-      window.location.href = g.file;
-    });
-
-    // Render Active Register Table
-    function renderTable() {
-      const weeks = activeRegister.weeks;
-      const students = activeRegister.students;
-      const attendance = activeRegister.attendance;
-      const notes = activeRegister.notes || {};
-
-      // 1. Populate Bulk Select
-      const bulkSelect = document.getElementById("bulkWeekSelect");
-      bulkSelect.innerHTML = weeks.map(w => `<option value="${w}">Week ${w}</option>`).join("");
-
-      // 2. Render Headers
-      const headerRow = document.getElementById("tableHeaderRow");
-      const baseHeaders = `
-        <th class="col-sticky-student py-2.5 px-3 font-bold text-xs uppercase tracking-wider text-brand-terracotta w-36 sm:w-56">Student</th>
-        <th class="py-2.5 px-2 font-bold text-[11px] sm:text-xs text-center uppercase tracking-wider text-slate-600 w-16 sm:w-20">Rate</th>
-      `;
-      const weekHeaders = weeks.map(w => `
-        <th class="py-2 px-1 text-center font-bold text-xs w-10 min-w-[42px]">
-          <span class="inline-block py-0.5 px-1 rounded bg-slate-100 font-mono text-[11px]">W${w}</span>
-        </th>
-      `).join("");
-      const actionHeader = `<th class="py-2.5 px-2 text-center font-bold text-xs text-slate-400 w-10"></th>`;
-      headerRow.innerHTML = baseHeaders + weekHeaders + actionHeader;
-
-      // 3. Render Student Rows
-      const grid = document.getElementById("attendanceGrid");
-      grid.innerHTML = "";
-
-      const query = searchQuery.trim().toLowerCase();
-      const visibleStudents = students.filter(student => {
-        if (!query) return true;
-        return student.name.toLowerCase().includes(query) || student.id.toLowerCase().includes(query);
-      });
-
-      if (visibleStudents.length === 0) {
-        const msg = students.length === 0 ? "No students currently enrolled. Click '+ Student' to add." : `No matches found for "${searchQuery}".`;
-        grid.innerHTML = `<tr><td colspan="${weeks.length + 3}" class="py-10 text-center text-slate-400 text-xs">${msg}</td></tr>`;
-        updateStats();
-        return;
-      }
-
-      visibleStudents.forEach((student, index) => {
-        const row = document.createElement("tr");
-        row.className = index % 2 === 0 ? "hover:bg-slate-50/70 transition-colors" : "bg-slate-50/25 hover:bg-slate-50/70 transition-colors";
-
-        const stats = calculateStudentStats(student.id);
-        let textColor = "text-emerald-700 bg-emerald-50";
-        if (stats.pct < 75 && stats.pct > 50) textColor = "text-amber-700 bg-amber-50";
-        else if (stats.pct <= 50 && stats.marked > 0) textColor = "text-rose-700 bg-rose-50";
-        else if (stats.marked === 0) textColor = "text-slate-400 bg-slate-50";
-
-        let cells = `
-          <td class="col-sticky-student py-2 px-3">
-            <div class="font-bold text-xs text-slate-800 leading-tight truncate max-w-[130px] sm:max-w-none">${student.name}</div>
-            <div class="font-mono text-[10px] text-slate-400 uppercase tracking-tighter">${student.id}</div>
-          </td>
-          <td class="py-2 px-1 text-center">
-            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${textColor}">${stats.text}</span>
-          </td>
-        `;
-
-        weeks.forEach(w => {
-          const key = `${student.id}_W${w}`;
-          const currentVal = attendance[key] || "";
-          const noteText = notes[key] || "";
-          const displayClass = currentVal ? `mark-${currentVal}` : "mark-none";
-          const glyph = glyphMap[currentVal];
-          const hasNoteDot = noteText ? '<span class="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-amber-400"></span>' : '';
-
-          cells += `
-            <td class="py-1 px-0.5 text-center">
-              <button type="button" 
-                class="glyph-btn ${displayClass}"
-                data-student-id="${student.id}"
-                data-student-name="${student.name}"
-                data-week="${w}"
-                title="${noteText ? 'Note: ' + noteText + ' (Right-click to edit)' : 'Click to cycle status, Right-click to add note'}">
-                ${glyph}
-                ${hasNoteDot}
-              </button>
-            </td>
-          `;
-        });
-
-        cells += `
-          <td class="py-1 px-1 text-center">
-            <button type="button" class="btn-delete-student p-1.5 text-slate-300 hover:text-rose-600 rounded-md transition-colors cursor-pointer" title="Delete Student" data-student-id="${student.id}" data-student-name="${student.name}">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-            </button>
-          </td>
-        `;
-
-        row.innerHTML = cells;
-        grid.appendChild(row);
-      });
-
-      updateStats();
+    function deleteRecord(id) {
+      const rec = records.find(r => r.id === id);
+      if (!rec) return;
+      if (!confirm(`Delete incident for "${rec.studentName}" (${rec.status})?`)) return;
+      records = records.filter(r => r.id !== id);
+      saveRecords();
     }
 
-    function calculateStudentStats(studentId) {
-      let marked = 0, score = 0;
-      activeRegister.weeks.forEach(w => {
-        const val = activeRegister.attendance[`${studentId}_W${w}`];
-        if (val === "P") { marked++; score += 1; }
-        else if (val === "L") { marked++; score += 0.5; }
-        else if (val === "A") { marked++; }
-      });
-      if (marked === 0) return { pct: 0, text: "-", marked: 0 };
-      const pct = Math.round((score / marked) * 100);
-      return { pct, text: `${pct}%`, marked };
-    }
+    // Filter listeners
+    document.getElementById("searchLogInput").addEventListener("input", renderRecordsTable);
+    document.getElementById("filterStatusSelect").addEventListener("change", renderRecordsTable);
 
+    // Clear all
+    document.getElementById("btnClearAllRecords").addEventListener("click", () => {
+      if (records.length === 0) return;
+      if (!confirm("Are you sure you want to clear ALL logged attendance records?")) return;
+      records = [];
+      saveRecords();
+    });
+
+    // Update Statistics Bar
     function updateStats() {
-      let totalP = 0, totalL = 0, totalA = 0, totalScore = 0, markedCount = 0;
-      activeRegister.students.forEach(s => {
-        activeRegister.weeks.forEach(w => {
-          const val = activeRegister.attendance[`${s.id}_W${w}`];
-          if (val === "P") { totalP++; totalScore += 1; markedCount++; }
-          else if (val === "L") { totalL++; totalScore += 0.5; markedCount++; }
-          else if (val === "A") { totalA++; markedCount++; }
-        });
-      });
-      const avgRate = markedCount > 0 ? Math.round((totalScore / markedCount) * 100) : 0;
-      document.getElementById("statAvgRate").innerText = `${avgRate}%`;
-      document.getElementById("statPresentCount").innerText = totalP;
-      document.getElementById("statLateCount").innerText = totalL;
-      document.getElementById("statAbsentCount").innerText = totalA;
-      document.getElementById("statStudentCount").innerText = activeRegister.students.length;
+      const today = new Date().toISOString().split("T")[0];
+      const todayRecords = records.filter(r => r.date === today);
+
+      document.getElementById("statTotalToday").textContent = todayRecords.length;
+      document.getElementById("statLateToday").textContent = todayRecords.filter(r => r.status === "Late").length;
+      document.getElementById("statAbsentToday").textContent = todayRecords.filter(r => r.status === "Absent").length;
+
+      const webhook = localStorage.getItem(WEBHOOK_KEY);
+      const sheetsStat = document.getElementById("statSheetsStatus");
+      const headerStat = document.getElementById("headerSheetsStatus");
+      if (webhook && webhook.startsWith("http")) {
+        sheetsStat.textContent = "Auto-Sync Active";
+        sheetsStat.className = "text-xs sm:text-sm font-bold text-emerald-600 truncate max-w-[130px]";
+        headerStat.textContent = "Google Sheets: Connected";
+      } else {
+        sheetsStat.textContent = "Local Only";
+        sheetsStat.className = "text-xs sm:text-sm font-bold text-slate-600 truncate max-w-[130px]";
+        headerStat.textContent = "Google Sheets";
+      }
     }
 
-    // Attendance Toggle
-    document.getElementById("attendanceGrid").addEventListener("click", (e) => {
-      const btn = e.target.closest(".glyph-btn");
-      if (!btn) return;
-      const studentId = btn.getAttribute("data-student-id");
-      const week = btn.getAttribute("data-week");
-      const key = `${studentId}_W${week}`;
-      const cur = activeRegister.attendance[key] || "";
-      const next = statusCycle[(statusCycle.indexOf(cur) + 1) % statusCycle.length];
-      if (next) activeRegister.attendance[key] = next;
-      else delete activeRegister.attendance[key];
-      saveActiveRegister(activeRegister);
-      renderTable();
-    });
+    // =========================================================================
+    // GOOGLE SHEETS & CSV INTEGRATION (100% Free of GitHub & Cloudflare)
+    // =========================================================================
+    function getExportRows() {
+      return records.map(r => [
+        r.date,
+        r.time || "",
+        r.promotion,
+        r.classType,
+        r.group,
+        r.status,
+        r.studentName,
+        r.notes || ""
+      ]);
+    }
 
-    // Note Editor
-    document.getElementById("attendanceGrid").addEventListener("contextmenu", (e) => {
-      const btn = e.target.closest(".glyph-btn");
-      if (!btn) return;
-      e.preventDefault();
-      const studentId = btn.getAttribute("data-student-id");
-      const studentName = btn.getAttribute("data-student-name");
-      const week = btn.getAttribute("data-week");
-      activeEditingNoteKey = `${studentId}_W${week}`;
-      document.getElementById("noteModalStudentInfo").textContent = `${studentName} (${studentId}) • Week ${week}`;
-      document.getElementById("noteTextInput").value = activeRegister.notes?.[activeEditingNoteKey] || "";
-      document.getElementById("noteModal").classList.remove("hidden");
-      document.getElementById("noteTextInput").focus();
-    });
-
-    document.getElementById("noteForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      if (!activeEditingNoteKey) return;
-      const text = document.getElementById("noteTextInput").value.trim();
-      if (!activeRegister.notes) activeRegister.notes = {};
-      if (text) activeRegister.notes[activeEditingNoteKey] = text;
-      else delete activeRegister.notes[activeEditingNoteKey];
-      saveActiveRegister(activeRegister);
-      document.getElementById("noteModal").classList.add("hidden");
-      renderTable();
-    });
-
-    document.getElementById("btnDeleteNote").addEventListener("click", () => {
-      if (activeEditingNoteKey && activeRegister.notes) {
-        delete activeRegister.notes[activeEditingNoteKey];
-        saveActiveRegister(activeRegister);
-      }
-      document.getElementById("noteModal").classList.add("hidden");
-      renderTable();
-    });
-
-    const closeNoteModal = () => document.getElementById("noteModal").classList.add("hidden");
-    document.getElementById("btnCloseNoteModal").addEventListener("click", closeNoteModal);
-    document.getElementById("btnCancelNote").addEventListener("click", closeNoteModal);
-
-    // Delete Student
-    document.getElementById("attendanceGrid").addEventListener("click", (e) => {
-      const delBtn = e.target.closest(".btn-delete-student");
-      if (!delBtn) return;
-      const studentId = delBtn.getAttribute("data-student-id");
-      const studentName = delBtn.getAttribute("data-student-name");
-      if (!confirm(`Remove student "${studentName}" from this register?`)) return;
-      activeRegister.students = activeRegister.students.filter(s => s.id !== studentId);
-      Object.keys(activeRegister.attendance).forEach(k => {
-        if (k.startsWith(`${studentId}_`)) delete activeRegister.attendance[k];
-      });
-      saveActiveRegister(activeRegister);
-      renderTable();
-    });
-
-    // Bulk Mark
-    document.getElementById("btnBulkMark").addEventListener("click", () => {
-      const w = document.getElementById("bulkWeekSelect").value;
-      activeRegister.students.forEach(s => {
-        activeRegister.attendance[`${s.id}_W${w}`] = "P";
-      });
-      saveActiveRegister(activeRegister);
-      renderTable();
-    });
-
-    // Add Week
-    document.getElementById("btnAddWeek").addEventListener("click", () => {
-      const maxW = activeRegister.weeks.length > 0 ? Math.max(...activeRegister.weeks) : 26;
-      const val = prompt("Enter new week number:", maxW + 1);
-      if (!val) return;
-      const num = parseInt(val.trim(), 10);
-      if (isNaN(num) || num <= 0 || activeRegister.weeks.includes(num)) return;
-      activeRegister.weeks.push(num);
-      activeRegister.weeks.sort((a, b) => a - b);
-      saveActiveRegister(activeRegister);
-      renderTable();
-    });
-
-    // Student Enrollment
-    const studentModal = document.getElementById("studentModal");
-    const openStudentModal = () => { studentModal.classList.remove("hidden"); document.getElementById("newStudentId").focus(); };
-    const closeStudentModal = () => { studentModal.classList.add("hidden"); document.getElementById("addStudentForm").reset(); };
-    document.getElementById("btnOpenStudentModal").addEventListener("click", openStudentModal);
-    document.getElementById("btnCloseModal").addEventListener("click", closeStudentModal);
-    document.getElementById("btnCancelStudent").addEventListener("click", closeStudentModal);
-
-    document.getElementById("addStudentForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const id = document.getElementById("newStudentId").value.trim().toUpperCase();
-      const name = document.getElementById("newStudentName").value.trim();
-      if (activeRegister.students.some(s => s.id.toUpperCase() === id)) {
-        alert("Student ID already enrolled!");
+    function copyAllToClipboardForSheets() {
+      if (records.length === 0) {
+        alert("No records to copy yet! Log a student absence or late first.");
         return;
       }
-      activeRegister.students.push({ id, name });
-      saveActiveRegister(activeRegister);
-      closeStudentModal();
-      renderTable();
-    });
-
-    // Search Filter
-    document.getElementById("studentSearchInput").addEventListener("input", (e) => {
-      searchQuery = e.target.value;
-      renderTable();
-    });
-    document.getElementById("studentSearchInput").addEventListener("keydown", (e) => {
-      if (e.key === "Escape") { e.target.value = ""; searchQuery = ""; renderTable(); }
-    });
-
-    // Google Sheets & CSV
-    function getTableExportData() {
-      const headers = ["Student ID", "Full Name", "Rate", ...activeRegister.weeks.map(w => "W" + w)];
-      const rows = activeRegister.students.map(s => {
-        const stats = calculateStudentStats(s.id);
-        const marks = activeRegister.weeks.map(w => activeRegister.attendance[`${s.id}_W${w}`] || "-");
-        return [s.id, s.name, stats.text, ...marks];
-      });
-      return { headers, rows };
-    }
-
-    function copyToClipboardForGoogleSheets() {
-      const { headers, rows } = getTableExportData();
+      const headers = ["Date", "Time", "Promotion", "Class Type", "Group", "Status", "Student Name", "Notes"];
+      const rows = getExportRows();
       const tsvContent = [
         headers.join("\t"),
         ...rows.map(r => r.join("\t"))
       ].join("\n");
 
       navigator.clipboard.writeText(tsvContent).then(() => {
-        alert("✓ Copied for Google Sheets!\n\nOpen your Google Sheet, click cell A1, and press Cmd+V (or Ctrl+V) to paste.");
+        alert("✓ Copied to clipboard for Google Sheets!\n\nOpen your Google Sheet, click cell A1, and press Cmd+V (or Ctrl+V) to paste.");
       }).catch(() => {
         const ta = document.createElement("textarea");
         ta.value = tsvContent;
@@ -785,42 +703,67 @@
       });
     }
 
-    document.getElementById("btnCopyForSheets").addEventListener("click", copyToClipboardForGoogleSheets);
-    document.getElementById("btnModalCopySheets").addEventListener("click", copyToClipboardForGoogleSheets);
+    document.getElementById("btnCopyTableForSheets").addEventListener("click", copyAllToClipboardForSheets);
+    document.getElementById("btnModalCopySheets").addEventListener("click", copyAllToClipboardForSheets);
 
     document.getElementById("btnExportCsv").addEventListener("click", () => {
-      const { headers, rows } = getTableExportData();
-      const g = getGroupObj(currentGroupId);
+      if (records.length === 0) {
+        alert("No records to export yet!");
+        return;
+      }
+      const headers = ["Date", "Time", "Promotion", "Class Type", "Group", "Status", "Student Name", "Notes"];
+      const rows = getExportRows();
       const csvContent = "data:text/csv;charset=utf-8," + [
         headers.map(h => `"${h}"`).join(","),
         ...rows.map(r => r.map(c => `"${c}"`).join(","))
       ].join("\n");
       const link = document.createElement("a");
       link.href = encodeURI(csvContent);
-      link.download = `${g.title.replace(/\s+/g, "_")}_Attendance.csv`;
+      link.download = `GSEA_Attendance_Log_${todayStr}.csv`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     });
 
-    // Sheets Modal
+    // Google Sheets Auto-Sync Webhook
+    async function syncRecordToGoogleSheets(rec) {
+      const webhook = localStorage.getItem(WEBHOOK_KEY);
+      if (!webhook || !webhook.startsWith("http")) return;
+
+      try {
+        await fetch(webhook, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(rec)
+        });
+      } catch (err) {
+        console.warn("Could not sync to Google Sheets:", err);
+      }
+    }
+
+    // Modal Handling
     const sheetsModal = document.getElementById("sheetsModal");
     document.getElementById("btnOpenSheetsModal").addEventListener("click", () => {
-      document.getElementById("inputSheetsWebhook").value = localStorage.getItem("gsea_sheets_master_webhook") || "";
+      document.getElementById("inputSheetsWebhook").value = localStorage.getItem(WEBHOOK_KEY) || "";
       sheetsModal.classList.remove("hidden");
     });
-    document.getElementById("btnCloseSheetsModal").addEventListener("click", () => sheetsModal.classList.add("hidden"));
-
-    document.getElementById("btnSaveSheetsWebhook").addEventListener("click", () => {
-      const url = document.getElementById("inputSheetsWebhook").value.trim();
-      localStorage.setItem("gsea_sheets_master_webhook", url);
-      alert("Google Sheets Webhook saved!");
+    document.getElementById("btnCloseSheetsModal").addEventListener("click", () => {
       sheetsModal.classList.add("hidden");
     });
 
-    // Initialize Master Dashboard
-    renderCohortCards();
-    selectGroup(GROUPS[0].id);
+    document.getElementById("btnSaveSheetsWebhook").addEventListener("click", () => {
+      const val = document.getElementById("inputSheetsWebhook").value.trim();
+      localStorage.setItem(WEBHOOK_KEY, val);
+      sheetsWebhookUrl = val;
+      updateStats();
+      alert("Google Sheets Web App URL saved!");
+      sheetsModal.classList.add("hidden");
+    });
+
+    // Initialize UI
+    updateStats();
+    renderRecordsTable();
   </script>
 </body>
 </html>
