@@ -535,8 +535,20 @@
   .border-\[\#556644\] {
     border-color: #556644;
   }
+  .border-\[\#c8dec3\] {
+    border-color: #c8dec3;
+  }
+  .border-\[\#cbdbcb\] {
+    border-color: #cbdbcb;
+  }
+  .border-\[\#cfe0cb\] {
+    border-color: #cfe0cb;
+  }
   .border-\[\#d0ded0\] {
     border-color: #d0ded0;
+  }
+  .border-\[\#d2dfcd\] {
+    border-color: #d2dfcd;
   }
   .border-\[\#d6e3d2\] {
     border-color: #d6e3d2;
@@ -569,8 +581,14 @@
     border-color: rgba(255, 255, 255, 0.15);
     
   }
+  .bg-\[\#3b5133\] {
+    background-color: #3b5133;
+  }
   .bg-\[\#3c4a34\] {
     background-color: #3c4a34;
+  }
+  .bg-\[\#3e5336\] {
+    background-color: #3e5336;
   }
   .bg-\[\#4a5f4e\] {
     background-color: #4a5f4e;
@@ -593,6 +611,15 @@
   .bg-\[\#556644\] {
     background-color: #556644;
   }
+  .bg-\[\#dbe8d4\] {
+    background-color: #dbe8d4;
+  }
+  .bg-\[\#dce8d6\] {
+    background-color: #dce8d6;
+  }
+  .bg-\[\#e3eedf\] {
+    background-color: #e3eedf;
+  }
   .bg-\[\#e6efe1\] {
     background-color: #e6efe1;
   }
@@ -602,11 +629,17 @@
   .bg-\[\#eaf0e6\] {
     background-color: #eaf0e6;
   }
+  .bg-\[\#eaf2e7\] {
+    background-color: #eaf2e7;
+  }
   .bg-\[\#ecf2e7\] {
     background-color: #ecf2e7;
   }
   .bg-\[\#edf2e8\] {
     background-color: #edf2e8;
+  }
+  .bg-\[\#edf3ea\] {
+    background-color: #edf3ea;
   }
   .bg-\[\#edf3ee\] {
     background-color: #edf3ee;
@@ -650,6 +683,10 @@
   .bg-\[\#fefaf0\] {
     background-color: #fefaf0;
   }
+  .bg-black\/5 {
+    background-color: rgba(0, 0, 0, 0.05);
+    
+  }
   .bg-black\/15 {
     background-color: rgba(0, 0, 0, 0.15);
     
@@ -680,6 +717,9 @@
   }
   .p-1\.5 {
     padding: calc(var(--spacing) * 1.5);
+  }
+  .p-2 {
+    padding: calc(var(--spacing) * 2);
   }
   .p-2\.5 {
     padding: calc(var(--spacing) * 2.5);
@@ -740,6 +780,9 @@
   }
   .py-8 {
     padding-block: calc(var(--spacing) * 8);
+  }
+  .pt-0\.5 {
+    padding-top: calc(var(--spacing) * 0.5);
   }
   .pt-1 {
     padding-top: var(--spacing);
@@ -829,14 +872,26 @@
   .text-\[\#2c3726\] {
     color: #2c3726;
   }
+  .text-\[\#2c4024\] {
+    color: #2c4024;
+  }
   .text-\[\#2e3b28\] {
     color: #2e3b28;
+  }
+  .text-\[\#2e3e27\] {
+    color: #2e3e27;
+  }
+  .text-\[\#2f4228\] {
+    color: #2f4228;
   }
   .text-\[\#3b4c33\] {
     color: #3b4c33;
   }
   .text-\[\#3b4c34\] {
     color: #3b4c34;
+  }
+  .text-\[\#3b4e34\] {
+    color: #3b4e34;
   }
   .text-\[\#3b5936\] {
     color: #3b5936;
@@ -862,6 +917,9 @@
   .text-\[\#4d5e44\] {
     color: #4d5e44;
   }
+  .text-\[\#4d6044\] {
+    color: #4d6044;
+  }
   .text-\[\#5a6b52\] {
     color: #5a6b52;
   }
@@ -873,6 +931,9 @@
   }
   .text-\[\#6c7b66\] {
     color: #6c7b66;
+  }
+  .text-\[\#6c7d65\] {
+    color: #6c7d65;
   }
   .text-\[\#6e7d67\] {
     color: #6e7d67;
@@ -895,6 +956,9 @@
   .text-\[\#34442b\] {
     color: #34442b;
   }
+  .text-\[\#34462e\] {
+    color: #34462e;
+  }
   .text-\[\#34472d\] {
     color: #34472d;
   }
@@ -907,11 +971,17 @@
   .text-\[\#55644d\] {
     color: #55644d;
   }
+  .text-\[\#55694f\] {
+    color: #55694f;
+  }
   .text-\[\#82560e\] {
     color: #82560e;
   }
   .text-\[\#283324\] {
     color: #283324;
+  }
+  .text-\[\#304129\] {
+    color: #304129;
   }
   .text-\[\#425437\] {
     color: #425437;
@@ -1024,11 +1094,17 @@
     user-select: none;
   }
   @media (hover: hover) {
+    .hover\:border-\[\#4d6042\]:hover {
+      border-color: #4d6042;
+    }
     .hover\:border-\[\#8c6721\]\/40:hover {
       border-color: rgba(140, 103, 33, 0.40);
     }
     .hover\:bg-\[\#344b31\]:hover {
       background-color: #344b31;
+    }
+    .hover\:bg-\[\#32432b\]:hover {
+      background-color: #32432b;
     }
     .hover\:bg-\[\#36452d\]:hover {
       background-color: #36452d;
@@ -1038,6 +1114,9 @@
     }
     .hover\:bg-\[\#f4f7f2\]:hover {
       background-color: #f4f7f2;
+    }
+    .hover\:bg-\[\#f6f9f4\]:hover {
+      background-color: #f6f9f4;
     }
     .hover\:bg-\[\#fffcf5\]:hover {
       background-color: #fffcf5;
@@ -1088,6 +1167,9 @@
   .active\:bg-\[\#2d3a26\]:active {
     background-color: #2d3a26;
   }
+  .active\:bg-\[\#283623\]:active {
+    background-color: #283623;
+  }
   .active\:bg-white\/20:active {
     background-color: rgba(255, 255, 255, 0.20);
     
@@ -1104,6 +1186,9 @@
     }
     .sm\:w-auto {
       width: auto;
+    }
+    .sm\:grid-cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .sm\:grid-cols-3 {
       grid-template-columns: repeat(3, minmax(0, 1fr));

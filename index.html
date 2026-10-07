@@ -83,7 +83,7 @@
           <svg class="w-3.5 h-3.5 text-[#cadbc1]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
           </svg>
-          <span id="headerFormStatus">Google Form &amp; Sheets</span>
+          <span id="headerFormStatus">✓ Synced to Sheets</span>
         </button>
 
         <div id="localCacheStatus" class="text-[11px] bg-black/15 text-[#d8e7d2] border border-white/15 px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5 shrink-0" title="All entries are saved offline-first in browser storage">
@@ -123,12 +123,12 @@
         <div class="w-9 h-9 rounded-lg bg-[#fef2f2] text-[#933434] border border-[#fbd3d3] flex items-center justify-center font-bold text-base">✕</div>
       </div>
 
-      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between">
+      <div id="cardDatabaseSync" class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between cursor-pointer hover:border-[#4d6042] transition-all" title="Click to view Google Forms & Sheets connection">
         <div>
           <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c7b66]">Database Sync</span>
-          <div id="statFormStatus" class="text-xs sm:text-sm font-bold text-[#33412c] truncate max-w-[130px]">Local Only</div>
+          <div id="statFormStatus" class="text-xs sm:text-sm font-semibold text-[#3b5936] truncate max-w-[130px]">Synced to Sheets</div>
         </div>
-        <div id="statFormIcon" class="w-9 h-9 rounded-lg bg-[#edf2e8] text-[#4d5e43] flex items-center justify-center font-bold text-sm">📝</div>
+        <div id="statFormIcon" class="w-9 h-9 rounded-lg bg-[#eaf0e6] text-[#3b5936] flex items-center justify-center font-bold text-sm">✓</div>
       </div>
     </section>
 
@@ -484,6 +484,29 @@
           </div>
         </div>
 
+        <!-- PERMANENT AUTO-CONNECT FOR ALL TEACHERS -->
+        <div id="permanentShareCard" class="p-3.5 bg-[#edf3ea] rounded-xl border border-[#d2dfcd] space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div class="font-bold text-[#2e3e27] text-xs flex items-center gap-1.5">
+              <span>🔗</span>
+              <span>Permanent Multi-Device Connection:</span>
+            </div>
+            <span id="permanentStatusBadge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#dce8d6] text-[#3b4e34]">All Devices</span>
+          </div>
+          <p class="text-[11px] text-[#4d6044] leading-relaxed">
+            Teachers on phones and computers never need to enter links or open this modal. Use one of these permanent methods:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-0.5">
+            <button id="btnCopyTeacherShareUrl" type="button" class="bg-[#3e5336] hover:bg-[#32432b] active:bg-[#283623] text-white font-semibold py-2 px-3 rounded-lg text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-xs" title="Copy 1-click teacher link">
+              <span>📋 Copy 1-Click Teacher Link</span>
+            </button>
+            <button id="btnDownloadConfigFile" type="button" class="bg-white hover:bg-[#f6f9f4] text-[#34462e] border border-[#cbdbcb] font-semibold py-2 px-3 rounded-lg text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs" title="Download gform-config.json for folder">
+              <span>💾 Download Config JSON</span>
+            </button>
+          </div>
+          <div id="shareLinkFeedback" class="hidden text-[11px] font-semibold p-2 rounded-lg bg-[#e3eedf] text-[#304129] border border-[#c8dec3]"></div>
+        </div>
+
         <!-- Offline / Manual Backup Section -->
         <div class="p-3 bg-[#f2f6ef] rounded-xl border border-[#dfe6dc] flex items-center justify-between gap-2">
           <div>
@@ -501,6 +524,22 @@
 
   <!-- APPLICATION JAVASCRIPT -->
   <script>
+    // =========================================================================
+    // PERMANENT BUILT-IN GOOGLE FORM CONFIGURATION (APPLIES TO ALL TEACHERS)
+    // =========================================================================
+    // When values are set here, EVERY teacher on ANY phone or computer is
+    // permanently connected automatically out of the box with zero configuration!
+    const BUILTIN_GFORM_CONFIG = {
+      formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfJWVxaGskC-x5qel0zKpA2M9ZTjYddLSbR4-SVlZEGqlANGQ/formResponse",
+      entryPromotion: "entry.1730844708",
+      entryClassType: "entry.33844399",
+      entryGroup: "entry.1165269373",
+      entryStatus: "entry.1233340469",
+      entryStudentName: "entry.902753919",
+      entryDate: "entry.466391886",
+      entryNotes: "entry.464143954"
+    };
+
     const STORAGE_KEY = "gsea_attendance_incident_log_v1";
     const GFORM_CONFIG_KEY = "gsea_form_config_v2";
 
@@ -509,12 +548,76 @@
     let gformConfig = getGformConfig();
 
     function getGformConfig() {
+      // 1. Permanent built-in configuration takes highest priority (zero setup for all teachers)
+      if (BUILTIN_GFORM_CONFIG && BUILTIN_GFORM_CONFIG.formUrl) {
+        return BUILTIN_GFORM_CONFIG;
+      }
+      // 2. Check URL query parameter auto-connect (?connect=... or ?gform_cfg=...)
+      const urlConfig = checkUrlAutoConnect();
+      if (urlConfig) {
+        return urlConfig;
+      }
+      // 3. Fallback to client localStorage
       const stored = localStorage.getItem(GFORM_CONFIG_KEY);
       if (stored) {
         try { return JSON.parse(stored); } catch (e) {}
       }
       return null;
     }
+
+    // Auto-detect and save configuration from URL parameters on first visit
+    function checkUrlAutoConnect() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        
+        // Mode A: JSON config encoded in URL (?gform_cfg=...)
+        const cfgParam = params.get("gform_cfg");
+        if (cfgParam) {
+          try {
+            const parsed = JSON.parse(decodeURIComponent(cfgParam));
+            if (parsed && parsed.formUrl) {
+              localStorage.setItem(GFORM_CONFIG_KEY, JSON.stringify(parsed));
+              cleanAddressBar();
+              return parsed;
+            }
+          } catch (e) {}
+        }
+
+        // Mode B: Full Google Form pre-fill URL (?connect=... or ?gform=... or ?prefill=...)
+        const connectParam = params.get("connect") || params.get("gform") || params.get("prefill");
+        if (connectParam) {
+          const parsed = parseGoogleFormPrefillUrl(connectParam);
+          if (!parsed.error && parsed.config && parsed.config.formUrl) {
+            localStorage.setItem(GFORM_CONFIG_KEY, JSON.stringify(parsed.config));
+            cleanAddressBar();
+            return parsed.config;
+          }
+        }
+      } catch (err) {}
+      return null;
+    }
+
+    function cleanAddressBar() {
+      if (window.history && window.history.replaceState) {
+        const cleanUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+    }
+
+    // Auto-check shared gform-config.json file if not hardcoded
+    async function loadSharedConfigFile() {
+      if (BUILTIN_GFORM_CONFIG && BUILTIN_GFORM_CONFIG.formUrl) return;
+      try {
+        const res = await fetch("gform-config.json", { cache: "no-store" });
+        if (res.ok) {
+          const cfg = await res.json();
+          if (cfg && cfg.formUrl && (!gformConfig || !gformConfig.formUrl)) {
+            saveGformConfig(cfg);
+          }
+        }
+      } catch (e) {}
+    }
+    loadSharedConfigFile();
 
     function saveGformConfig(cfg) {
       gformConfig = cfg;
@@ -802,7 +905,7 @@
         statEl.textContent = "Synced to Sheets";
         statEl.className = "text-xs sm:text-sm font-semibold text-[#3b5936] truncate max-w-[130px]";
         iconEl.className = "w-9 h-9 rounded-lg bg-[#eaf0e6] text-[#3b5936] flex items-center justify-center font-bold text-sm";
-        headerEl.textContent = "Google Form: Connected";
+        headerEl.textContent = "✓ Synced to Sheets";
       } else {
         statEl.textContent = "Local Only";
         statEl.className = "text-xs sm:text-sm font-semibold text-[#5a6b52] truncate max-w-[130px]";
@@ -972,10 +1075,35 @@
       const nameInput = document.getElementById("cfgEntryStudentName");
       const dateInput = document.getElementById("cfgEntryDate");
       const notesInput = document.getElementById("cfgEntryNotes");
+      const permBadge = document.getElementById("permanentStatusBadge");
 
-      if (gformConfig && gformConfig.formUrl) {
+      const isBuiltin = BUILTIN_GFORM_CONFIG && Boolean(BUILTIN_GFORM_CONFIG.formUrl);
+      const isConnected = gformConfig && Boolean(gformConfig.formUrl);
+
+      if (isBuiltin) {
+        badge.textContent = "✓ Permanently Built-in (All Devices Connected)";
+        badge.className = "text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[#dbe8d4] text-[#2c4024]";
+        if (permBadge) {
+          permBadge.textContent = "✓ Built into Code";
+          permBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#3b5133] text-white";
+        }
+      } else if (isConnected) {
         badge.textContent = "✓ Connected (Streaming to Sheet)";
         badge.className = "text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-[#e6efe1] text-[#34442b]";
+        if (permBadge) {
+          permBadge.textContent = "Ready to Share";
+          permBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#dce8d6] text-[#3b4e34]";
+        }
+      } else {
+        badge.textContent = "Not Connected";
+        badge.className = "text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-[#eaf0e6] text-[#55644d]";
+        if (permBadge) {
+          permBadge.textContent = "Not Configured";
+          permBadge.className = "text-[10px] font-normal px-2 py-0.5 rounded-full bg-black/5 text-[#6c7d65]";
+        }
+      }
+
+      if (isConnected) {
         urlInput.value = gformConfig.formUrl || "";
         promoInput.value = gformConfig.entryPromotion || "";
         classInput.value = gformConfig.entryClassType || "";
@@ -985,8 +1113,6 @@
         dateInput.value = gformConfig.entryDate || "";
         notesInput.value = gformConfig.entryNotes || "";
       } else {
-        badge.textContent = "Not Connected";
-        badge.className = "text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-[#eaf0e6] text-[#55644d]";
         urlInput.value = "";
         promoInput.value = "";
         classInput.value = "";
@@ -1065,10 +1191,12 @@
     // MODAL EVENT LISTENERS & INITIALIZATION
     // =========================================================================
     const formsModal = document.getElementById("formsModal");
-    document.getElementById("btnOpenFormsModal").addEventListener("click", () => {
+    function openFormsModal() {
       updateFormConfigUI();
       formsModal.classList.remove("hidden");
-    });
+    }
+    document.getElementById("btnOpenFormsModal").addEventListener("click", openFormsModal);
+    document.getElementById("cardDatabaseSync")?.addEventListener("click", openFormsModal);
     document.getElementById("btnCloseFormsModal").addEventListener("click", () => {
       formsModal.classList.add("hidden");
     });
@@ -1165,6 +1293,51 @@
         btn.innerHTML = origText;
         btn.disabled = false;
       }
+    });
+
+    // Copy 1-Click Teacher Link for all devices
+    document.getElementById("btnCopyTeacherShareUrl").addEventListener("click", () => {
+      const fb = document.getElementById("shareLinkFeedback");
+      if (!gformConfig || !gformConfig.formUrl) {
+        fb.classList.remove("hidden");
+        fb.className = "text-[11px] font-bold p-2.5 rounded-lg bg-[#fef4f4] text-[#8c2d2d] border border-[#f9d5d5]";
+        fb.textContent = "Please connect or paste your Google Form link above first.";
+        return;
+      }
+
+      const encodedCfg = encodeURIComponent(JSON.stringify(gformConfig));
+      const shareUrl = window.location.origin + window.location.pathname + "?gform_cfg=" + encodedCfg;
+
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        fb.classList.remove("hidden");
+        fb.className = "text-[11px] font-semibold p-2.5 rounded-lg bg-[#eaf2e7] text-[#2f4228] border border-[#cfe0cb]";
+        fb.innerHTML = `✓ <strong>1-Click Teacher Link copied to clipboard!</strong><br><span class="text-[10px] text-[#55694f]">Share this link with any teacher via WhatsApp/Email. Opening it once permanently connects their phone/computer forever without any configuration!</span>`;
+      }).catch(() => {
+        const ta = document.createElement("textarea");
+        ta.value = shareUrl;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        fb.classList.remove("hidden");
+        fb.className = "text-[11px] font-semibold p-2.5 rounded-lg bg-[#eaf2e7] text-[#2f4228] border border-[#cfe0cb]";
+        fb.innerHTML = `✓ <strong>1-Click Teacher Link copied!</strong>`;
+      });
+    });
+
+    // Download Config JSON for folder/server
+    document.getElementById("btnDownloadConfigFile").addEventListener("click", () => {
+      if (!gformConfig || !gformConfig.formUrl) {
+        alert("Please connect or paste your Google Form link above first.");
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(gformConfig, null, 2));
+      const dlAnchor = document.createElement("a");
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", "gform-config.json");
+      document.body.appendChild(dlAnchor);
+      dlAnchor.click();
+      dlAnchor.remove();
     });
 
     // Disconnect form
