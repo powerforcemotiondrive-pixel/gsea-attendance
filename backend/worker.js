@@ -29,6 +29,9 @@ export default {
     // Sanitize and normalize environment variables
     let repo = (env.GITHUB_REPO || "powerforcemotiondrive-pixel/gsea-attendance").trim();
     repo = repo.replace(/^https?:\/\/github\.com\//i, "").replace(/\.git$/i, "").replace(/^\/+|\/+$/g, "");
+    if (!repo.includes("/")) {
+      repo = `powerforcemotiondrive-pixel/${repo}`;
+    }
 
     let branch = (env.GITHUB_BRANCH || "main").trim();
     if (!branch) branch = "main";
