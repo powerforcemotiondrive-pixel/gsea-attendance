@@ -1,0 +1,757 @@
+<!-- Tailwind CSS CDN -->
+<p>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              terracotta: '#b85d42',
+              terracottaDark: '#9e4e37',
+              mustard: '#c29b38',
+              mustardDark: '#a8842c',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</p>
+<div
+  class="main-wrapper w-full sm:w-[96%] lg:w-[95%] max-w-[1700px] mx-auto px-1 sm:px-3 py-1 sm:py-4 font-sans text-slate-800">
+  <div
+    class="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-slate-300 flex flex-col overflow-hidden">
+    <!-- Top Header Bar -->
+    <header
+      class="bg-brand-terracotta text-white px-3.5 py-3 sm:px-6 sm:py-4 flex flex-wrap items-center justify-between gap-2.5 border-b border-brand-terracottaDark relative overflow-hidden"
+      style="background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.03) 10px, rgba(255, 255, 255, 0.03) 20px);">
+      <div class="flex items-center space-x-2.5">
+        <div><span
+            class="block text-[10px] sm:text-xs font-black tracking-wider text-[#fde047] uppercase">
+            GSEA SEMESTER 1 • ACADEMIC TRACKING </span>
+          <h1 class="text-sm sm:text-lg font-bold text-white leading-tight">
+            Attendance Register &amp; Live Progression Dashboard</h1>
+        </div>
+      </div>
+      <div id="syncStatus"
+        class="text-[11px] bg-brand-mustard text-white px-2.5 py-1 rounded-md font-semibold shadow-sm flex items-center gap-1.5 shrink-0">
+        Ready</div>
+    </header><!-- Stat Summary Cards -->
+    <div
+      class="bg-slate-50 border-b border-slate-200 px-3 sm:px-6 py-2.5 sm:py-4 grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
+      <div
+        class="bg-white p-2.5 sm:p-3.5 rounded-lg border border-slate-200 flex items-center justify-between shadow-sm">
+        <div><span
+            class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">Cohort
+            Rate</span>
+          <div id="statAvgRate"
+            class="text-lg sm:text-xl font-black text-slate-800">0%</div>
+        </div>
+        <div
+          class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs">
+          %</div>
+      </div>
+      <div
+        class="bg-white p-2.5 sm:p-3.5 rounded-lg border border-slate-200 flex items-center justify-between shadow-sm">
+        <div><span
+            class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">Total
+            Present</span>
+          <div id="statPresentCount"
+            class="text-lg sm:text-xl font-black text-emerald-600">0</div>
+        </div>
+        <div
+          class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs">
+          ✓</div>
+      </div>
+      <div
+        class="bg-white p-2.5 sm:p-3.5 rounded-lg border border-slate-200 flex items-center justify-between shadow-sm">
+        <div><span
+            class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">Late
+            Marks</span>
+          <div id="statLateCount"
+            class="text-lg sm:text-xl font-black text-amber-600">0</div>
+        </div>
+        <div
+          class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs">
+          ◷</div>
+      </div>
+      <div
+        class="bg-white p-2.5 sm:p-3.5 rounded-lg border border-slate-200 flex items-center justify-between shadow-sm">
+        <div><span
+            class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500">Absences</span>
+          <div id="statAbsentCount"
+            class="text-lg sm:text-xl font-black text-rose-600">0</div>
+        </div>
+        <div
+          class="w-7 h-7 sm:w-8 sm:h-8 rounded bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-xs">
+          ✕</div>
+      </div>
+    </div>
+    <!-- Toolbar: Search, Bulk Tools & Action Buttons -->
+    <div
+      class="toolbar-container bg-white border-b border-slate-200 px-3 sm:px-6 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
+      <!-- Search Input -->
+      <div class="relative w-full sm:w-64"><input id="studentSearchInput"
+          class="w-full border border-slate-300 rounded-lg pl-8 pr-3 py-1.5 text-xs bg-slate-50 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-terracotta focus:bg-white transition-all"
+          type="search" placeholder="Search name or ID (Esc)..."></div>
+      <!-- Action & Bulk Controls -->
+      <div
+        class="flex items-center flex-wrap gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+        <label class="text-slate-600 font-semibold text-[11px] shrink-0"
+          for="bulkWeekSelect">Bulk:</label><select id="bulkWeekSelect"
+          class="border border-slate-300 rounded-lg px-2 py-1 text-xs bg-slate-50 font-medium shrink-0"></select><button
+          id="btnBulkMark"
+          class="bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-sm transition-all shrink-0 cursor-pointer"
+          type="button">Mark All</button> <button id="btnAddWeek"
+          class="bg-slate-800 hover:bg-slate-900 active:bg-black text-white font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-sm transition-all shrink-0 cursor-pointer"
+          type="button">+ Week</button> <button id="btnOpenStudentModal"
+          class="bg-brand-terracotta hover:bg-brand-terracottaDark text-white font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-sm transition-all shrink-0 cursor-pointer"
+          type="button">+ Student</button> <button id="btnExportCsv"
+          class="bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-sm border border-slate-300 transition-all shrink-0 cursor-pointer"
+          type="button">CSV</button> <button id="btnPrint"
+          class="bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-sm border border-slate-300 transition-all shrink-0 cursor-pointer"
+          type="button">Print</button></div>
+    </div>
+    <!-- Attendance Table -->
+    <div id="tableContainer"
+      class="table-scroll-container flex-1 p-2 sm:p-5 overflow-x-auto focus:outline-none"
+      tabindex="-1">
+      <table class="w-full border-collapse text-left text-sm">
+        <thead>
+          <tr id="tableHeaderRow"
+            class="border-b border-slate-200 text-slate-600 bg-slate-50/70">
+          </tr>
+        </thead>
+        <tbody id="attendanceGrid"
+          class="divide-y divide-slate-100 text-slate-800"></tbody>
+      </table>
+    </div>
+    <!-- Status Footer -->
+    <footer
+      class="bg-slate-50 border-t border-slate-200 px-3 sm:px-4 py-2.5 text-[10px] sm:text-[11px] text-slate-500 flex flex-wrap justify-between items-center gap-2 rounded-b-xl">
+      <div
+        class="flex items-center space-x-2 truncate max-w-[320px] sm:max-w-none">
+        <span class="font-medium text-slate-700">Target: GitHub
+          (attendance.json)</span> • <span
+          id="lastActionText">Initializing...</span></div>
+      <div class="font-medium text-brand-terracotta shrink-0">Real-Time Cloud
+        Synchronization Active</div>
+    </footer>
+  </div>
+</div>
+<!-- Modal: Enroll Student -->
+<div id="studentModal"
+  class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+  <div
+    class="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden">
+    <div
+      class="bg-brand-terracotta px-5 py-4 text-white flex justify-between items-center">
+      <h3 class="font-bold text-sm tracking-wide">Enroll New Student</h3>
+      <button id="btnCloseModal"
+        class="text-white/80 hover:text-white text-lg font-bold"
+        type="button">×</button>
+    </div>
+    <form id="addStudentForm" class="p-5 space-y-4">
+      <div><label
+          class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"
+          for="newStudentId">Student ID</label> <input id="newStudentId"
+          class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-terracotta focus:outline-none uppercase font-mono"
+          required="" type="text" placeholder="e.g. STD-1011"></div>
+      <div><label
+          class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1"
+          for="newStudentName">Full Name</label> <input id="newStudentName"
+          class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-terracotta focus:outline-none"
+          required="" type="text" placeholder="e.g. Jordan Smith"></div>
+      <div
+        class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+        <button id="btnCancelStudent"
+          class="px-4 py-2 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+          type="button">Cancel</button> <button id="btnSubmitStudent"
+          class="bg-brand-terracotta hover:bg-brand-terracottaDark text-white px-4 py-2 rounded-lg text-xs font-bold shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
+          type="submit">Enroll Student</button></div>
+    </form>
+  </div>
+</div>
+<p>
+  <script>
+    // ==========================================
+    // CONFIGURATION & PERSISTENCE
+    // ==========================================
+    const BACKEND_URL = "https://attendance-api.<your-subdomain>.workers.dev";
+
+    const storageKey = "attendance_reg_marks_v2";
+    const weekCacheKey = "attendance_reg_weeks_v2";
+    const studentCacheKey = "attendance_reg_students_v2";
+
+    let weeks = JSON.parse(localStorage.getItem(weekCacheKey) ||
+      "[27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41]");
+    let students = JSON.parse(localStorage.getItem(studentCacheKey) || `[
+    {"id": "STD-1001", "name": "Alex Morgan"},
+    {"id": "STD-1002", "name": "David Chen"},
+    {"id": "STD-1003", "name": "Emma Watson"},
+    {"id": "STD-1004", "name": "Lucas Garcia"},
+    {"id": "STD-1005", "name": "Sofia Rossi"},
+    {"id": "STD-1006", "name": "Liam Tremblay"},
+    {"id": "STD-1007", "name": "Maya Patel"},
+    {"id": "STD-1008", "name": "Noah Al-Mansoor"},
+    {"id": "STD-1009", "name": "Camille Dubois"},
+    {"id": "STD-1010", "name": "Elena Kowalski"}
+  ]`);
+    let attendanceData = JSON.parse(localStorage.getItem(storageKey) || "{}");
+
+    let searchQuery = "";
+    const statusCycle = ["", "P", "L", "A", "E"];
+    const glyphMap = {
+      "": "—",
+      "P": `<svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`,
+      "L": `<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+      "A": `<svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>`,
+      "E": `<svg class="w-4 h-4 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>`
+    };
+
+    // DOM Elements
+    const grid = document.getElementById("attendanceGrid");
+    const tableContainer = document.getElementById("tableContainer");
+    const bulkSelect = document.getElementById("bulkWeekSelect");
+    const bulkBtn = document.getElementById("btnBulkMark");
+    const btnAddWeek = document.getElementById("btnAddWeek");
+    const searchInput = document.getElementById("studentSearchInput");
+
+    // Modal Elements
+    const studentModal = document.getElementById("studentModal");
+    const btnOpenStudentModal = document.getElementById("btnOpenStudentModal");
+    const btnCloseModal = document.getElementById("btnCloseModal");
+    const btnCancelStudent = document.getElementById("btnCancelStudent");
+    const addStudentForm = document.getElementById("addStudentForm");
+
+    // ==========================================
+    // INITIALIZERS
+    // ==========================================
+    function initBulkSelect() {
+      bulkSelect.innerHTML = weeks.map(w =>
+        `<option value="${w}">Week ${w}</option>`).join('');
+    }
+
+    function renderTableHeaders() {
+      const headerRow = document.getElementById("tableHeaderRow");
+      const baseHeaders = `
+      <th class="col-sticky-student py-2.5 px-2.5 font-bold text-xs uppercase tracking-wider text-brand-terracotta w-28 sm:w-48">
+        Student
+      </th>
+      <th class="py-2.5 px-2 font-bold text-[11px] sm:text-xs text-center uppercase tracking-wider text-slate-600 w-14 sm:w-20">
+        Rate
+      </th>
+    `;
+      const weekHeaders = weeks.map(w =>
+        `<th class="py-2 px-1 text-center font-bold text-xs w-10 min-w-[40px]">W${w}</th>`
+      ).join('');
+      const actionHeader =
+        `<th class="py-2.5 px-1 text-center font-bold text-xs text-slate-400 w-10"></th>`;
+
+      headerRow.innerHTML = baseHeaders + weekHeaders + actionHeader;
+    }
+
+    // ==========================================
+    // METRICS & STATS
+    // ==========================================
+    function calculateStudentStats(studentId) {
+      let marked = 0,
+        score = 0;
+      weeks.forEach(w => {
+        const val = attendanceData[`${studentId}_W${w}`];
+        if (val === "P") {
+          score += 1;
+          marked++;
+        } else if (val === "L") {
+          score += 0.5;
+          marked++;
+        } else if (val === "A") {
+          score += 0;
+          marked++;
+        }
+      });
+      if (marked === 0) return {
+        pct: 0,
+        text: "0%"
+      };
+      const pct = Math.round((score / marked) * 100);
+      return {
+        pct: pct,
+        text: `${pct}%`
+      };
+    }
+
+    function updateCohortStats() {
+      let totalP = 0,
+        totalL = 0,
+        totalA = 0,
+        markedCount = 0,
+        totalScore = 0;
+      students.forEach(s => {
+        weeks.forEach(w => {
+          const val = attendanceData[`${s.id}_W${w}`];
+          if (val === "P") {
+            totalP++;
+            totalScore += 1;
+            markedCount++;
+          } else if (val === "L") {
+            totalL++;
+            totalScore += 0.5;
+            markedCount++;
+          } else if (val === "A") {
+            totalA++;
+            markedCount++;
+          }
+        });
+      });
+
+      const cohortAvg = markedCount > 0 ? Math.round((totalScore /
+        markedCount) * 100) : 0;
+      document.getElementById("statAvgRate").innerText = `${cohortAvg}%`;
+      document.getElementById("statPresentCount").innerText = totalP;
+      document.getElementById("statLateCount").innerText = totalL;
+      document.getElementById("statAbsentCount").innerText = totalA;
+    }
+
+    // ==========================================
+    // TABLE RENDERER
+    // ==========================================
+    function renderGrid() {
+      grid.innerHTML = "";
+
+      const query = searchQuery.trim().toLowerCase();
+      const visibleStudents = students.filter(student => {
+        if (!query) return true;
+        return (
+          student.name.toLowerCase().includes(query) ||
+          student.id.toLowerCase().includes(query)
+        );
+      });
+
+      if (visibleStudents.length === 0) {
+        const message = students.length === 0 ?
+          "No students found. Enroll a student to begin." :
+          `No matches found for "${searchQuery}".`;
+        grid.innerHTML =
+          `<tr><td colspan="${weeks.length + 3}" class="py-8 text-center text-slate-400 text-xs">${message}</td></tr>`;
+        return;
+      }
+
+      visibleStudents.forEach((student, index) => {
+        const row = document.createElement("tr");
+        row.className = index % 2 === 0 ?
+          "hover:bg-slate-50/70 transition-colors" :
+          "bg-slate-50/25 hover:bg-slate-50/70 transition-colors";
+        const stats = calculateStudentStats(student.id);
+
+        let textColor = "text-emerald-700";
+        if (stats.pct < 75 && stats.pct > 50) textColor = "text-amber-700";
+        else if (stats.pct <= 50) textColor = "text-rose-700";
+
+        let cells = `
+        <td class="col-sticky-student py-2 px-2.5">
+          <div class="font-bold text-xs text-slate-800 leading-tight truncate max-w-[110px] sm:max-w-none">
+            ${student.name}
+          </div>
+          <div class="font-mono text-[10px] text-slate-400 uppercase tracking-tighter">
+            ${student.id}
+          </div>
+        </td>
+        <td class="py-2 px-1 text-center">
+          <span class="text-[11px] font-bold ${textColor}">${stats.text}</span>
+        </td>
+      `;
+
+        weeks.forEach(w => {
+          const key = `${student.id}_W${w}`;
+          const currentVal = attendanceData[key] || "";
+          const note = attendanceData[`${student.id}_W${w}_note`] || "";
+          const displayClass = currentVal ? `mark-${currentVal}` :
+            'mark-none';
+          const glyph = glyphMap[currentVal];
+          const noteIndicator = note ?
+            "ring-2 ring-brand-terracotta/40" : "";
+
+          cells += `
+          <td class="py-1 px-0.5 text-center">
+            <button type="button" class="glyph-btn ${displayClass} ${noteIndicator}" data-student-id="${student.id}" data-student-name="${student.name}" data-week="${w}" title="${note ? 'Note: ' + note : ''}">
+              ${glyph}
+            </button>
+          </td>
+        `;
+        });
+
+        cells += `
+        <td class="py-1 px-1 text-center">
+          <button type="button" class="btn-delete-student p-1.5 text-slate-300 hover:text-rose-600 rounded-md transition-colors cursor-pointer" title="Archive Student" data-student-id="${student.id}" data-student-name="${student.name}">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          </button>
+        </td>
+      `;
+
+        row.innerHTML = cells;
+        grid.appendChild(row);
+      });
+
+      updateCohortStats();
+    }
+
+    // ==========================================
+    // BACKEND SYNC HELPERS (GitHub via Worker)
+    // ==========================================
+    async function fetchAttendanceData() {
+      const statusElem = document.getElementById("syncStatus");
+      const lastAction = document.getElementById("lastActionText");
+
+      if (!BACKEND_URL || BACKEND_URL.includes("<your-subdomain>")) {
+        statusElem.innerHTML =
+          `<span class="w-2 h-2 rounded-full bg-slate-400"></span> Local Only`;
+        lastAction.textContent =
+          "Backend URL not configured. Working locally.";
+        return;
+      }
+
+      statusElem.innerHTML =
+        `<span class="w-2 h-2 rounded-full bg-amber-300 animate-spin"></span> Syncing...`;
+      lastAction.textContent = "Fetching latest records from GitHub...";
+
+      try {
+        const response = await fetch(BACKEND_URL);
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const result = await response.json();
+
+        if (result.status === "success") {
+          if (Array.isArray(result.weeks) && result.weeks.length > 0) {
+            weeks = result.weeks;
+            localStorage.setItem(weekCacheKey, JSON.stringify(weeks));
+            initBulkSelect();
+            renderTableHeaders();
+          }
+
+          if (Array.isArray(result.students) && result.students.length > 0) {
+            students = result.students;
+            localStorage.setItem(studentCacheKey, JSON.stringify(students));
+          }
+
+          if (result.attendance) {
+            attendanceData = Object.assign({}, attendanceData, result
+              .attendance);
+            localStorage.setItem(storageKey, JSON.stringify(attendanceData));
+          }
+
+          renderGrid();
+
+          statusElem.innerHTML =
+            `<span class="w-2 h-2 rounded-full bg-emerald-300"></span> Synced`;
+          lastAction.textContent =
+            `Connected to GitHub: ${students.length} students loaded.`;
+        }
+      } catch (err) {
+        console.warn("Could not retrieve remote data:", err);
+        statusElem.innerHTML =
+          `<span class="w-2 h-2 rounded-full bg-slate-400"></span> Local Cache`;
+        lastAction.textContent = "Offline / Using local browser storage";
+      }
+    }
+
+    async function postToBackend(payload, actionDescription) {
+      const statusElem = document.getElementById("syncStatus");
+      const lastAction = document.getElementById("lastActionText");
+
+      statusElem.innerHTML =
+        `<span class="w-2 h-2 rounded-full bg-amber-300 animate-spin"></span> Syncing...`;
+      lastAction.textContent = actionDescription + "...";
+
+      if (!BACKEND_URL || BACKEND_URL.includes("<your-subdomain>")) {
+        statusElem.innerHTML =
+          `<span class="w-2 h-2 rounded-full bg-emerald-300"></span> Saved Locally`;
+        lastAction.textContent = actionDescription + " (Local Cache Only)";
+        return;
+      }
+
+      try {
+        const response = await fetch(BACKEND_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) throw new Error("Sync failed with status " +
+          response.status);
+
+        statusElem.innerHTML =
+          `<span class="w-2 h-2 rounded-full bg-emerald-300"></span> Synced`;
+        lastAction.textContent =
+          `${actionDescription} committed at ${new Date().toLocaleTimeString()}`;
+      } catch (err) {
+        console.error(err);
+        statusElem.innerHTML =
+          `<span class="w-2 h-2 rounded-full bg-rose-400"></span> Sync Failed`;
+        lastAction.textContent = `Sync error. Changes kept locally.`;
+      }
+    }
+
+    // ==========================================
+    // EVENT LISTENERS
+    // ==========================================
+
+    // 1. Table Mark Toggle
+    grid.addEventListener("click", async (e) => {
+      const btn = e.target.closest(".glyph-btn");
+      if (!btn) return;
+
+      const studentId = btn.getAttribute("data-student-id");
+      const studentName = btn.getAttribute("data-student-name");
+      const week = btn.getAttribute("data-week");
+
+      const key = `${studentId}_W${week}`;
+      const currentVal = attendanceData[key] || "";
+      const nextVal = statusCycle[(statusCycle.indexOf(currentVal) + 1) %
+        statusCycle.length];
+
+      attendanceData[key] = nextVal;
+      localStorage.setItem(storageKey, JSON.stringify(attendanceData));
+      renderGrid();
+
+      await postToBackend({
+        studentId: studentId,
+        studentName: studentName,
+        week: `W${week}`,
+        status: nextVal
+      }, `Marked ${studentName} (${nextVal || 'Clear'}) for W${week}`);
+    });
+
+    // 2. Search & Escape Key Handling
+    searchInput.addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderGrid();
+    });
+
+    searchInput.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        searchInput.value = "";
+        searchQuery = "";
+        renderGrid();
+
+        const firstBtn = grid.querySelector(".glyph-btn");
+        if (firstBtn) firstBtn.focus();
+        else tableContainer.focus();
+      }
+    });
+
+    // 3. Bulk Mark Present
+    bulkBtn.addEventListener("click", async () => {
+      const selectedWeek = bulkSelect.value;
+      const originalText = bulkBtn.innerHTML;
+
+      bulkBtn.disabled = true;
+      bulkBtn.innerHTML = `<span>Updating...</span>`;
+
+      const batch = [];
+      students.forEach(student => {
+        attendanceData[`${student.id}_W${selectedWeek}`] = "P";
+        batch.push({
+          studentId: student.id,
+          studentName: student.name,
+          week: `W${selectedWeek}`,
+          status: "P"
+        });
+      });
+
+      localStorage.setItem(storageKey, JSON.stringify(attendanceData));
+      renderGrid();
+
+      await postToBackend(batch,
+        `Marked all Present for Week ${selectedWeek}`);
+      bulkBtn.disabled = false;
+      bulkBtn.innerHTML = originalText;
+    });
+
+    // 4. Add Week Column
+    btnAddWeek.addEventListener("click", async () => {
+      const highestWeek = weeks.length > 0 ? Math.max(...weeks) : 26;
+      const defaultNext = highestWeek + 1;
+      const input = prompt("Enter week number to append:", defaultNext);
+      if (!input) return;
+
+      const newWeekNum = parseInt(input.trim().replace(/[^0-9]/g, ''),
+        10);
+      if (isNaN(newWeekNum) || newWeekNum <= 0) {
+        alert("Invalid week number.");
+        return;
+      }
+      if (weeks.includes(newWeekNum)) {
+        alert(`Week ${newWeekNum} already exists.`);
+        return;
+      }
+
+      weeks.push(newWeekNum);
+      weeks.sort((a, b) => a - b);
+      localStorage.setItem(weekCacheKey, JSON.stringify(weeks));
+
+      initBulkSelect();
+      renderTableHeaders();
+      renderGrid();
+
+      await postToBackend({
+        action: "ADD_WEEK",
+        weekNum: newWeekNum
+      }, `Created Week ${newWeekNum} column`);
+    });
+
+    // 5. Student Modal Handling
+    btnOpenStudentModal.addEventListener("click", () => {
+      studentModal.classList.remove("hidden");
+      document.getElementById("newStudentId").focus();
+    });
+    const closeModal = () => {
+      studentModal.classList.add("hidden");
+      addStudentForm.reset();
+    };
+    btnCloseModal.addEventListener("click", closeModal);
+    btnCancelStudent.addEventListener("click", closeModal);
+    studentModal.addEventListener("click", (e) => {
+      if (e.target === studentModal) closeModal();
+    });
+
+    addStudentForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const idInput = document.getElementById("newStudentId").value.trim()
+        .toUpperCase();
+      const nameInput = document.getElementById("newStudentName").value
+        .trim();
+
+      if (students.some(s => s.id.toUpperCase() === idInput)) {
+        alert(`Student ID "${idInput}" is already registered.`);
+        return;
+      }
+
+      const newStudent = {
+        id: idInput,
+        name: nameInput
+      };
+      students.push(newStudent);
+      localStorage.setItem(studentCacheKey, JSON.stringify(students));
+      renderGrid();
+      closeModal();
+
+      await postToBackend({
+        action: "ADD_STUDENT",
+        studentId: idInput,
+        studentName: nameInput
+      }, `Enrolled ${nameInput}`);
+    });
+
+    // 6. Archive Student
+    grid.addEventListener("click", async (e) => {
+      const delBtn = e.target.closest(".btn-delete-student");
+      if (!delBtn) return;
+
+      const studentId = delBtn.getAttribute("data-student-id");
+      const studentName = delBtn.getAttribute("data-student-name");
+
+      const confirmed = confirm(
+        `Archive student "${studentName}" (${studentId})?`);
+      if (!confirmed) return;
+
+      students = students.filter(s => s.id !== studentId);
+      localStorage.setItem(studentCacheKey, JSON.stringify(students));
+      renderGrid();
+
+      await postToBackend({
+        action: "ARCHIVE_STUDENT",
+        studentId: studentId
+      }, `Archived ${studentName}`);
+    });
+
+    // 7. RFC-4180 CSV Export
+    document.getElementById("btnExportCsv").addEventListener("click", () => {
+      if (!students || students.length === 0) {
+        alert("No students to export.");
+        return;
+      }
+
+      const escapeCsv = (val) => {
+        const str = String(val === undefined || val === null ? "" : val);
+        return (str.includes(",") || str.includes('"') || str.includes(
+            "\n") || str.includes("\r")) ?
+          `"${str.replace(/"/g, '""')}"` : str;
+      };
+
+      const dynamicWeekHeaders = [];
+      weeks.forEach(w => {
+        dynamicWeekHeaders.push(`Week ${w}`);
+        dynamicWeekHeaders.push(`Week ${w} Note`);
+      });
+
+      const headers = [
+        "Student ID",
+        "Student Name",
+        "Attendance Rate",
+        "Present",
+        "Late",
+        "Absent",
+        "Excused",
+        ...dynamicWeekHeaders
+      ];
+
+      const rows = [headers.map(escapeCsv).join(",")];
+
+      students.forEach(s => {
+        let p = 0,
+          l = 0,
+          a = 0,
+          ec = 0;
+        const weekData = [];
+
+        weeks.forEach(w => {
+          const mark = attendanceData[`${s.id}_W${w}`] || "";
+          const note = attendanceData[`${s.id}_W${w}_note`] || "";
+
+          if (mark === "P") p++;
+          else if (mark === "L") l++;
+          else if (mark === "A") a++;
+          else if (mark === "E") ec++;
+
+          weekData.push(escapeCsv(mark));
+          weekData.push(escapeCsv(note));
+        });
+
+        const stats = calculateStudentStats(s.id);
+        const studentRow = [
+          escapeCsv(s.id),
+          escapeCsv(s.name),
+          escapeCsv(stats.text),
+          p, l, a, ec,
+          ...weekData
+        ];
+
+        rows.push(studentRow.join(","));
+      });
+
+      const blob = new Blob(["\uFEFF" + rows.join("\r\n")], {
+        type: "text/csv;charset=utf-8;"
+      });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download =
+        `Attendance_Register_${new Date().toISOString().split("T")[0]}.csv`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+
+    // 8. Print Trigger
+    document.getElementById("btnPrint").addEventListener("click", () => window
+      .print());
+
+    // Startup Initialization
+    initBulkSelect();
+    renderTableHeaders();
+    renderGrid();
+    fetchAttendanceData();
+  </script>
+</p>
