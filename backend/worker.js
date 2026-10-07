@@ -16,6 +16,9 @@ export default {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Pragma": "no-cache",
+      "Expires": "0"
     };
 
     if (request.method === "OPTIONS") {
@@ -37,12 +40,13 @@ export default {
       );
     }
 
-    const githubApiUrl = `https://api.github.com/repos/${repo}/contents/${filePath}?ref=${branch}`;
+    const githubApiUrl = `https://api.github.com/repos/${repo}/contents/${filePath}?ref=${branch}&_t=${Date.now()}`;
 
     // 1. GET Request: Fetch latest attendance.json from GitHub
     if (request.method === "GET") {
       try {
         const ghRes = await fetch(githubApiUrl, {
+          cf: { cacheTtl: 0, cacheEverything: false },
           headers: {
             "User-Agent": "GSEA-Attendance-Worker",
             "Authorization": `Bearer ${token}`,

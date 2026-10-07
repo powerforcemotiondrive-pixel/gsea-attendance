@@ -1177,6 +1177,42 @@
       }
     }
 
+    function mergeRemoteDatabase(remoteDb) {
+      if (!remoteDb || typeof remoteDb !== "object") return false;
+
+      let mergedCount = 0;
+      SEMESTERS.forEach(sem => {
+        if (remoteDb[sem.id]) {
+          mergedCount++;
+          if (!database[sem.id]) database[sem.id] = {};
+          GROUPS.forEach(grp => {
+            const remoteGrp = remoteDb[sem.id]?.[grp];
+            if (remoteGrp) {
+              if (!database[sem.id][grp]) {
+                database[sem.id][grp] = remoteGrp;
+              } else {
+                // Keep weeks if remote has them
+                if (Array.isArray(remoteGrp.weeks) && remoteGrp.weeks.length > 0) {
+                  database[sem.id][grp].weeks = remoteGrp.weeks;
+                }
+                // Keep students if remote has them
+                if (Array.isArray(remoteGrp.students) && remoteGrp.students.length > 0) {
+                  database[sem.id][grp].students = remoteGrp.students;
+                }
+                // Attendance marks: merge with remote source of truth
+                database[sem.id][grp].attendance = Object.assign({}, database[sem.id][grp].attendance || {}, remoteGrp.attendance || {});
+                // Notes: merge with remote
+                database[sem.id][grp].notes = Object.assign({}, database[sem.id][grp].notes || {}, remoteGrp.notes || {});
+              }
+            }
+          });
+        }
+      });
+
+      if (remoteDb._lastUpdated) database._lastUpdated = remoteDb._lastUpdated;
+      return mergedCount > 0;
+    }
+
     async function performBackendSync(payload) {
       // 1. Cloudflare Worker Mode
       if (backendConfig.mode === "worker" && backendConfig.workerUrl && !backendConfig.workerUrl.includes("<your-subdomain>")) {
@@ -1185,6 +1221,7 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...payload,
+            action: "FULL_SNAPSHOT",
             semester: currentSemesterId,
             group: currentGroupId,
             fullState: database,
@@ -1245,6 +1282,7 @@
       let sha = null;
       try {
         const checkRes = await fetch(url, {
+          cache: 'no-store',
           headers: {
             "Authorization": `Bearer ${token}`,
             "Accept": "application/vnd.github.v3+json"
@@ -1288,7 +1326,11 @@
     }
 
     async function pullRemoteData() {
-      updateSaveIndicators({ cloudState: "syncing", actionText: "Checking backend for updates..." });
+      const targetUrl = (backendConfig.mode === "worker" && backendConfig.workerUrl && !backendConfig.workerUrl.includes("<your-subdomain>"))
+        ? backendConfig.workerUrl
+        : BACKEND_URL;
+
+      updateSaveIndicators({ cloudState: "syncing", actionText: "Pulling fresh cloud data from GitHub..." });
 
       // A. Direct GitHub API
       if (backendConfig.mode === "github" && backendConfig.ghToken) {
@@ -1296,12 +1338,14 @@
           const repo = backendConfig.ghRepo;
           const path = backendConfig.ghPath;
           const branch = backendConfig.ghBranch;
-          const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}`;
+          const url = `https://api.github.com/repos/${repo}/contents/${path}?ref=${branch}&_t=${Date.now()}`;
 
           const res = await fetch(url, {
+            cache: 'no-store',
             headers: {
               "Authorization": `Bearer ${backendConfig.ghToken}`,
-              "Accept": "application/vnd.github.v3+json"
+              "Accept": "application/vnd.github.v3+json",
+              "Cache-Control": "no-cache, no-store, must-revalidate"
             }
           });
 
@@ -1310,10 +1354,13 @@
           const raw = decodeURIComponent(escape(atob(data.content.replace(/\s/g, ''))));
           const remoteJson = JSON.parse(raw);
 
-          database = Object.assign({}, database, remoteJson);
-          saveDatabase();
-          renderGroupButtons();
-          renderTable();
+          if (mergeRemoteDatabase(remoteJson)) {
+            saveDatabase();
+            renderSemesterButtons();
+            renderGroupButtons();
+            renderHeaderBanner();
+            renderTable();
+          }
 
           lastCloudSyncTime = new Date();
           updateSaveIndicators({ localSaved: true, cloudState: "synced", actionText: `Updated from GitHub at ${new Date().toLocaleTimeString()}` });
@@ -1326,16 +1373,31 @@
       }
 
       // B. Worker Proxy
-      if (backendConfig.mode === "worker" && backendConfig.workerUrl && !backendConfig.workerUrl.includes("<your-subdomain>")) {
+      if (targetUrl) {
         try {
-          const res = await fetch(backendConfig.workerUrl);
+          const cacheBusterUrl = targetUrl + (targetUrl.includes("?") ? "&" : "?") + "_t=" + Date.now();
+          const res = await fetch(cacheBusterUrl, {
+            cache: 'no-store',
+            headers: {
+              "Cache-Control": "no-cache, no-store, must-revalidate",
+              "Pragma": "no-cache"
+            }
+          });
+
           if (!res.ok) throw new Error("HTTP " + res.status);
           const result = await res.json();
-          if (result.status === "success" && result.data) {
-            database = Object.assign({}, database, result.data);
-            saveDatabase();
-            renderGroupButtons();
-            renderTable();
+          const remoteData = (result && result.data !== undefined) ? result.data : result;
+
+          if (remoteData && typeof remoteData === "object" && (result.status === "success" || remoteData.sem1_aas || Object.keys(remoteData).length > 0)) {
+            const hasData = mergeRemoteDatabase(remoteData);
+            if (hasData) {
+              saveDatabase();
+              renderSemesterButtons();
+              renderGroupButtons();
+              renderHeaderBanner();
+              renderTable();
+              if (typeof renderOverviewCards === "function") renderOverviewCards();
+            }
 
             lastCloudSyncTime = new Date();
             updateSaveIndicators({ localSaved: true, cloudState: "synced", actionText: `Updated from Cloudflare Worker at ${new Date().toLocaleTimeString()}` });
@@ -1911,18 +1973,49 @@
     });
 
     // =========================================================================
-    // 9. STARTUP LIFECYCLE
+    // 9. STARTUP LIFECYCLE & AUTO-PULL ON DOMContentLoaded
     // =========================================================================
-    parseRouteHash();
-    updateRouteHash();
-    renderSemesterButtons();
-    renderGroupButtons();
-    renderHeaderBanner();
-    renderTable();
-    updateBackendStatusBadge();
+    async function initAppStartup() {
+      // 1. Load local cache immediately so the UI isn't blank
+      parseRouteHash();
+      updateRouteHash();
+      renderSemesterButtons();
+      renderGroupButtons();
+      renderHeaderBanner();
+      renderTable();
+      updateBackendStatusBadge();
 
-    // Attempt initial pull if remote backend is configured
-    pullRemoteData();
+      // 2. If a backend URL is configured, pull the fresh source of truth from GitHub
+      if (BACKEND_URL || (backendConfig && backendConfig.workerUrl)) {
+        await pullRemoteData();
+      }
+    }
+
+    if (document.readyState === "loading") {
+      window.addEventListener("DOMContentLoaded", initAppStartup);
+    } else {
+      initAppStartup();
+    }
+
+    // Auto-pull on window focus & tab visibility change so Computer B refreshes immediately when switched to
+    window.addEventListener("focus", () => {
+      if (!isSyncInProgress && !pendingSyncPayload) {
+        pullRemoteData();
+      }
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && !isSyncInProgress && !pendingSyncPayload) {
+        pullRemoteData();
+      }
+    });
+
+    // Periodic auto-pull (every 20s) so multi-computer changes stay synchronized automatically
+    setInterval(() => {
+      if (!isSyncInProgress && !pendingSyncPayload) {
+        pullRemoteData();
+      }
+    }, 20000);
   </script>
 </body>
 </html>
