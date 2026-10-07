@@ -415,6 +415,12 @@
             <span id="absencesCountBadge" class="bg-white/20 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
           </button>
 
+          <!-- Sync Sheet Button -->
+          <button id="btnSyncSheetToolbar" type="button" class="bg-[#edf3ea] hover:bg-[#dfeada] active:bg-[#d0dfcb] text-[#3b4e33] border border-[#cbd9c7] font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap" title="Sync live records from Google Sheet">
+            <span id="toolbarSyncSpinner" class="inline-block transition-transform">🔄</span>
+            <span class="hidden sm:inline">Sync Sheet</span>
+          </button>
+
           <!-- Copy for Sheets Button -->
           <button id="btnCopyTableForSheets" type="button" class="bg-[#405c3d] hover:bg-[#344b31] active:bg-[#2a3e28] text-white font-semibold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer" title="Copy all records to clipboard for pasting into Google Sheets">
             <span>📋 Copy for Sheets</span>
@@ -468,7 +474,7 @@
 
   <!-- ALL RECORDED ABSENCES MODAL -->
   <div id="allAbsencesModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 z-50 hidden no-print">
-    <div class="bg-white rounded-2xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl border border-[#dfe6dc] max-h-[90vh] flex flex-col">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl border border-[#dfe6dc] max-h-[92vh] flex flex-col">
       <!-- Modal Header -->
       <div class="flex justify-between items-center pb-3 border-b border-[#eaf0e6] shrink-0">
         <div class="flex items-center gap-2.5">
@@ -480,16 +486,57 @@
               <span>All Recorded Absences</span>
               <span id="modalAbsencesTotalBadge" class="bg-[#fef2f2] text-[#8c3838] border border-[#fbd3d3] text-xs px-2 py-0.5 rounded-full font-bold">0</span>
             </h3>
-            <p class="text-[11px] text-[#6e7d67]">Master roster of all students logged as Absent</p>
+            <p class="text-[11px] text-[#6e7d67]">Master roster of all students logged as Absent (Synced with Google Sheet)</p>
           </div>
         </div>
         <button id="btnCloseAbsencesModal" type="button" class="text-[#788871] hover:text-[#2e3b28] p-1 text-2xl font-bold rounded-lg cursor-pointer leading-none">&times;</button>
       </div>
 
-      <!-- Filter Controls & Action Bar -->
-      <div class="py-3 border-b border-[#eaf0e6] flex flex-wrap items-center justify-between gap-2 shrink-0">
+      <!-- Action & Sync Status Bar -->
+      <div class="py-2.5 px-3 bg-[#f8faf7] border-b border-[#eaf0e6] flex flex-wrap items-center justify-between gap-2 shrink-0">
+        <div class="flex items-center gap-2 text-xs flex-wrap">
+          <button id="btnSyncSheetModal" type="button" class="bg-white hover:bg-[#edf3ea] active:scale-97 text-[#3b4e33] border border-[#cbd9c7] font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer">
+            <span id="modalSyncSpinner" class="inline-block">🔄</span>
+            <span>Sync Google Sheet</span>
+          </button>
+          <span id="modalSyncStatus" class="text-[11px] font-medium text-[#6e7d67]">Synced with spreadsheet</span>
+        </div>
+
+        <button id="btnCopyAbsencesList" type="button" class="bg-[#48593e] hover:bg-[#3c4a34] active:bg-[#313d2b] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
+          <span>📋 Copy Absences List</span>
+        </button>
+      </div>
+
+      <!-- Google Sheet Permission Notice (Shows if Google Sheet is set to Restricted) -->
+      <div id="modalSheetNotice" class="hidden my-2.5 p-3.5 bg-[#fef4f4] border border-[#fbd3d3] rounded-xl text-xs text-[#8c2d2d] space-y-2 shrink-0">
+        <div class="font-bold flex items-center gap-1.5">
+          <span>⚠️</span>
+          <span>Google Sheet Access Required to Retrieve Entries</span>
+        </div>
+        <p class="text-[11px] leading-relaxed text-[#752424]">
+          Your linked Google Sheet is currently <strong>Restricted</strong>, preventing the app from retrieving rows.
+          To allow this page to pull all logged absences from the spreadsheet:
+        </p>
+        <ol class="list-decimal list-inside text-[11px] space-y-1 text-[#752424]">
+          <li>Open your <a id="linkOpenGoogleSheet" href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="underline font-bold text-[#8c2d2d]">Google Sheet (Click here)</a></li>
+          <li>Click the blue <strong>Share</strong> button (top right of Google Sheets)</li>
+          <li>Under <em>General access</em>, change from <strong>Restricted</strong> to <strong>Anyone with the link</strong> (Viewer)</li>
+          <li>Click <strong>Done</strong>, then return here and tap <strong>🔄 Retry Sync</strong>.</li>
+        </ol>
+        <div class="pt-1 flex items-center gap-2">
+          <a href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="bg-[#8c2d2d] hover:bg-[#782626] text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1">
+            <span>↗ Open Google Sheet</span>
+          </a>
+          <button id="btnRetrySyncModal" type="button" class="bg-white hover:bg-[#fef4f4] text-[#8c2d2d] border border-[#fbd3d3] font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer">
+            🔄 Retry Sync
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="py-2.5 border-b border-[#eaf0e6] flex flex-wrap items-center justify-between gap-2 shrink-0">
         <div class="flex items-center flex-wrap gap-2 flex-1 min-w-[200px]">
-          <input id="searchAbsencesInput" type="search" placeholder="Search absent student..." class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] focus:outline-none focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 flex-1 min-w-[130px] placeholder-[#97a591]">
+          <input id="searchAbsencesInput" type="search" placeholder="Search name, date (e.g. May)..." class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] focus:outline-none focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 flex-1 min-w-[140px] placeholder-[#97a591]">
           
           <select id="filterAbsencePromo" class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] font-semibold cursor-pointer focus:outline-none focus:border-[#4d6042]">
             <option value="all">All Promotions</option>
@@ -500,18 +547,15 @@
           </select>
 
           <select id="filterAbsenceDate" class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] font-semibold cursor-pointer focus:outline-none focus:border-[#4d6042]">
-            <option value="all">All Dates</option>
+            <option value="all">All Dates (May, Jun, Oct...)</option>
             <option value="today">Today Only</option>
+            <option value="this_month">This Month</option>
           </select>
         </div>
-
-        <button id="btnCopyAbsencesList" type="button" class="bg-[#48593e] hover:bg-[#3c4a34] active:bg-[#313d2b] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
-          <span>📋 Copy Absences</span>
-        </button>
       </div>
 
-      <!-- Absences List (Scrollable) -->
-      <div id="absencesListContainer" class="flex-1 overflow-y-auto py-3 space-y-2.5">
+      <!-- Absences List (Scrollable - shows all absences from any date/month) -->
+      <div id="absencesListContainer" class="flex-1 overflow-y-auto py-3 space-y-2.5 max-h-[58vh] pr-1">
         <!-- Dynamically rendered via renderAbsencesModal() -->
       </div>
 
@@ -570,6 +614,7 @@
               <span class="font-mono text-[10px] bg-[#edf2e8] px-1 py-0.5 rounded text-[#33412c]">Notes</span>.
             </li>
             <li>In your Google Form, click the <strong>Responses</strong> tab &rarr; click <strong>Link to Sheets</strong> (green icon) to create your spreadsheet.</li>
+            <li>In your linked Google Sheet, click the blue <strong>Share</strong> button &rarr; under <em>General access</em>, change <strong>Restricted</strong> to <strong>"Anyone with the link" (Viewer)</strong>. This allows the app to retrieve and show all logged absences in real-time.</li>
             <li>In the Google Form, click the <strong>&vellip; (three dots)</strong> at the top right &rarr; select <strong>"Get pre-filled link"</strong>. Fill in quick sample text for all 7 items, then click <strong>Get link</strong> (or <strong>Copy link</strong>).</li>
             <li>Paste that pre-filled link below and click <strong>Auto-Connect</strong>. That's it!</li>
           </ol>
@@ -706,7 +751,16 @@
       entryStatus: "entry.1233340469",
       entryStudentName: "entry.902753919",
       entryDate: "entry.466391886",
-      entryNotes: "entry.464143954"
+      entryNotes: "entry.464143954",
+      sheetId: "1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU",
+      sheetGid: "2066081147",
+      sheetUrl: "https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?resourcekey=&gid=2066081147#gid=2066081147"
+    };
+
+    const BUILTIN_SHEET_CONFIG = {
+      sheetId: "1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU",
+      gid: "2066081147",
+      sheetUrl: "https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?resourcekey=&gid=2066081147#gid=2066081147"
     };
 
     const STORAGE_KEY = "gsea_attendance_incident_log_v1";
@@ -924,6 +978,7 @@
       // Push to Google Form (and through to Google Sheets) if configured
       if (gformConfig && gformConfig.formUrl) {
         submitToGoogleForm(newRecord);
+        setTimeout(() => syncRecordsFromGoogleSheet(false), 2500);
       }
     });
 
@@ -1137,6 +1192,256 @@
     }
 
     // =========================================================================
+    // GOOGLE SHEETS LIVE DATA SYNC & EXTRACTION
+    // =========================================================================
+    let isSyncingSheet = false;
+
+    function strHashCode(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash).toString(36);
+    }
+
+    function extractGvizJson(text) {
+      const start = text.indexOf("{");
+      const end = text.lastIndexOf("}");
+      if (start !== -1 && end !== -1) {
+        return JSON.parse(text.substring(start, end + 1));
+      }
+      throw new Error("Invalid response format from Google Sheet");
+    }
+
+    function fetchSheetViaJsonp(sheetId, gid, timeoutMs = 8000) {
+      return new Promise((resolve, reject) => {
+        const callbackName = "__gsea_sheet_cb_" + Math.floor(Math.random() * 1000000);
+        let timer = null;
+
+        const cleanup = () => {
+          if (timer) clearTimeout(timer);
+          try { delete window[callbackName]; } catch (e) {}
+          const el = document.getElementById(callbackName);
+          if (el) el.remove();
+        };
+
+        window[callbackName] = (data) => {
+          cleanup();
+          resolve(data);
+        };
+
+        const script = document.createElement("script");
+        script.id = callbackName;
+        script.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=responseHandler:${callbackName}&gid=${gid}&_t=${Date.now()}`;
+        script.onerror = () => {
+          cleanup();
+          reject(new Error("Network or permission restriction connecting to Google Sheet"));
+        };
+
+        timer = setTimeout(() => {
+          cleanup();
+          reject(new Error("Timeout waiting for Google Sheet response"));
+        }, timeoutMs);
+
+        document.head.appendChild(script);
+      });
+    }
+
+    function parseGvizTable(table) {
+      if (!table || !table.rows) return [];
+
+      const cols = (table.cols || []).map(c => (c.label || c.id || "").trim().toLowerCase());
+
+      let tsIdx = cols.findIndex(c => c.includes("timestamp") || c.includes("horodateur") || c.includes("date & heure") || c.includes("time"));
+      let promoIdx = cols.findIndex(c => c.includes("promo"));
+      let classIdx = cols.findIndex(c => c.includes("class"));
+      let groupIdx = cols.findIndex(c => c.includes("group"));
+      let statusIdx = cols.findIndex(c => c.includes("status") || c.includes("incident") || c.includes("statut"));
+      let nameIdx = cols.findIndex(c => c.includes("student") || c.includes("name") || c.includes("nom") || c.includes("élève"));
+      let dateIdx = cols.findIndex(c => c === "date" || c.includes("incident date") || (c.includes("date") && !c.includes("time")));
+      let notesIdx = cols.findIndex(c => c.includes("note") || c.includes("reason") || c.includes("motif") || c.includes("remarque"));
+
+      // Standard Google Form order: Timestamp, Promotion, Class, Group, Status, Student Name, Date, Notes
+      if (tsIdx === -1) tsIdx = 0;
+      if (promoIdx === -1) promoIdx = 1;
+      if (classIdx === -1) classIdx = 2;
+      if (groupIdx === -1) groupIdx = 3;
+      if (statusIdx === -1) statusIdx = 4;
+      if (nameIdx === -1) nameIdx = 5;
+      if (dateIdx === -1) dateIdx = 6;
+      if (notesIdx === -1) notesIdx = 7;
+
+      const getVal = (row, idx) => {
+        if (idx < 0 || !row.c || !row.c[idx]) return "";
+        const cell = row.c[idx];
+        if (cell.f !== undefined && cell.f !== null) return String(cell.f).trim();
+        if (cell.v !== undefined && cell.v !== null) return String(cell.v).trim();
+        return "";
+      };
+
+      const parsedRecords = [];
+      for (const row of table.rows) {
+        const studentName = getVal(row, nameIdx);
+        if (!studentName) continue;
+
+        const statusRaw = getVal(row, statusIdx) || "Absent";
+        const isLate = statusRaw.toLowerCase().includes("late") || statusRaw.toLowerCase().includes("retard");
+        const status = isLate ? "Late" : "Absent";
+
+        const promotion = getVal(row, promoIdx) || "GSEA24B";
+        const classType = getVal(row, classIdx) || "AAS";
+        const group = getVal(row, groupIdx) || "A";
+        let date = getVal(row, dateIdx);
+        const notes = getVal(row, notesIdx);
+        const timestampRaw = getVal(row, tsIdx);
+
+        if (!date && timestampRaw) {
+          date = timestampRaw.split(" ")[0];
+        }
+
+        let time = "";
+        if (timestampRaw && timestampRaw.includes(" ")) {
+          time = timestampRaw.split(" ")[1]?.substring(0, 5) || "";
+        }
+
+        parsedRecords.push({
+          id: "SHEET-" + strHashCode(timestampRaw + studentName + date + status),
+          timestamp: timestampRaw,
+          date: date,
+          time: time,
+          promotion: promotion,
+          classType: classType,
+          group: group,
+          status: status,
+          studentName: studentName,
+          notes: notes,
+          source: "sheet"
+        });
+      }
+      return parsedRecords;
+    }
+
+    async function syncRecordsFromGoogleSheet(isManual = false) {
+      const sheetId = (gformConfig && gformConfig.sheetId) || BUILTIN_SHEET_CONFIG.sheetId;
+      const gid = (gformConfig && gformConfig.sheetGid) || BUILTIN_SHEET_CONFIG.gid;
+      if (!sheetId) return;
+
+      if (isSyncingSheet) return;
+      isSyncingSheet = true;
+
+      setSyncAnimation(true);
+      updateSyncStatusText("🔄 Syncing from Google Sheet...");
+
+      try {
+        let gvizData = null;
+
+        // Try direct fetch
+        try {
+          const gvizUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${gid}&_t=${Date.now()}`;
+          const res = await fetch(gvizUrl, { cache: "no-store" });
+          if (res.ok) {
+            const text = await res.text();
+            if (text.includes("google.visualization.Query.setResponse")) {
+              gvizData = extractGvizJson(text);
+            }
+          }
+        } catch (fetchErr) {
+          // Fall back to JSONP
+        }
+
+        // Try JSONP (bypasses CORS restrictions on all browsers)
+        if (!gvizData) {
+          gvizData = await fetchSheetViaJsonp(sheetId, gid);
+        }
+
+        if (!gvizData || !gvizData.table) {
+          throw new Error("No data received from Google Sheet");
+        }
+
+        if (gvizData.status === "error") {
+          const errMsg = gvizData.errors?.[0]?.message || "Access denied";
+          throw new Error(errMsg);
+        }
+
+        const sheetRecords = parseGvizTable(gvizData.table);
+        mergeSheetRecords(sheetRecords);
+
+        hideSheetNotice();
+        updateSyncStatusText(`✓ Synced ${sheetRecords.length} record(s) from spreadsheet`);
+        if (isManual) {
+          alert(`✓ Synced successfully!\n\nRetrieved ${sheetRecords.length} attendance incident(s) from your Google Spreadsheet.`);
+        }
+      } catch (err) {
+        console.warn("Google Sheet sync error:", err);
+        updateSyncStatusText("⚠️ Cannot read spreadsheet");
+        showSheetNotice();
+        if (isManual) {
+          alert(`Could not retrieve records from Google Sheet:\n\n${err.message}\n\nPlease check that your Google Sheet sharing is set to 'Anyone with the link' (Viewer).`);
+        }
+      } finally {
+        isSyncingSheet = false;
+        setSyncAnimation(false);
+      }
+    }
+
+    function setSyncAnimation(isSpinning) {
+      const tbSpinner = document.getElementById("toolbarSyncSpinner");
+      const modalSpinner = document.getElementById("modalSyncSpinner");
+      if (tbSpinner) tbSpinner.className = isSpinning ? "inline-block animate-spin" : "inline-block";
+      if (modalSpinner) modalSpinner.className = isSpinning ? "inline-block animate-spin" : "inline-block";
+    }
+
+    function updateSyncStatusText(msg) {
+      const el = document.getElementById("modalSyncStatus");
+      if (el) el.textContent = msg;
+    }
+
+    function showSheetNotice() {
+      const notice = document.getElementById("modalSheetNotice");
+      if (notice) notice.classList.remove("hidden");
+    }
+
+    function hideSheetNotice() {
+      const notice = document.getElementById("modalSheetNotice");
+      if (notice) notice.classList.add("hidden");
+    }
+
+    function mergeSheetRecords(sheetRecords) {
+      if (!sheetRecords || sheetRecords.length === 0) return;
+
+      const makeKey = (r) => {
+        const d = (r.date || "").trim();
+        const n = (r.studentName || "").toLowerCase().trim();
+        const s = (r.status || "").toLowerCase().trim();
+        const p = (r.promotion || "").toLowerCase().trim();
+        const g = (r.group || "").toLowerCase().trim();
+        return `${d}__${n}__${s}__${p}__${g}`;
+      };
+
+      const existingKeys = new Set(records.map(makeKey));
+      let added = 0;
+
+      for (const sRec of sheetRecords) {
+        const key = makeKey(sRec);
+        if (!existingKeys.has(key)) {
+          records.push(sRec);
+          existingKeys.add(key);
+          added++;
+        }
+      }
+
+      // Sort newest first
+      records.sort((a, b) => {
+        const da = a.date || a.timestamp || "";
+        const db = b.date || b.timestamp || "";
+        return db.localeCompare(da);
+      });
+
+      saveRecords();
+    }
+
+    // =========================================================================
     // ALL RECORDED ABSENCES MODAL LOGIC
     // =========================================================================
     const allAbsencesModal = document.getElementById("allAbsencesModal");
@@ -1144,6 +1449,7 @@
     function openAbsencesModal() {
       renderAbsencesModal();
       allAbsencesModal.classList.remove("hidden");
+      syncRecordsFromGoogleSheet(false);
     }
 
     function closeAbsencesModal() {
@@ -1155,16 +1461,23 @@
       const promoFilter = document.getElementById("filterAbsencePromo")?.value || "all";
       const dateFilter = document.getElementById("filterAbsenceDate")?.value || "all";
       const today = new Date().toISOString().split("T")[0];
+      const thisMonth = today.substring(0, 7);
 
       return records.filter(r => {
         if (r.status !== "Absent") return false;
         if (promoFilter !== "all" && r.promotion !== promoFilter) return false;
+        
         if (dateFilter === "today" && r.date !== today) return false;
+        if (dateFilter === "this_month" && !(r.date || "").startsWith(thisMonth)) return false;
+
         if (search) {
-          const matchName = r.studentName.toLowerCase().includes(search);
+          const matchName = (r.studentName || "").toLowerCase().includes(search);
           const matchNotes = (r.notes || "").toLowerCase().includes(search);
-          const matchPromo = r.promotion.toLowerCase().includes(search);
-          if (!matchName && !matchNotes && !matchPromo) return false;
+          const matchPromo = (r.promotion || "").toLowerCase().includes(search);
+          const matchDate = (r.date || "").toLowerCase().includes(search);
+          const matchClass = (r.classType || "").toLowerCase().includes(search);
+          const matchGroup = (r.group || "").toLowerCase().includes(search);
+          if (!matchName && !matchNotes && !matchPromo && !matchDate && !matchClass && !matchGroup) return false;
         }
         return true;
       });
@@ -1181,7 +1494,7 @@
       if (totalBadge) totalBadge.textContent = totalAbsences;
 
       const summaryEl = document.getElementById("absencesListSummary");
-      if (summaryEl) summaryEl.textContent = `Showing ${filteredAbsences.length} of ${totalAbsences} absent record(s)`;
+      if (summaryEl) summaryEl.textContent = `Showing ${filteredAbsences.length} of ${totalAbsences} recorded absence(s)`;
 
       if (filteredAbsences.length === 0) {
         container.innerHTML = `
@@ -1189,7 +1502,7 @@
             <div class="text-2xl">📋</div>
             <div class="font-bold text-[#3c4a34] text-sm">No absences found</div>
             <p class="text-[#6e7d67]">
-              ${totalAbsences === 0 ? 'No students have been recorded as absent yet.' : 'No absent records match your current filter or search query.'}
+              ${totalAbsences === 0 ? 'No absences have been retrieved or recorded yet. Tap "Sync Google Sheet" above to fetch from your spreadsheet.' : 'No absent records match your current search or date filter.'}
             </p>
           </div>
         `;
@@ -1197,13 +1510,28 @@
       }
 
       container.innerHTML = filteredAbsences.map(r => {
+        let displayDate = r.date || "Unknown Date";
+        try {
+          if (/^\d{4}-\d{2}-\d{2}$/.test(r.date)) {
+            const [y, m, d] = r.date.split("-");
+            const dateObj = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
+            displayDate = dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+          }
+        } catch (e) {}
+
+        const isSheetSource = r.source === "sheet";
+
         return `
           <div class="p-3.5 rounded-xl bg-[#fdfbf9] border border-[#f5dede] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 transition-all hover:border-[#ebb5b5]">
             <div class="space-y-1.5 flex-1 min-w-0">
               <div class="flex items-center gap-2 flex-wrap">
-                <span class="w-2 h-2 rounded-full bg-[#8c3838]"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-[#8c3838]"></span>
                 <span class="font-bold text-sm text-[#283324]">${r.studentName}</span>
                 <span class="inline-flex items-center gap-1 bg-[#fef2f2] border border-[#fbd3d3] text-[#8c3838] font-bold px-2 py-0.5 rounded-full text-[10px]">✕ Absent</span>
+                <span class="text-[11px] font-semibold text-[#8c3838] bg-[#fbf2f2] px-2 py-0.5 rounded-md border border-[#f6dcdc]">
+                  📅 ${displayDate} ${r.time ? 'at ' + r.time : ''}
+                </span>
+                ${isSheetSource ? `<span class="text-[10px] text-[#4d6645] bg-[#edf4ec] px-1.5 py-0.2 rounded font-medium" title="Synced from Google Sheet">Sheet</span>` : ''}
               </div>
               <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#55644d]">
                 <span><strong class="text-[#3b4c34]">Promo:</strong> ${r.promotion}</span>
@@ -1211,13 +1539,11 @@
                 <span><strong class="text-[#3b4c34]">Class:</strong> ${r.classType}</span>
                 <span>•</span>
                 <span><strong class="text-[#3b4c34]">Group:</strong> Group ${r.group}</span>
-                <span>•</span>
-                <span class="font-mono text-[11px] text-[#708068]"><strong class="text-[#3b4c34]">Date:</strong> ${r.date} ${r.time ? '(' + r.time + ')' : ''}</span>
               </div>
               ${r.notes ? `<div class="text-xs text-[#6e7d67] italic bg-white/70 px-2 py-1 rounded border border-[#faeaea]"><strong class="text-[#3b4c34] not-italic font-semibold">Reason:</strong> ${r.notes}</div>` : ''}
             </div>
             <div class="shrink-0 flex items-center gap-2 self-end sm:self-center">
-              <button type="button" onclick="deleteRecord('${r.id}')" class="text-xs text-[#a23b3b] hover:underline cursor-pointer px-2.5 py-1 rounded bg-[#fef2f2] hover:bg-[#fde8e8] font-semibold border border-[#fbd3d3] transition-colors" title="Delete absence record">
+              <button type="button" onclick="deleteRecord('${r.id}')" class="text-xs text-[#a23b3b] hover:underline cursor-pointer px-2.5 py-1 rounded bg-[#fef2f2] hover:bg-[#fde8e8] font-semibold border border-[#fbd3d3] transition-colors" title="Delete record">
                 Delete
               </button>
             </div>
@@ -1258,6 +1584,9 @@
     // Absences Modal Event Listeners
     document.getElementById("btnShowAllAbsences")?.addEventListener("click", openAbsencesModal);
     document.getElementById("cardAbsentToday")?.addEventListener("click", openAbsencesModal);
+    document.getElementById("btnSyncSheetToolbar")?.addEventListener("click", () => syncRecordsFromGoogleSheet(true));
+    document.getElementById("btnSyncSheetModal")?.addEventListener("click", () => syncRecordsFromGoogleSheet(true));
+    document.getElementById("btnRetrySyncModal")?.addEventListener("click", () => syncRecordsFromGoogleSheet(true));
     document.getElementById("btnCloseAbsencesModal")?.addEventListener("click", closeAbsencesModal);
     document.getElementById("btnCloseAbsencesModalBottom")?.addEventListener("click", closeAbsencesModal);
     document.getElementById("searchAbsencesInput")?.addEventListener("input", renderAbsencesModal);
@@ -1702,6 +2031,9 @@
     updateStats();
     renderRecordsTable();
     updateFormConfigUI();
+
+    // Auto-sync live spreadsheet records on page load
+    syncRecordsFromGoogleSheet(false);
   </script>
 </body>
 </html>
