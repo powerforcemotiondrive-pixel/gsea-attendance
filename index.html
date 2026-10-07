@@ -514,20 +514,33 @@
           <span>Google Sheet Access Required to Retrieve Entries</span>
         </div>
         <p class="text-[11px] leading-relaxed text-[#752424]">
-          Your linked Google Sheet is currently <strong>Restricted</strong>, preventing the app from retrieving rows.
-          To allow this page to pull all logged absences from the spreadsheet:
+          Your linked Google Sheet is currently set to <strong>Restricted</strong> by Google. This allows phones to submit forms, but prevents other devices (like laptops) from reading the spreadsheet rows.
         </p>
-        <ol class="list-decimal list-inside text-[11px] space-y-1 text-[#752424]">
-          <li>Open your <a id="linkOpenGoogleSheet" href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="underline font-bold text-[#8c2d2d]">Google Sheet (Click here)</a></li>
-          <li>Click the blue <strong>Share</strong> button (top right of Google Sheets)</li>
-          <li>Under <em>General access</em>, change from <strong>Restricted</strong> to <strong>Anyone with the link</strong> (Viewer)</li>
-          <li>Click <strong>Done</strong>, then return here and tap <strong>🔄 Retry Sync</strong>.</li>
-        </ol>
+        <div class="p-2.5 bg-white/80 rounded-lg border border-[#fbd3d3] space-y-2 text-[11px] text-[#752424]">
+          <div class="font-bold text-[#8c2d2d]">Fix in 15 seconds (Choose either option in Google Sheets):</div>
+          <div class="space-y-1">
+            <span class="font-bold text-[#2e3b28]">Option 1 — Share Link (Recommended):</span>
+            <ol class="list-decimal list-inside pl-1 space-y-0.5 text-[#55644d]">
+              <li>Open your <a id="linkOpenGoogleSheet" href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="underline font-bold text-[#8c2d2d]">Google Sheet (Click here)</a></li>
+              <li>Click the blue <strong>Share</strong> button (top right of Google Sheets)</li>
+              <li>Under <em>General access</em>, change from <strong>Restricted</strong> to <strong>Anyone with the link</strong> (Viewer)</li>
+              <li>Click <strong>Done</strong>, then return here and tap <strong>🔄 Retry Sync</strong>.</li>
+            </ol>
+          </div>
+          <div class="pt-1.5 border-t border-[#fbd3d3] space-y-1">
+            <span class="font-bold text-[#2e3b28]">Option 2 — Publish to web (If school domain restricts link sharing):</span>
+            <ol class="list-decimal list-inside pl-1 space-y-0.5 text-[#55644d]">
+              <li>In your Google Sheet, click <strong>File &gt; Share &gt; Publish to web</strong></li>
+              <li>Leave default &amp; click the blue <strong>Publish</strong> button</li>
+              <li>Return here and tap <strong>🔄 Retry Sync</strong> below.</li>
+            </ol>
+          </div>
+        </div>
         <div class="pt-1 flex items-center gap-2">
-          <a href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="bg-[#8c2d2d] hover:bg-[#782626] text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1">
+          <a href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="bg-[#8c2d2d] hover:bg-[#782626] text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1 shadow-xs transition-colors">
             <span>↗ Open Google Sheet</span>
           </a>
-          <button id="btnRetrySyncModal" type="button" class="bg-white hover:bg-[#fef4f4] text-[#8c2d2d] border border-[#fbd3d3] font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer">
+          <button id="btnRetrySyncModal" type="button" class="bg-white hover:bg-[#fef4f4] text-[#8c2d2d] border border-[#fbd3d3] font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer shadow-xs transition-colors">
             🔄 Retry Sync
           </button>
         </div>
@@ -1322,6 +1335,108 @@
       return parsedRecords;
     }
 
+    // =========================================================================
+    // CSV PARSER FOR SPREADSHEET EXPORT & "PUBLISH TO WEB" FEEDS
+    // =========================================================================
+    function parseCsvRows(csvText) {
+      const rows = [];
+      let currentRow = [];
+      let currentVal = "";
+      let insideQuotes = false;
+      for (let i = 0; i < csvText.length; i++) {
+        const c = csvText[i];
+        const next = csvText[i + 1];
+        if (c === '"') {
+          if (insideQuotes && next === '"') {
+            currentVal += '"';
+            i++;
+          } else {
+            insideQuotes = !insideQuotes;
+          }
+        } else if (c === ',' && !insideQuotes) {
+          currentRow.push(currentVal.trim());
+          currentVal = "";
+        } else if ((c === '\r' || c === '\n') && !insideQuotes) {
+          if (c === '\r' && next === '\n') i++;
+          currentRow.push(currentVal.trim());
+          if (currentRow.some(val => val.length > 0)) rows.push(currentRow);
+          currentRow = [];
+          currentVal = "";
+        } else {
+          currentVal += c;
+        }
+      }
+      if (currentVal || currentRow.length > 0) {
+        currentRow.push(currentVal.trim());
+        if (currentRow.some(val => val.length > 0)) rows.push(currentRow);
+      }
+      return rows;
+    }
+
+    function parseCsvTable(rows) {
+      if (!rows || rows.length < 2) return [];
+      const header = rows[0].map(h => String(h || "").toLowerCase().trim());
+      let tsIdx = header.findIndex(c => c.includes("timestamp") || c.includes("horodateur") || c.includes("date & heure") || c.includes("time"));
+      let promoIdx = header.findIndex(c => c.includes("promo"));
+      let classIdx = header.findIndex(c => c.includes("class"));
+      let groupIdx = header.findIndex(c => c.includes("group"));
+      let statusIdx = header.findIndex(c => c.includes("status") || c.includes("incident") || c.includes("statut"));
+      let nameIdx = header.findIndex(c => c.includes("student") || c.includes("name") || c.includes("nom") || c.includes("élève"));
+      let dateIdx = header.findIndex(c => c === "date" || c.includes("incident date") || (c.includes("date") && !c.includes("time")));
+      let notesIdx = header.findIndex(c => c.includes("note") || c.includes("reason") || c.includes("motif") || c.includes("remarque"));
+
+      if (tsIdx === -1) tsIdx = 0;
+      if (promoIdx === -1) promoIdx = 1;
+      if (classIdx === -1) classIdx = 2;
+      if (groupIdx === -1) groupIdx = 3;
+      if (statusIdx === -1) statusIdx = 4;
+      if (nameIdx === -1) nameIdx = 5;
+      if (dateIdx === -1) dateIdx = 6;
+      if (notesIdx === -1) notesIdx = 7;
+
+      const parsedRecords = [];
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const studentName = String(row[nameIdx] || "").trim();
+        if (!studentName) continue;
+
+        const statusRaw = String(row[statusIdx] || "Absent").trim();
+        const isLate = statusRaw.toLowerCase().includes("late") || statusRaw.toLowerCase().includes("retard");
+        const status = isLate ? "Late" : "Absent";
+
+        const promotion = String(row[promoIdx] || "GSEA24B").trim();
+        const classType = String(row[classIdx] || "AAS").trim();
+        const group = String(row[groupIdx] || "A").trim();
+        let date = String(row[dateIdx] || "").trim();
+        const notes = String(row[notesIdx] || "").trim();
+        const timestampRaw = String(row[tsIdx] || "").trim();
+
+        if (!date && timestampRaw) {
+          date = timestampRaw.split(" ")[0];
+        }
+
+        let time = "";
+        if (timestampRaw && timestampRaw.includes(" ")) {
+          time = timestampRaw.split(" ")[1]?.substring(0, 5) || "";
+        }
+
+        parsedRecords.push({
+          id: "SHEET-" + strHashCode(timestampRaw + studentName + date + status),
+          timestamp: timestampRaw,
+          date: date,
+          time: time,
+          promotion: promotion,
+          classType: classType,
+          group: group,
+          status: status,
+          studentName: studentName,
+          notes: notes,
+          source: "sheet"
+        });
+      }
+      return parsedRecords;
+    }
+
     async function syncRecordsFromGoogleSheet(isManual = false) {
       const sheetId = (gformConfig && gformConfig.sheetId) || BUILTIN_SHEET_CONFIG.sheetId;
       const gid = (gformConfig && gformConfig.sheetGid) || BUILTIN_SHEET_CONFIG.gid;
@@ -1334,41 +1449,72 @@
       updateSyncStatusText("🔄 Syncing from Google Sheet...");
 
       try {
-        let gvizData = null;
+        let sheetRecords = null;
 
-        // Try direct fetch
+        // Protocol 1: Google Visualization API (GViz) - Direct fetch
         try {
           const gvizUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${gid}&_t=${Date.now()}`;
           const res = await fetch(gvizUrl, { cache: "no-store" });
           if (res.ok) {
             const text = await res.text();
             if (text.includes("google.visualization.Query.setResponse")) {
-              gvizData = extractGvizJson(text);
+              const gvizData = extractGvizJson(text);
+              if (gvizData && gvizData.table) {
+                sheetRecords = parseGvizTable(gvizData.table);
+              }
             }
           }
-        } catch (fetchErr) {
-          // Fall back to JSONP
+        } catch (fetchErr) {}
+
+        // Protocol 2: GViz JSONP (bypasses browser CORS restrictions)
+        if (!sheetRecords || sheetRecords.length === 0) {
+          try {
+            const gvizData = await fetchSheetViaJsonp(sheetId, gid, 5000);
+            if (gvizData && gvizData.table) {
+              sheetRecords = parseGvizTable(gvizData.table);
+            }
+          } catch (jsonpErr) {}
         }
 
-        // Try JSONP (bypasses CORS restrictions on all browsers)
-        if (!gvizData) {
-          gvizData = await fetchSheetViaJsonp(sheetId, gid);
+        // Protocol 3: CSV Export endpoint (supports public sheets and 'Publish to web')
+        if (!sheetRecords || sheetRecords.length === 0) {
+          try {
+            const csvUrl = (gformConfig && gformConfig.publishedCsvUrl) ||
+              `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}&_t=${Date.now()}`;
+            const res = await fetch(csvUrl, { cache: "no-store" });
+            if (res.ok) {
+              const csvText = await res.text();
+              if (csvText && !csvText.includes("<!DOCTYPE") && !csvText.includes("<html")) {
+                const rows = parseCsvRows(csvText);
+                sheetRecords = parseCsvTable(rows);
+              }
+            }
+          } catch (csvErr) {}
         }
 
-        if (!gvizData || !gvizData.table) {
-          throw new Error("No data received from Google Sheet");
+        // Protocol 4: Google Apps Script Web App endpoint if configured
+        if ((!sheetRecords || sheetRecords.length === 0) && gformConfig && gformConfig.appsScriptUrl) {
+          try {
+            const asRes = await fetch(gformConfig.appsScriptUrl + `?gid=${gid}&_t=${Date.now()}`);
+            if (asRes.ok) {
+              const asData = await asRes.json();
+              if (Array.isArray(asData) && asData.length > 1) {
+                sheetRecords = parseCsvTable(asData);
+              }
+            }
+          } catch (asErr) {}
         }
 
-        if (gvizData.status === "error") {
-          const errMsg = gvizData.errors?.[0]?.message || "Access denied";
-          throw new Error(errMsg);
+        if (!sheetRecords) {
+          throw new Error("Cannot access Google Sheet. Please set Google Sheet sharing to 'Anyone with the link' (Viewer) or 'Publish to web'.");
         }
 
-        const sheetRecords = parseGvizTable(gvizData.table);
         mergeSheetRecords(sheetRecords);
-
         hideSheetNotice();
         updateSyncStatusText(`✓ Synced ${sheetRecords.length} record(s) from spreadsheet`);
+        renderAbsencesModal();
+        updateStats();
+
         if (isManual) {
           alert(`✓ Synced successfully!\n\nRetrieved ${sheetRecords.length} attendance incident(s) from your Google Spreadsheet.`);
         }
@@ -1377,7 +1523,7 @@
         updateSyncStatusText("⚠️ Cannot read spreadsheet");
         showSheetNotice();
         if (isManual) {
-          alert(`Could not retrieve records from Google Sheet:\n\n${err.message}\n\nPlease check that your Google Sheet sharing is set to 'Anyone with the link' (Viewer).`);
+          alert(`Could not retrieve records from Google Sheet:\n\n${err.message}\n\nPlease check that your Google Sheet sharing is set to 'Anyone with the link' (Viewer) or File > Share > Publish to web.`);
         }
       } finally {
         isSyncingSheet = false;
