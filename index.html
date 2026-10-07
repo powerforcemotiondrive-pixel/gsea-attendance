@@ -5,12 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GSEA Attendance - Absence Tracker</title>
   
-  <!-- Tailwind CSS Compiled via CLI -->
+  <!-- Tailwind CSS Compiled via CLI (Processed for Safari compatibility) -->
   <link rel="stylesheet" href="output.css">
 
+  <!-- Tailwind CDN Runtime Fallback (ensures perfect styling across all Safari WebKit engine versions) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
+    /* Safari desktop button appearance fix (prevents native Aqua button chrome) */
+    button, input[type="button"], input[type="reset"], input[type="submit"] {
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    body {
+      background-color: #f5f7f4;
+      color: #2c3726;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
     /* Custom styling for olive theme and smooth transitions */
     .btn-pill {
+      -webkit-appearance: none;
+      appearance: none;
       transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
       user-select: none;
@@ -18,6 +35,18 @@
     .btn-pill:active {
       transform: scale(0.97);
     }
+
+    /* Core olive theme color fallbacks */
+    .bg-\[\#3c4a34\] { background-color: #3c4a34; }
+    .bg-\[\#48593e\] { background-color: #48593e; }
+    .bg-\[\#4a5f4e\] { background-color: #4a5f4e; }
+    .bg-\[\#425437\] { background-color: #425437; }
+    .bg-\[\#8c3838\] { background-color: #8c3838; }
+    .bg-\[\#8c6721\] { background-color: #8c6721; }
+    .border-\[\#dfe6dc\] { border-color: #dfe6dc; }
+    .border-\[\#d0ded0\] { border-color: #d0ded0; }
+    .border-\[\#48593e\] { border-color: #48593e; }
+
     /* Print optimizations */
     @media print {
       body { background: white !important; color: black !important; }
