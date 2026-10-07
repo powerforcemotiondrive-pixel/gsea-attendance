@@ -15,7 +15,8 @@ export default {
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization, Cache-Control, Pragma, X-Requested-With, *",
+      "Access-Control-Max-Age": "86400",
       "Cache-Control": "no-cache, no-store, must-revalidate",
       "Pragma": "no-cache",
       "Expires": "0"
@@ -91,108 +92,136 @@ export default {
       }
     }
 
-    // 2. POST Request: Commit updated attendance data to GitHub
+    // 2. POST Request: Commit updated attendance data to GitHub with concurrency retry
     if (request.method === "POST") {
       try {
         const payload = await request.json();
+        const maxRetries = 4;
+        let lastErrorText = "";
 
-        // Step 1: Get existing file SHA if it exists
-        let currentSha = null;
-        let existingData = {};
+        for (let attempt = 0; attempt < maxRetries; attempt++) {
+          // Step 1: Fetch latest file state & SHA from GitHub
+          let currentSha = null;
+          let existingData = {};
 
-        const checkRes = await fetch(githubApiUrl, {
-          headers: {
-            "User-Agent": "GSEA-Attendance-Worker",
-            "Authorization": `Bearer ${token}`,
-            "Accept": "application/vnd.github.v3+json"
-          }
-        });
-
-        if (checkRes.ok) {
-          const checkJson = await checkRes.json();
-          currentSha = checkJson.sha;
-          try {
-            const rawContent = decodeURIComponent(escape(atob(checkJson.content.replace(/\s/g, ''))));
-            existingData = JSON.parse(rawContent);
-          } catch (e) {
-            existingData = {};
-          }
-        }
-
-        // Merge or replace data
-        let mergedData;
-        let commitMessage = "Update attendance register";
-
-        if (payload.action === "FULL_SNAPSHOT" && payload.fullState) {
-          mergedData = payload.fullState;
-          commitMessage = `Sync attendance register: ${payload.description || 'Full snapshot'}`;
-        } else if (payload.semester && payload.group) {
-          mergedData = existingData || {};
-          if (!mergedData[payload.semester]) mergedData[payload.semester] = {};
-          if (!mergedData[payload.semester][payload.group]) mergedData[payload.semester][payload.group] = {};
-
-          if (payload.action === "UPDATE_MARK") {
-            if (!mergedData[payload.semester][payload.group].attendance) {
-              mergedData[payload.semester][payload.group].attendance = {};
+          const checkRes = await fetch(githubApiUrl, {
+            cf: { cacheTtl: 0, cacheEverything: false },
+            headers: {
+              "User-Agent": "GSEA-Attendance-Worker",
+              "Authorization": `Bearer ${token}`,
+              "Accept": "application/vnd.github.v3+json"
             }
-            mergedData[payload.semester][payload.group].attendance[`${payload.studentId}_${payload.week}`] = payload.status;
-            commitMessage = `Attendance [${payload.semester} ${payload.group}]: ${payload.studentName || payload.studentId} ${payload.week} -> ${payload.status || 'Cleared'}`;
-          } else if (payload.action === "UPDATE_REGISTER" && payload.registerData) {
-            mergedData[payload.semester][payload.group] = payload.registerData;
-            commitMessage = `Update register [${payload.semester} ${payload.group}]: ${payload.description || 'Register updated'}`;
-          } else {
-            // Generic merge
-            mergedData = payload.fullState || payload;
-            commitMessage = payload.description || "Update attendance";
+          });
+
+          if (checkRes.ok) {
+            const checkJson = await checkRes.json();
+            currentSha = checkJson.sha;
+            try {
+              const rawContent = decodeURIComponent(escape(atob(checkJson.content.replace(/\s/g, ''))));
+              existingData = JSON.parse(rawContent);
+            } catch (e) {
+              existingData = {};
+            }
           }
-        } else {
-          mergedData = payload.fullState || payload;
-          commitMessage = payload.description || "Update attendance";
-        }
 
-        mergedData._lastUpdated = new Date().toISOString();
+          // Step 2: Merge incoming changes safely (protect other groups/teachers from overwrite)
+          let mergedData;
+          let commitMessage = payload.description || "Update attendance";
 
-        // Step 2: Commit file to GitHub Contents API
-        const newContentJson = JSON.stringify(mergedData, null, 2);
-        const encodedContent = btoa(unescape(encodeURIComponent(newContentJson)));
+          if (payload.action === "FULL_SNAPSHOT" && payload.fullState) {
+            // Deep merge to ensure concurrent edits to other semesters/groups are not wiped
+            mergedData = deepMergeAttendance(existingData, payload.fullState);
+          } else if (payload.semester && payload.group) {
+            mergedData = existingData || {};
+            if (!mergedData[payload.semester]) mergedData[payload.semester] = {};
+            if (!mergedData[payload.semester][payload.group]) {
+              mergedData[payload.semester][payload.group] = { weeks: [], students: [], attendance: {}, notes: {} };
+            }
 
-        const commitBody = {
-          message: commitMessage,
-          content: encodedContent,
-          branch: branch,
-        };
-        if (currentSha) {
-          commitBody.sha = currentSha;
-        }
+            if (payload.action === "UPDATE_MARK") {
+              if (!mergedData[payload.semester][payload.group].attendance) {
+                mergedData[payload.semester][payload.group].attendance = {};
+              }
+              if (payload.status) {
+                mergedData[payload.semester][payload.group].attendance[`${payload.studentId}_${payload.week}`] = payload.status;
+              } else {
+                delete mergedData[payload.semester][payload.group].attendance[`${payload.studentId}_${payload.week}`];
+              }
+            } else if (payload.action === "UPDATE_NOTE") {
+              if (!mergedData[payload.semester][payload.group].notes) {
+                mergedData[payload.semester][payload.group].notes = {};
+              }
+              if (payload.noteText) {
+                mergedData[payload.semester][payload.group].notes[payload.noteKey] = payload.noteText;
+              } else {
+                delete mergedData[payload.semester][payload.group].notes[payload.noteKey];
+              }
+            } else if (payload.registerData) {
+              mergedData[payload.semester][payload.group] = payload.registerData;
+            } else {
+              mergedData = deepMergeAttendance(existingData, payload.fullState || payload);
+            }
+          } else {
+            mergedData = deepMergeAttendance(existingData, payload.fullState || payload);
+          }
 
-        const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
-          method: "PUT",
-          headers: {
-            "User-Agent": "GSEA-Attendance-Worker",
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-            "Accept": "application/vnd.github.v3+json"
-          },
-          body: JSON.stringify(commitBody)
-        });
+          mergedData._lastUpdated = new Date().toISOString();
 
-        if (!putRes.ok) {
-          const errDetail = await putRes.text();
+          // Step 3: Commit file to GitHub Contents API
+          const newContentJson = JSON.stringify(mergedData, null, 2);
+          const encodedContent = btoa(unescape(encodeURIComponent(newContentJson)));
+
+          const commitBody = {
+            message: commitMessage,
+            content: encodedContent,
+            branch: branch,
+          };
+          if (currentSha) {
+            commitBody.sha = currentSha;
+          }
+
+          const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${filePath}`, {
+            method: "PUT",
+            headers: {
+              "User-Agent": "GSEA-Attendance-Worker",
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json",
+              "Accept": "application/vnd.github.v3+json"
+            },
+            body: JSON.stringify(commitBody)
+          });
+
+          // Handle multi-user concurrent commit (409 Conflict): another teacher committed at the same second
+          if (putRes.status === 409) {
+            lastErrorText = "GitHub 409 Conflict";
+            // Wait briefly with exponential jitter and retry with fresh SHA
+            await new Promise(r => setTimeout(r, 120 * Math.pow(2, attempt) + Math.random() * 50));
+            continue;
+          }
+
+          if (!putRes.ok) {
+            const errDetail = await putRes.text();
+            return new Response(
+              JSON.stringify({ status: "error", message: `GitHub commit error: ${putRes.status}`, details: errDetail }),
+              { status: putRes.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            );
+          }
+
+          const commitResult = await putRes.json();
           return new Response(
-            JSON.stringify({ status: "error", message: `GitHub commit error: ${putRes.status}`, details: errDetail }),
-            { status: putRes.status, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+            JSON.stringify({
+              status: "success",
+              commitSha: commitResult.commit?.sha,
+              newFileSha: commitResult.content?.sha,
+              message: commitMessage
+            }),
+            { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
           );
         }
 
-        const commitResult = await putRes.json();
         return new Response(
-          JSON.stringify({
-            status: "success",
-            commitSha: commitResult.commit?.sha,
-            newFileSha: commitResult.content?.sha,
-            message: commitMessage
-          }),
-          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          JSON.stringify({ status: "error", message: `Concurrent write collision: ${lastErrorText}. Please retry.` }),
+          { status: 409, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       } catch (err) {
         return new Response(
@@ -205,4 +234,38 @@ export default {
     return new Response("Method not allowed", { status: 405, headers: corsHeaders });
   }
 };
+
+/**
+ * Deep merge helper to prevent concurrent teachers from overwriting each others registers
+ */
+function deepMergeAttendance(base, incoming) {
+  if (!base || typeof base !== "object" || Object.keys(base).length === 0) return incoming || {};
+  if (!incoming || typeof incoming !== "object") return base;
+
+  const result = { ...base };
+  for (const semKey of Object.keys(incoming)) {
+    if (semKey.startsWith("_")) continue;
+    if (!result[semKey]) {
+      result[semKey] = incoming[semKey];
+    } else {
+      result[semKey] = { ...result[semKey] };
+      for (const grpKey of Object.keys(incoming[semKey])) {
+        if (!result[semKey][grpKey]) {
+          result[semKey][grpKey] = incoming[semKey][grpKey];
+        } else {
+          const baseGrp = result[semKey][grpKey];
+          const incGrp = incoming[semKey][grpKey];
+          result[semKey][grpKey] = {
+            weeks: Array.isArray(incGrp.weeks) && incGrp.weeks.length > 0 ? incGrp.weeks : (baseGrp.weeks || []),
+            students: Array.isArray(incGrp.students) && incGrp.students.length > 0 ? incGrp.students : (baseGrp.students || []),
+            attendance: { ...(baseGrp.attendance || {}), ...(incGrp.attendance || {}) },
+            notes: { ...(baseGrp.notes || {}), ...(incGrp.notes || {}) }
+          };
+        }
+      }
+    }
+  }
+  result._lastUpdated = new Date().toISOString();
+  return result;
+}
 

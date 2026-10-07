@@ -1121,14 +1121,15 @@
       // 1. Immediate Local Cache save
       saveDatabase();
 
-      // 2. Queue backend sync payload with latest full state
+      // 2. Queue backend sync payload with latest register & full state
       pendingSyncPayload = {
-        action: specificPayload.action || "FULL_SNAPSHOT",
-        ...specificPayload,
+        action: specificPayload.action || "UPDATE_REGISTER",
         semester: currentSemesterId,
         group: currentGroupId,
+        registerData: database[currentSemesterId]?.[currentGroupId],
         fullState: database,
-        description: actionDescription || "Update attendance"
+        description: actionDescription || "Update attendance",
+        ...specificPayload
       };
 
       updateSaveIndicators({ localSaved: true, cloudState: isSyncInProgress ? "syncing" : "pending", actionText: actionDescription });
@@ -1199,10 +1200,17 @@
                 if (Array.isArray(remoteGrp.students) && remoteGrp.students.length > 0) {
                   database[sem.id][grp].students = remoteGrp.students;
                 }
-                // Attendance marks: merge with remote source of truth
-                database[sem.id][grp].attendance = Object.assign({}, database[sem.id][grp].attendance || {}, remoteGrp.attendance || {});
-                // Notes: merge with remote
-                database[sem.id][grp].notes = Object.assign({}, database[sem.id][grp].notes || {}, remoteGrp.notes || {});
+                // Attendance marks & notes:
+                // When no unsaved local changes are pending for this group, remote is the source of truth (cleared marks reflected accurately).
+                const hasPendingForGrp = isSyncInProgress || (pendingSyncPayload && pendingSyncPayload.semester === sem.id && pendingSyncPayload.group === grp);
+                if (!hasPendingForGrp) {
+                  database[sem.id][grp].attendance = { ...(remoteGrp.attendance || {}) };
+                  database[sem.id][grp].notes = { ...(remoteGrp.notes || {}) };
+                } else {
+                  // Merge local unsaved changes over remote data
+                  database[sem.id][grp].attendance = Object.assign({}, remoteGrp.attendance || {}, database[sem.id][grp].attendance || {});
+                  database[sem.id][grp].notes = Object.assign({}, remoteGrp.notes || {}, database[sem.id][grp].notes || {});
+                }
               }
             }
           });
@@ -1220,12 +1228,13 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            ...payload,
-            action: "FULL_SNAPSHOT",
+            action: payload.action || "UPDATE_REGISTER",
             semester: currentSemesterId,
             group: currentGroupId,
+            registerData: database[currentSemesterId]?.[currentGroupId],
             fullState: database,
-            description: payload.description || "Automatic attendance update"
+            description: payload.description || "Automatic attendance update",
+            ...payload
           })
         });
 
@@ -1344,8 +1353,7 @@
             cache: 'no-store',
             headers: {
               "Authorization": `Bearer ${backendConfig.ghToken}`,
-              "Accept": "application/vnd.github.v3+json",
-              "Cache-Control": "no-cache, no-store, must-revalidate"
+              "Accept": "application/vnd.github.v3+json"
             }
           });
 
@@ -1377,11 +1385,7 @@
         try {
           const cacheBusterUrl = targetUrl + (targetUrl.includes("?") ? "&" : "?") + "_t=" + Date.now();
           const res = await fetch(cacheBusterUrl, {
-            cache: 'no-store',
-            headers: {
-              "Cache-Control": "no-cache, no-store, must-revalidate",
-              "Pragma": "no-cache"
-            }
+            cache: 'no-store'
           });
 
           if (!res.ok) throw new Error("HTTP " + res.status);
