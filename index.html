@@ -16,24 +16,123 @@
     button, input[type="button"], input[type="reset"], input[type="submit"] {
       -webkit-appearance: none;
       appearance: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       background-color: #f5f7f4;
       color: #2c3726;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    /* Custom styling for olive theme and smooth transitions */
+    /* Custom styling for selector pill buttons */
     .btn-pill {
       -webkit-appearance: none;
       appearance: none;
-      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: background-color 0.12s ease-in-out, color 0.12s ease-in-out, border-color 0.12s ease-in-out, box-shadow 0.12s ease-in-out;
       cursor: pointer;
       user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+    .btn-pill:focus {
+      outline: none;
     }
     .btn-pill:active {
       transform: scale(0.97);
+    }
+
+    /* =========================================================================
+       FIX PHONE VIEW: Prevent sticky hover and eliminate whited-out text
+       ========================================================================= */
+
+    /* INACTIVE BUTTONS: Always solid crisp white background with bold dark olive text */
+    .btn-pill:not(.active),
+    .btn-pill:not(.active):focus,
+    .btn-pill:not(.active):active {
+      background-color: #ffffff !important;
+      color: #2e3b28 !important;
+      border-color: #d7e0d3 !important;
+      box-shadow: none !important;
+    }
+
+    /* Only apply hover on devices with a true mouse pointer (Desktop) */
+    @media (hover: hover) and (pointer: fine) {
+      .btn-pill:not(.active):hover {
+        background-color: #edf3ea !important;
+        color: #1e2819 !important;
+        border-color: #b9ccb2 !important;
+      }
+    }
+
+    /* ACTIVE PROMOTION & GROUP BUTTONS: Always dark executive olive with crisp pure white text */
+    .promotion-btn.active,
+    .promotion-btn.active:hover,
+    .promotion-btn.active:focus,
+    .promotion-btn.active:active,
+    .group-btn.active,
+    .group-btn.active:hover,
+    .group-btn.active:focus,
+    .group-btn.active:active {
+      background-color: #48593e !important;
+      color: #ffffff !important;
+      border-color: #48593e !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14) !important;
+    }
+
+    /* ACTIVE CLASS TYPE BUTTONS (AAS vs AG) */
+    .classtype-btn.active,
+    .classtype-btn.active[data-value="AAS"],
+    .classtype-btn.active[data-value="AAS"]:hover,
+    .classtype-btn.active[data-value="AAS"]:focus,
+    .classtype-btn.active[data-value="AAS"]:active {
+      background-color: #4a5f4e !important;
+      color: #ffffff !important;
+      border-color: #4a5f4e !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14) !important;
+    }
+    .classtype-btn.active[data-value="AG"],
+    .classtype-btn.active[data-value="AG"]:hover,
+    .classtype-btn.active[data-value="AG"]:focus,
+    .classtype-btn.active[data-value="AG"]:active {
+      background-color: #556644 !important;
+      color: #ffffff !important;
+      border-color: #556644 !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14) !important;
+    }
+
+    /* ACTIVE STATUS BUTTON: ABSENT (Bold Crimson Red) */
+    .status-btn.active[data-value="Absent"],
+    .status-btn.active[data-value="Absent"]:hover,
+    .status-btn.active[data-value="Absent"]:focus,
+    .status-btn.active[data-value="Absent"]:active {
+      background-color: #8c3838 !important;
+      color: #ffffff !important;
+      border-color: #8c3838 !important;
+      box-shadow: 0 1px 3px rgba(140, 56, 56, 0.28) !important;
+    }
+
+    /* ACTIVE STATUS BUTTON: LATE (Bold Ochre Amber) */
+    .status-btn.active[data-value="Late"],
+    .status-btn.active[data-value="Late"]:hover,
+    .status-btn.active[data-value="Late"]:focus,
+    .status-btn.active[data-value="Late"]:active {
+      background-color: #8c6721 !important;
+      color: #ffffff !important;
+      border-color: #8c6721 !important;
+      box-shadow: 0 1px 3px rgba(140, 103, 33, 0.28) !important;
+    }
+
+    /* STATUS BUTTON ICONS */
+    .status-btn.active .status-icon {
+      background-color: rgba(255, 255, 255, 0.22) !important;
+      color: #ffffff !important;
+    }
+    .status-btn:not(.active) .status-icon {
+      background-color: #f3f6f1 !important;
+      color: #6b7b64 !important;
     }
 
     /* Core olive theme color fallbacks */
@@ -115,7 +214,7 @@
         <div class="w-9 h-9 rounded-lg bg-[#fef9ed] text-[#8a6316] border border-[#f8e6bc] flex items-center justify-center font-bold text-base">◷</div>
       </div>
 
-      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between">
+      <div id="cardAbsentToday" class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between cursor-pointer hover:border-[#8c3838] transition-all" title="Click to view all recorded absences">
         <div>
           <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c7b66]">Absent Today</span>
           <div id="statAbsentToday" class="text-xl sm:text-2xl font-bold text-[#933434]">0</div>
@@ -155,16 +254,16 @@
               1. Promotion
             </label>
             <div id="promotionOptions" class="grid grid-cols-2 gap-1.5">
-              <button type="button" data-value="GSEA24B" class="btn-pill promotion-btn active py-2.5 px-3 rounded-lg text-xs font-semibold text-center border border-[#48593e] bg-[#48593e] text-white shadow-xs">
+              <button type="button" data-value="GSEA24B" class="btn-pill promotion-btn active py-2.5 px-3 rounded-lg text-xs font-semibold text-center border">
                 GSEA24B
               </button>
-              <button type="button" data-value="GSEA25A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
+              <button type="button" data-value="GSEA25A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border">
                 GSEA25A
               </button>
-              <button type="button" data-value="GSEA25B" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
+              <button type="button" data-value="GSEA25B" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border">
                 GSEA25B
               </button>
-              <button type="button" data-value="GSEA26A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
+              <button type="button" data-value="GSEA26A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border">
                 GSEA26A
               </button>
             </div>
@@ -177,10 +276,10 @@
               2. Class Type
             </label>
             <div id="classTypeOptions" class="grid grid-cols-2 gap-1.5">
-              <button type="button" data-value="AAS" class="btn-pill classtype-btn active py-2.5 px-3 rounded-lg text-xs font-semibold text-center border border-[#4a5f4e] bg-[#4a5f4e] text-white shadow-xs">
+              <button type="button" data-value="AAS" class="btn-pill classtype-btn active py-2.5 px-3 rounded-lg text-xs font-semibold text-center border">
                 AAS
               </button>
-              <button type="button" data-value="AG" class="btn-pill classtype-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
+              <button type="button" data-value="AG" class="btn-pill classtype-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border">
                 AG
               </button>
             </div>
@@ -196,16 +295,16 @@
               3. Group
             </label>
             <div id="groupOptions" class="grid grid-cols-4 gap-1.5">
-              <button type="button" data-value="A" class="btn-pill group-btn active py-2.5 px-2 rounded-lg text-xs font-semibold text-center border border-[#48593e] bg-[#48593e] text-white shadow-xs">
+              <button type="button" data-value="A" class="btn-pill group-btn active py-2.5 px-2 rounded-lg text-xs font-semibold text-center border">
                 A
               </button>
-              <button type="button" data-value="B" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
+              <button type="button" data-value="B" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-semibold text-center border">
                 B
               </button>
-              <button type="button" data-value="C" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
+              <button type="button" data-value="C" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-semibold text-center border">
                 C
               </button>
-              <button type="button" data-value="D" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-semibold text-center border border-[#d7e0d3] bg-white text-[#3f4d38] hover:bg-[#f4f7f2]">
+              <button type="button" data-value="D" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-semibold text-center border">
                 D
               </button>
             </div>
@@ -220,14 +319,14 @@
           </label>
           <div id="statusOptions" class="grid grid-cols-2 gap-3 max-w-md">
             <!-- Absent Option (Default / Primary) -->
-            <button type="button" data-value="Absent" class="btn-pill status-btn active py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 border border-[#8c3838] bg-[#8c3838] text-white shadow-xs">
-              <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">✕</span>
+            <button type="button" data-value="Absent" class="btn-pill status-btn active py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 border">
+              <span class="status-icon w-5 h-5 rounded-full flex items-center justify-center text-xs">✕</span>
               <span>Absent</span>
             </button>
 
             <!-- Late Option -->
-            <button type="button" data-value="Late" class="btn-pill status-btn py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 border border-[#d7e0d3] bg-white text-[#4a5742] hover:border-[#8c6721]/40 hover:bg-[#fffcf5]">
-              <span class="w-5 h-5 rounded-full bg-[#f3f6f1] text-[#6b7b64] flex items-center justify-center text-xs">◷</span>
+            <button type="button" data-value="Late" class="btn-pill status-btn py-2.5 px-4 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 border">
+              <span class="status-icon w-5 h-5 rounded-full flex items-center justify-center text-xs">◷</span>
               <span>Late</span>
             </button>
           </div>
@@ -309,6 +408,13 @@
             <option value="Late">Late Only</option>
           </select>
 
+          <!-- All Recorded Absences Button -->
+          <button id="btnShowAllAbsences" type="button" class="bg-[#8c3838] hover:bg-[#782f2f] active:bg-[#682626] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap" title="View all recorded student absences">
+            <span>✕</span>
+            <span>All Recorded Absences</span>
+            <span id="absencesCountBadge" class="bg-white/20 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
+          </button>
+
           <!-- Copy for Sheets Button -->
           <button id="btnCopyTableForSheets" type="button" class="bg-[#405c3d] hover:bg-[#344b31] active:bg-[#2a3e28] text-white font-semibold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer" title="Copy all records to clipboard for pasting into Google Sheets">
             <span>📋 Copy for Sheets</span>
@@ -321,18 +427,18 @@
         </div>
       </div>
 
-      <!-- Table View -->
-      <div class="overflow-x-auto">
+      <!-- Desktop Table View -->
+      <div class="hidden sm:block overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs">
           <thead>
             <tr class="bg-[#f2f6ef]/80 border-b border-[#dfe6dc] text-[#55644d] uppercase font-bold tracking-wider text-[11px] select-none">
-              <th class="py-2.5 px-3">Date &amp; Time</th>
+              <th class="py-2.5 px-3">Date</th>
               <th class="py-2.5 px-3">Student Name</th>
               <th class="py-2.5 px-2">Status</th>
-              <th class="py-2.5 px-2">Promotion</th>
+              <th class="py-2.5 px-2">Promo</th>
               <th class="py-2.5 px-2">Class</th>
               <th class="py-2.5 px-2">Group</th>
-              <th class="py-2.5 px-3">Reason / Notes</th>
+              <th class="py-2.5 px-3">Reason</th>
               <th class="py-2.5 px-2 text-center w-12 no-print"></th>
             </tr>
           </thead>
@@ -340,6 +446,11 @@
             <!-- Dynamically populated -->
           </tbody>
         </table>
+      </div>
+
+      <!-- Mobile Record Cards View (explicit item labels for small screens) -->
+      <div id="recordsMobileCards" class="sm:hidden p-3 space-y-2.5 bg-[#f8faf7]">
+        <!-- Dynamically populated -->
       </div>
 
       <!-- Footer Info -->
@@ -353,8 +464,66 @@
         </button>
       </div>
     </section>
-
   </main>
+
+  <!-- ALL RECORDED ABSENCES MODAL -->
+  <div id="allAbsencesModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 z-50 hidden no-print">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl border border-[#dfe6dc] max-h-[90vh] flex flex-col">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center pb-3 border-b border-[#eaf0e6] shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-[#fef2f2] text-[#8c3838] border border-[#fbd3d3] flex items-center justify-center font-bold text-base shadow-xs">
+            ✕
+          </div>
+          <div>
+            <h3 class="font-bold text-[#2e3b28] text-base leading-tight flex items-center gap-2">
+              <span>All Recorded Absences</span>
+              <span id="modalAbsencesTotalBadge" class="bg-[#fef2f2] text-[#8c3838] border border-[#fbd3d3] text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+            </h3>
+            <p class="text-[11px] text-[#6e7d67]">Master roster of all students logged as Absent</p>
+          </div>
+        </div>
+        <button id="btnCloseAbsencesModal" type="button" class="text-[#788871] hover:text-[#2e3b28] p-1 text-2xl font-bold rounded-lg cursor-pointer leading-none">&times;</button>
+      </div>
+
+      <!-- Filter Controls & Action Bar -->
+      <div class="py-3 border-b border-[#eaf0e6] flex flex-wrap items-center justify-between gap-2 shrink-0">
+        <div class="flex items-center flex-wrap gap-2 flex-1 min-w-[200px]">
+          <input id="searchAbsencesInput" type="search" placeholder="Search absent student..." class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] focus:outline-none focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 flex-1 min-w-[130px] placeholder-[#97a591]">
+          
+          <select id="filterAbsencePromo" class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] font-semibold cursor-pointer focus:outline-none focus:border-[#4d6042]">
+            <option value="all">All Promotions</option>
+            <option value="GSEA24B">GSEA24B</option>
+            <option value="GSEA25A">GSEA25A</option>
+            <option value="GSEA25B">GSEA25B</option>
+            <option value="GSEA26A">GSEA26A</option>
+          </select>
+
+          <select id="filterAbsenceDate" class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] font-semibold cursor-pointer focus:outline-none focus:border-[#4d6042]">
+            <option value="all">All Dates</option>
+            <option value="today">Today Only</option>
+          </select>
+        </div>
+
+        <button id="btnCopyAbsencesList" type="button" class="bg-[#48593e] hover:bg-[#3c4a34] active:bg-[#313d2b] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
+          <span>📋 Copy Absences</span>
+        </button>
+      </div>
+
+      <!-- Absences List (Scrollable) -->
+      <div id="absencesListContainer" class="flex-1 overflow-y-auto py-3 space-y-2.5">
+        <!-- Dynamically rendered via renderAbsencesModal() -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="pt-3 border-t border-[#eaf0e6] flex items-center justify-between shrink-0 text-xs">
+        <span id="absencesListSummary" class="text-[#6e7d67] font-semibold">0 absent records</span>
+        <button id="btnCloseAbsencesModalBottom" type="button" class="bg-[#edf2e8] hover:bg-[#dce5d5] text-[#3c4a34] font-bold px-4 py-1.5 rounded-lg text-xs cursor-pointer transition-colors">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- GOOGLE FORMS & SHEETS SETUP MODAL -->
   <div id="formsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 z-50 hidden no-print">
@@ -660,12 +829,9 @@
     // 1. Promotion Selector
     document.querySelectorAll(".promotion-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".promotion-btn").forEach(b => {
-          b.classList.remove("active", "bg-[#48593e]", "text-white", "border-[#48593e]", "shadow-xs");
-          b.classList.add("bg-white", "text-[#3f4d38]", "border-[#d7e0d3]");
-        });
-        btn.classList.add("active", "bg-[#48593e]", "text-white", "border-[#48593e]", "shadow-xs");
-        btn.classList.remove("bg-white", "text-[#3f4d38]", "border-[#d7e0d3]");
+        document.querySelectorAll(".promotion-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        btn.blur();
         document.getElementById("inputPromotion").value = btn.getAttribute("data-value");
       });
     });
@@ -673,28 +839,19 @@
     // 2. Class Type Selector (AAS vs AG)
     document.querySelectorAll(".classtype-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".classtype-btn").forEach(b => {
-          b.classList.remove("active", "bg-[#4a5f4e]", "border-[#4a5f4e]", "bg-[#556644]", "border-[#556644]", "text-white", "shadow-xs");
-          b.classList.add("bg-white", "text-[#3f4d38]", "border-[#d7e0d3]");
-        });
-        const val = btn.getAttribute("data-value");
-        const activeColor = val === "AAS" ? "bg-[#4a5f4e]" : "bg-[#556644]";
-        const borderColor = val === "AAS" ? "border-[#4a5f4e]" : "border-[#556644]";
-        btn.classList.add("active", activeColor, borderColor, "text-white", "shadow-xs");
-        btn.classList.remove("bg-white", "text-[#3f4d38]", "border-[#d7e0d3]");
-        document.getElementById("inputClassType").value = val;
+        document.querySelectorAll(".classtype-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        btn.blur();
+        document.getElementById("inputClassType").value = btn.getAttribute("data-value");
       });
     });
 
     // 3. Group Selector (A, B, C, D)
     document.querySelectorAll(".group-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".group-btn").forEach(b => {
-          b.classList.remove("active", "bg-[#48593e]", "text-white", "border-[#48593e]", "shadow-xs");
-          b.classList.add("bg-white", "text-[#3f4d38]", "border-[#d7e0d3]");
-        });
-        btn.classList.add("active", "bg-[#48593e]", "text-white", "border-[#48593e]", "shadow-xs");
-        btn.classList.remove("bg-white", "text-[#3f4d38]", "border-[#d7e0d3]");
+        document.querySelectorAll(".group-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        btn.blur();
         document.getElementById("inputGroup").value = btn.getAttribute("data-value");
       });
     });
@@ -702,22 +859,18 @@
     // 4. Status Selector (Late vs Absent)
     document.querySelectorAll(".status-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".status-btn").forEach(b => {
-          b.classList.remove("active", "bg-[#8c3838]", "border-[#8c3838]", "bg-[#8c6721]", "border-[#8c6721]", "text-white", "shadow-xs");
-          b.classList.add("bg-white", "text-[#4a5742]", "border-[#d7e0d3]");
-          b.querySelector("span:first-child").className = "w-5 h-5 rounded-full bg-[#f3f6f1] text-[#6b7b64] flex items-center justify-center text-xs";
-        });
-        const val = btn.getAttribute("data-value");
-        if (val === "Absent") {
-          btn.classList.add("active", "bg-[#8c3838]", "border-[#8c3838]", "text-white", "shadow-xs");
-          btn.querySelector("span:first-child").className = "w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-xs";
-        } else {
-          btn.classList.add("active", "bg-[#8c6721]", "border-[#8c6721]", "text-white", "shadow-xs");
-          btn.querySelector("span:first-child").className = "w-5 h-5 rounded-full bg-white/20 text-white flex items-center justify-center text-xs";
-        }
-        btn.classList.remove("bg-white", "text-[#4a5742]", "border-[#d7e0d3]");
-        document.getElementById("inputStatus").value = val;
+        document.querySelectorAll(".status-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        btn.blur();
+        document.getElementById("inputStatus").value = btn.getAttribute("data-value");
       });
+    });
+
+    // Clear focus on touch devices to completely prevent sticky hover
+    document.querySelectorAll(".btn-pill").forEach(btn => {
+      btn.addEventListener("touchend", () => {
+        setTimeout(() => btn.blur(), 40);
+      }, { passive: true });
     });
 
     // Clear name button
@@ -800,6 +953,7 @@
     // =========================================================================
     function renderRecordsTable() {
       const tbody = document.getElementById("recordsTableBody");
+      const mobileCards = document.getElementById("recordsMobileCards");
       const searchQuery = document.getElementById("searchLogInput").value.trim().toLowerCase();
       const statusFilter = document.getElementById("filterStatusSelect").value;
 
@@ -817,16 +971,27 @@
       document.getElementById("logCountBadge").textContent = `${filtered.length} record(s)`;
 
       if (filtered.length === 0) {
+        const emptyMsg = records.length === 0 
+          ? 'No attendance incidents recorded yet. Use the form above to log absence or late.' 
+          : 'No records matching your search/filter.';
         tbody.innerHTML = `
           <tr>
             <td colspan="8" class="py-8 text-center text-[#788871] text-xs">
-              ${records.length === 0 ? 'No attendance incidents recorded yet. Use the form above to log absence or late.' : 'No records matching your search/filter.'}
+              ${emptyMsg}
             </td>
           </tr>
         `;
+        if (mobileCards) {
+          mobileCards.innerHTML = `
+            <div class="py-8 text-center text-[#788871] text-xs bg-white rounded-xl border border-[#dfe6dc] p-4">
+              ${emptyMsg}
+            </div>
+          `;
+        }
         return;
       }
 
+      // 1. Render Desktop Table Rows
       tbody.innerHTML = filtered.map((r, index) => {
         const isAbsent = r.status === "Absent";
         const statusBadge = isAbsent
@@ -866,6 +1031,57 @@
           </tr>
         `;
       }).join("");
+
+      // 2. Render Mobile Cards View (with explicit item labels: Date, Status, Promo, Class, Group, Reason)
+      if (mobileCards) {
+        mobileCards.innerHTML = filtered.map(r => {
+          const isAbsent = r.status === "Absent";
+          const statusBadge = isAbsent
+            ? `<span class="inline-flex items-center gap-1 bg-[#fef2f2] border border-[#fbd3d3] text-[#933434] font-semibold px-2 py-0.5 rounded-full text-[10px]">✕ Absent</span>`
+            : `<span class="inline-flex items-center gap-1 bg-[#fef9ed] border border-[#f8e6bc] text-[#8a6316] font-semibold px-2 py-0.5 rounded-full text-[10px]">◷ Late</span>`;
+
+          return `
+            <div class="bg-white border border-[#dfe6dc] rounded-xl p-3.5 shadow-2xs space-y-2.5">
+              <div class="flex items-center justify-between pb-2 border-b border-[#edf2eb]">
+                <div class="font-bold text-[#283324] text-sm leading-tight">${r.studentName}</div>
+                <div class="flex items-center gap-2">
+                  ${statusBadge}
+                  <button type="button" onclick="deleteRecord('${r.id}')" class="text-[#a5b2a0] hover:text-[#933434] p-1 rounded transition-colors cursor-pointer" title="Delete entry">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-x-3 gap-y-2 text-xs text-[#33412c]">
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Date:</span>
+                  <span class="font-medium text-[#2c3726]">${r.date} <span class="text-[#889882] text-[11px]">(${r.time || ''})</span></span>
+                </div>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Status:</span>
+                  <span class="font-semibold ${isAbsent ? 'text-[#933434]' : 'text-[#8a6316]'}">${r.status}</span>
+                </div>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Promo:</span>
+                  <span class="font-semibold text-[#3b4c34]">${r.promotion}</span>
+                </div>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Class:</span>
+                  <span class="font-semibold px-1.5 py-0.5 rounded text-[11px] ${r.classType === 'AAS' ? 'bg-[#edf3ee] text-[#3e5644]' : 'bg-[#f2f5ed] text-[#4a5a3a]'}">${r.classType}</span>
+                </div>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Group:</span>
+                  <span class="font-semibold text-[#3b4c34]">Group ${r.group}</span>
+                </div>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Reason:</span>
+                  <span class="text-[#55644d] italic truncate block" title="${r.notes || ''}">${r.notes || '<span class="text-[#bcc7b7] not-italic">None</span>'}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join("");
+      }
     }
 
     function deleteRecord(id) {
@@ -874,6 +1090,7 @@
       if (!confirm(`Delete incident for "${rec.studentName}" (${rec.status})?`)) return;
       records = records.filter(r => r.id !== id);
       saveRecords();
+      renderAbsencesModal();
     }
 
     // Filter listeners
@@ -886,16 +1103,21 @@
       if (!confirm("Are you sure you want to clear ALL logged attendance records?")) return;
       records = [];
       saveRecords();
+      renderAbsencesModal();
     });
 
     // Update Statistics Bar & Header
     function updateStats() {
       const today = new Date().toISOString().split("T")[0];
       const todayRecords = records.filter(r => r.date === today);
+      const totalAbsences = records.filter(r => r.status === "Absent").length;
 
       document.getElementById("statTotalToday").textContent = todayRecords.length;
       document.getElementById("statLateToday").textContent = todayRecords.filter(r => r.status === "Late").length;
       document.getElementById("statAbsentToday").textContent = todayRecords.filter(r => r.status === "Absent").length;
+
+      const absenceBadge = document.getElementById("absencesCountBadge");
+      if (absenceBadge) absenceBadge.textContent = totalAbsences;
 
       const statEl = document.getElementById("statFormStatus");
       const iconEl = document.getElementById("statFormIcon");
@@ -913,6 +1135,135 @@
         headerEl.textContent = "Google Form & Sheets";
       }
     }
+
+    // =========================================================================
+    // ALL RECORDED ABSENCES MODAL LOGIC
+    // =========================================================================
+    const allAbsencesModal = document.getElementById("allAbsencesModal");
+
+    function openAbsencesModal() {
+      renderAbsencesModal();
+      allAbsencesModal.classList.remove("hidden");
+    }
+
+    function closeAbsencesModal() {
+      allAbsencesModal.classList.add("hidden");
+    }
+
+    function getFilteredAbsences() {
+      const search = (document.getElementById("searchAbsencesInput")?.value || "").trim().toLowerCase();
+      const promoFilter = document.getElementById("filterAbsencePromo")?.value || "all";
+      const dateFilter = document.getElementById("filterAbsenceDate")?.value || "all";
+      const today = new Date().toISOString().split("T")[0];
+
+      return records.filter(r => {
+        if (r.status !== "Absent") return false;
+        if (promoFilter !== "all" && r.promotion !== promoFilter) return false;
+        if (dateFilter === "today" && r.date !== today) return false;
+        if (search) {
+          const matchName = r.studentName.toLowerCase().includes(search);
+          const matchNotes = (r.notes || "").toLowerCase().includes(search);
+          const matchPromo = r.promotion.toLowerCase().includes(search);
+          if (!matchName && !matchNotes && !matchPromo) return false;
+        }
+        return true;
+      });
+    }
+
+    function renderAbsencesModal() {
+      const container = document.getElementById("absencesListContainer");
+      if (!container) return;
+
+      const filteredAbsences = getFilteredAbsences();
+      const totalAbsences = records.filter(r => r.status === "Absent").length;
+
+      const totalBadge = document.getElementById("modalAbsencesTotalBadge");
+      if (totalBadge) totalBadge.textContent = totalAbsences;
+
+      const summaryEl = document.getElementById("absencesListSummary");
+      if (summaryEl) summaryEl.textContent = `Showing ${filteredAbsences.length} of ${totalAbsences} absent record(s)`;
+
+      if (filteredAbsences.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 text-center text-[#788871] text-xs bg-[#f8faf7] rounded-xl border border-[#dfe6dc] p-6 space-y-2">
+            <div class="text-2xl">📋</div>
+            <div class="font-bold text-[#3c4a34] text-sm">No absences found</div>
+            <p class="text-[#6e7d67]">
+              ${totalAbsences === 0 ? 'No students have been recorded as absent yet.' : 'No absent records match your current filter or search query.'}
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filteredAbsences.map(r => {
+        return `
+          <div class="p-3.5 rounded-xl bg-[#fdfbf9] border border-[#f5dede] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 transition-all hover:border-[#ebb5b5]">
+            <div class="space-y-1.5 flex-1 min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="w-2 h-2 rounded-full bg-[#8c3838]"></span>
+                <span class="font-bold text-sm text-[#283324]">${r.studentName}</span>
+                <span class="inline-flex items-center gap-1 bg-[#fef2f2] border border-[#fbd3d3] text-[#8c3838] font-bold px-2 py-0.5 rounded-full text-[10px]">✕ Absent</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#55644d]">
+                <span><strong class="text-[#3b4c34]">Promo:</strong> ${r.promotion}</span>
+                <span>•</span>
+                <span><strong class="text-[#3b4c34]">Class:</strong> ${r.classType}</span>
+                <span>•</span>
+                <span><strong class="text-[#3b4c34]">Group:</strong> Group ${r.group}</span>
+                <span>•</span>
+                <span class="font-mono text-[11px] text-[#708068]"><strong class="text-[#3b4c34]">Date:</strong> ${r.date} ${r.time ? '(' + r.time + ')' : ''}</span>
+              </div>
+              ${r.notes ? `<div class="text-xs text-[#6e7d67] italic bg-white/70 px-2 py-1 rounded border border-[#faeaea]"><strong class="text-[#3b4c34] not-italic font-semibold">Reason:</strong> ${r.notes}</div>` : ''}
+            </div>
+            <div class="shrink-0 flex items-center gap-2 self-end sm:self-center">
+              <button type="button" onclick="deleteRecord('${r.id}')" class="text-xs text-[#a23b3b] hover:underline cursor-pointer px-2.5 py-1 rounded bg-[#fef2f2] hover:bg-[#fde8e8] font-semibold border border-[#fbd3d3] transition-colors" title="Delete absence record">
+                Delete
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function copyAbsencesListToClipboard() {
+      const absences = getFilteredAbsences();
+      if (absences.length === 0) {
+        alert("No absent records to copy matching the current filter.");
+        return;
+      }
+
+      const today = new Date().toISOString().split("T")[0];
+      const lines = [
+        `GSEA Recorded Absences Report (${today})`,
+        `Total Absences: ${absences.length}`,
+        `----------------------------------------`,
+        ...absences.map((r, i) => `${i + 1}. ${r.studentName} | ${r.promotion} ${r.classType} Grp ${r.group} | Date: ${r.date} ${r.time || ''} | Reason: ${r.notes || 'None'}`)
+      ];
+      const text = lines.join("\n");
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert(`✓ Copied ${absences.length} absent student(s) to clipboard!\n\nReady to paste into WhatsApp, email, or a document.`);
+      }).catch(() => {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        alert(`✓ Copied ${absences.length} absent student(s) to clipboard!`);
+      });
+    }
+
+    // Absences Modal Event Listeners
+    document.getElementById("btnShowAllAbsences")?.addEventListener("click", openAbsencesModal);
+    document.getElementById("cardAbsentToday")?.addEventListener("click", openAbsencesModal);
+    document.getElementById("btnCloseAbsencesModal")?.addEventListener("click", closeAbsencesModal);
+    document.getElementById("btnCloseAbsencesModalBottom")?.addEventListener("click", closeAbsencesModal);
+    document.getElementById("searchAbsencesInput")?.addEventListener("input", renderAbsencesModal);
+    document.getElementById("filterAbsencePromo")?.addEventListener("change", renderAbsencesModal);
+    document.getElementById("filterAbsenceDate")?.addEventListener("change", renderAbsencesModal);
+    document.getElementById("btnCopyAbsencesList")?.addEventListener("click", copyAbsencesListToClipboard);
 
     // =========================================================================
     // GOOGLE FORMS SUBMISSION & INTEGRATION
