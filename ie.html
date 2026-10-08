@@ -44,18 +44,18 @@
     }
 
     /* Core theme color fallbacks */
-    .bg-\[\#1e2328\] { background-color: #1e2328; }
-    .bg-\[\#2e343b\] { background-color: #2e343b; }
+    .bg-\[\#1e2328\] { background-color: #2c343e; }
+    .bg-\[\#2e343b\] { background-color: #38424e; }
     .bg-\[\#8c3838\] { background-color: #8c3838; }
 
     /* Executive Textured Charcoal Header */
     .charcoal-header-textured {
-      background-color: #1e2328;
+      background-color: #2c343e;
       background-image: 
-        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.07) 0%, transparent 75%),
-        radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.15) 100%);
-      background-size: 100% 100%, 8px 8px, 100% 100%;
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.14) 0%, transparent 70%),
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.045) 0, rgba(255, 255, 255, 0.045) 1px, transparent 0, transparent 4px),
+        repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.16) 0, rgba(0, 0, 0, 0.16) 1px, transparent 0, transparent 4px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.14) 100%);
     }
 
     /* Internal scrollable table window for ~10 visible records */
@@ -91,7 +91,7 @@
     }
   </style>
 </head>
-<body class="bg-[#f3f4f6] min-h-screen text-[#1e2226] antialiased font-sans flex flex-col justify-between">
+<body class="bg-[#f0f3f6] min-h-screen text-[#1e2226] antialiased font-sans flex flex-col justify-between">
 
   <!-- TOP HEADER (Executive Textured Charcoal Grey) -->
   <header class="charcoal-header-textured text-white shadow-sm border-b border-[#14181c] no-print sticky top-0 z-30">
@@ -122,7 +122,7 @@
           <span id="syncStatusText">Sync</span>
         </button>
 
-        <a href="index.html" class="bg-[#2e343b] hover:bg-[#39424a] text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 transition-all no-underline shadow-2xs">
+        <a href="index.html" class="bg-[#38424e] hover:bg-[#434e5c] active:bg-[#2e3742] text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 transition-all no-underline shadow-2xs">
           <span>← Back to Logger</span>
         </a>
       </div>

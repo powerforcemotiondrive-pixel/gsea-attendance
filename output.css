@@ -634,10 +634,6 @@
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
   }
-  .border-l-4 {
-    border-left-style: var(--tw-border-style);
-    border-left-width: 4px;
-  }
   .border-\[\#782f2f\] {
     border-color: #782f2f;
   }
@@ -713,6 +709,10 @@
   .border-\[\#fbd3d3\] {
     border-color: #fbd3d3;
   }
+  .border-white\/10 {
+    border-color: rgba(255, 255, 255, 0.10);
+    
+  }
   .border-white\/15 {
     border-color: rgba(255, 255, 255, 0.15);
     
@@ -720,9 +720,6 @@
   .border-white\/20 {
     border-color: rgba(255, 255, 255, 0.20);
     
-  }
-  .border-l-\[\#8c3838\] {
-    border-left-color: #8c3838;
   }
   .bg-\[\#2b3035\]\/10 {
     background-color: rgba(43, 48, 53, 0.10);
@@ -753,6 +750,9 @@
   }
   .bg-\[\#405c3d\] {
     background-color: #405c3d;
+  }
+  .bg-\[\#38424e\] {
+    background-color: #38424e;
   }
   .bg-\[\#48593e\] {
     background-color: #48593e;
@@ -799,14 +799,14 @@
   .bg-\[\#eef4ec\] {
     background-color: #eef4ec;
   }
+  .bg-\[\#f0f3f6\] {
+    background-color: #f0f3f6;
+  }
   .bg-\[\#f1f3f5\] {
     background-color: #f1f3f5;
   }
   .bg-\[\#f2f6ef\] {
     background-color: #f2f6ef;
-  }
-  .bg-\[\#f3f4f6\] {
-    background-color: #f3f4f6;
   }
   .bg-\[\#f4f7f1\] {
     background-color: #f4f7f1;
@@ -1269,8 +1269,8 @@
     --tw-shadow: 0 2px 6px var(--tw-shadow-color, rgba(0,0,0,0.05));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
-  .shadow-\[0_2px_6px_rgba\(0\,0\,0\,0\.12\)\] {
-    --tw-shadow: 0 2px 6px var(--tw-shadow-color, rgba(0,0,0,0.12));
+  .shadow-\[0_2px_6px_rgba\(0\,0\,0\,0\.08\)\] {
+    --tw-shadow: 0 2px 6px var(--tw-shadow-color, rgba(0,0,0,0.08));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
   .shadow-\[0_2px_6px_rgba\(140\,56\,56\,0\.25\)\] {
@@ -1347,6 +1347,9 @@
     .hover\:bg-\[\#344b31\]:hover {
       background-color: #344b31;
     }
+    .hover\:bg-\[\#434e5c\]:hover {
+      background-color: #434e5c;
+    }
     .hover\:bg-\[\#782f2f\]:hover {
       background-color: #782f2f;
     }
@@ -1355,9 +1358,6 @@
     }
     .hover\:bg-\[\#36452d\]:hover {
       background-color: #36452d;
-    }
-    .hover\:bg-\[\#39424a\]:hover {
-      background-color: #39424a;
     }
     .hover\:bg-\[\#212529\]:hover {
       background-color: #212529;
@@ -1454,8 +1454,8 @@
   .active\:bg-\[\#2d3a26\]:active {
     background-color: #2d3a26;
   }
-  .active\:bg-\[\#252a30\]:active {
-    background-color: #252a30;
+  .active\:bg-\[\#2e3742\]:active {
+    background-color: #2e3742;
   }
   .active\:bg-\[\#313d2b\]:active {
     background-color: #313d2b;
