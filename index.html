@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>GSEA Attendance - Absence Tracker</title>
   
   <!-- Tailwind CSS Compiled via CLI (Processed for Safari compatibility) -->
@@ -167,9 +170,12 @@
           </svg>
         </div>
         <div>
-          <span class="block text-[10px] font-bold tracking-widest text-[#c2d7b7] uppercase">
-            GSEA ATTENDANCE 2026 - 2027
-          </span>
+          <div class="flex items-center gap-1.5">
+            <span class="block text-[10px] font-bold tracking-widest text-[#c2d7b7] uppercase">
+              GSEA ATTENDANCE 2026 - 2027
+            </span>
+            <span class="bg-[#8c3838] text-white text-[9px] font-bold px-1.5 py-0.2 rounded shadow-2xs">v2.0 IE</span>
+          </div>
           <h1 class="text-base sm:text-lg font-bold text-white tracking-tight leading-tight">
             Absence Tracker
           </h1>
@@ -178,6 +184,12 @@
 
       <!-- Header Action Controls -->
       <div class="flex items-center gap-2">
+        <!-- Prominent IE Header Button -->
+        <a href="ie.html" class="bg-[#8c3838] hover:bg-[#782f2f] text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-1.5 transition-all no-underline shadow-xs" title="Open IE — All Reported Absences Database">
+          <span>IE</span>
+          <span class="hidden sm:inline font-semibold text-[11px] text-white/90">Database</span>
+        </a>
+
         <button id="btnOpenFormsModal" type="button" class="bg-white/10 hover:bg-white/15 active:bg-white/20 text-[#eaf2e6] text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 transition-all cursor-pointer">
           <svg class="w-3.5 h-3.5 text-[#cadbc1]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>

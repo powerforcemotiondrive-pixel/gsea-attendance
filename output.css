@@ -1015,6 +1015,9 @@
     font-size: var(--text-xs);
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
+  .text-\[9px\] {
+    font-size: 9px;
+  }
   .text-\[10px\] {
     font-size: 10px;
   }
@@ -1250,6 +1253,10 @@
   }
   .text-white {
     color: var(--color-white);
+  }
+  .text-white\/90 {
+    color: rgba(255, 255, 255, 0.90);
+    
   }
   .lowercase {
     text-transform: lowercase;
@@ -1488,6 +1495,9 @@
     }
     .sm\:col-span-6 {
       grid-column: span 6 / span 6;
+    }
+    .sm\:inline {
+      display: inline;
     }
     .sm\:w-auto {
       width: auto;
