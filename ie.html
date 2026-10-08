@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IE — Incident Explorer | GSEA Attendance</title>
+
+  <!-- Tailwind CSS Compiled via CLI (Processed for Safari compatibility) -->
+  <link rel="stylesheet" href="output.css">
+
+  <!-- Tailwind CDN Runtime Fallback -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* Safari desktop button appearance fix */
+    button, input[type="button"], input[type="reset"], input[type="submit"] {
+      -webkit-appearance: none;
+      appearance: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #f5f7f4;
+      color: #2c3726;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-pill {
+      -webkit-appearance: none;
+      appearance: none;
+      transition: all 0.12s ease-in-out;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+    .btn-pill:focus {
+      outline: none;
+    }
+    .btn-pill:active {
+      transform: scale(0.97);
+    }
+
+    /* Core olive theme color fallbacks */
+    .bg-\[\#3c4a34\] { background-color: #3c4a34; }
+    .bg-\[\#48593e\] { background-color: #48593e; }
+    .bg-\[\#8c3838\] { background-color: #8c3838; }
+
+    @media print {
+      body { background: white !important; color: black !important; }
+      .no-print { display: none !important; }
+      .print-full { width: 100% !important; max-width: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-[#f5f7f4] min-h-screen text-[#2c3726] antialiased font-sans flex flex-col justify-between">
+
+  <!-- TOP HEADER -->
+  <header class="bg-[#3c4a34] text-white shadow-xs border-b border-[#2e3a27] no-print sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand & Title -->
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="w-10 h-10 rounded-xl bg-[#8c3838] hover:bg-[#782f2f] text-white flex items-center justify-center border border-white/20 shadow-xs font-black text-sm tracking-wider transition-transform active:scale-95" title="Back to Attendance Logger">
+          IE
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold tracking-widest text-[#c2d7b7] uppercase">
+              GSEA ATTENDANCE 2026 - 2027
+            </span>
+            <span class="bg-[#8c3838] text-white text-[10px] font-bold px-2 py-0.2 rounded-full shadow-2xs">Database Explorer</span>
+          </div>
+          <h1 class="text-base sm:text-lg font-bold text-white tracking-tight leading-tight flex items-center gap-2">
+            <span>All Reported Absences</span>
+            <span id="headerCountBadge" class="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+          </h1>
+        </div>
+      </div>
+
+      <!-- Header Action Controls -->
+      <div class="flex items-center gap-2">
+        <button id="btnSyncSheet" type="button" class="bg-white/10 hover:bg-white/20 active:bg-white/25 text-[#eaf2e6] text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-1.5 transition-all cursor-pointer">
+          <span id="syncSpinner" class="inline-block">🔄</span>
+          <span id="syncStatusText">Sync Sheet</span>
+        </button>
+
+        <a href="index.html" class="bg-[#48593e] hover:bg-[#55694a] text-white text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-1.5 transition-all no-underline shadow-2xs">
+          <span>← Back to Logger</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-6 flex-1 space-y-4 print-full">
+
+    <!-- SUMMARY KPIS BAR -->
+    <section class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 no-print">
+      <!-- Total Absences -->
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] sm:text-xs font-bold text-[#6a7a63] uppercase tracking-wider">Reported Absences</span>
+          <span class="w-6 h-6 rounded-md bg-[#fef2f2] text-[#8c3838] flex items-center justify-center text-xs font-bold">✕</span>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span id="statTotalAbsences" class="text-xl sm:text-2xl font-black text-[#8c3838]">0</span>
+          <span class="text-[11px] text-[#85947f]">in database</span>
+        </div>
+      </div>
+
+      <!-- Absences Today -->
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] sm:text-xs font-bold text-[#6a7a63] uppercase tracking-wider">Absences Today</span>
+          <span class="w-6 h-6 rounded-md bg-[#edf3ea] text-[#3e5236] flex items-center justify-center text-xs font-bold">📅</span>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span id="statAbsencesToday" class="text-xl sm:text-2xl font-bold text-[#2e3e27]">0</span>
+          <span class="text-[11px] text-[#85947f]">logged today</span>
+        </div>
+      </div>
+
+      <!-- Total Spreadsheet Records -->
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] sm:text-xs font-bold text-[#6a7a63] uppercase tracking-wider">Total Sheet Rows</span>
+          <span class="w-6 h-6 rounded-md bg-[#edf3ea] text-[#3e5236] flex items-center justify-center text-xs font-bold">📊</span>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span id="statTotalRows" class="text-xl sm:text-2xl font-bold text-[#2e3e27]">0</span>
+          <span class="text-[11px] text-[#85947f]">rows synced</span>
+        </div>
+      </div>
+
+      <!-- Google Sheet Status -->
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] sm:text-xs font-bold text-[#6a7a63] uppercase tracking-wider">Database Source</span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+        <div class="mt-1">
+          <span id="statSourceText" class="text-xs sm:text-sm font-bold text-[#2e3e27] truncate block">Google Sheets</span>
+          <a id="linkOpenSheet" href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="text-[11px] text-[#4d6645] hover:underline font-semibold inline-flex items-center gap-1">
+            <span>↗ Open Spreadsheet</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHEET PERMISSION NOTICE (Hidden by default, shown if permission is restricted) -->
+    <div id="sheetPermissionNotice" class="hidden p-4 bg-[#fef4f4] border border-[#fbd3d3] rounded-2xl text-xs text-[#8c2d2d] space-y-2 no-print shadow-xs">
+      <div class="font-bold flex items-center gap-2 text-sm">
+        <span>⚠️</span>
+        <span>Google Sheet Access Required</span>
+      </div>
+      <p class="text-xs leading-relaxed text-[#752424]">
+        Google returned a permission restriction. Please ensure your Google Sheet General Access is set to <strong>Anyone with the link</strong> (Viewer), or click <strong>File &gt; Share &gt; Publish to web &gt; Publish</strong>.
+      </p>
+      <div class="flex items-center gap-2 pt-1">
+        <a href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="bg-[#8c2d2d] hover:bg-[#782626] text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1">
+          <span>↗ Open Google Sheet</span>
+        </a>
+        <button id="btnRetrySyncNotice" type="button" class="bg-white hover:bg-[#fef4f4] text-[#8c2d2d] border border-[#fbd3d3] font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer">
+          🔄 Retry Sync
+        </button>
+      </div>
+    </div>
+
+    <!-- FILTER & CONTROLS CARD -->
+    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-[#dfe6dc] p-4 sm:p-5 space-y-4 no-print">
+
+      <!-- PROMOTION FILTER BAR (User Required) -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-bold uppercase tracking-wider text-[#3d5035] flex items-center gap-1.5">
+            <span>🎓</span>
+            <span>Filter by PROMOTION:</span>
+          </label>
+          <span id="activePromoLabel" class="text-xs font-semibold text-[#6e7d67]">Showing: All Promotions</span>
+        </div>
+
+        <!-- Promotion Pills -->
+        <div id="promoPillsContainer" class="flex flex-wrap gap-2">
+          <button type="button" data-promo="all" class="promo-pill active bg-[#48593e] text-white font-bold px-3.5 py-1.5 rounded-lg text-xs shadow-2xs border border-[#48593e] cursor-pointer transition-all">
+            All Promotions
+          </button>
+          <button type="button" data-promo="GSEA24B" class="promo-pill bg-white text-[#2e3b28] hover:bg-[#edf3ea] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#d7e0d3] cursor-pointer transition-all">
+            GSEA24B
+          </button>
+          <button type="button" data-promo="GSEA25A" class="promo-pill bg-white text-[#2e3b28] hover:bg-[#edf3ea] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#d7e0d3] cursor-pointer transition-all">
+            GSEA25A
+          </button>
+          <button type="button" data-promo="GSEA25B" class="promo-pill bg-white text-[#2e3b28] hover:bg-[#edf3ea] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#d7e0d3] cursor-pointer transition-all">
+            GSEA25B
+          </button>
+          <button type="button" data-promo="GSEA26A" class="promo-pill bg-white text-[#2e3b28] hover:bg-[#edf3ea] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#d7e0d3] cursor-pointer transition-all">
+            GSEA26A
+          </button>
+        </div>
+      </div>
+
+      <!-- SECONDARY FILTERS & ACTIONS BAR -->
+      <div class="pt-3 border-t border-[#edf2eb] flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <!-- Search & Secondary Filters -->
+        <div class="flex items-center flex-wrap gap-2 flex-1">
+          <!-- Search input -->
+          <div class="relative flex-1 min-w-[180px] max-w-sm">
+            <input id="searchInput" type="search" placeholder="Search student name, reason, date..." class="w-full border border-[#d0ded0] rounded-lg pl-8 pr-3 py-1.5 text-xs bg-white text-[#2c3726] focus:outline-none focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 placeholder-[#97a591]">
+            <span class="absolute left-2.5 top-2 text-[#97a591] text-xs">🔍</span>
+          </div>
+
+          <!-- Status Filter -->
+          <select id="statusFilterSelect" class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] font-semibold cursor-pointer focus:outline-none focus:border-[#4d6042]">
+            <option value="Absent" selected>Reported Absences Only</option>
+            <option value="all">All Incidents (Absences &amp; Lates)</option>
+            <option value="Late">Lates Only</option>
+          </select>
+
+          <!-- Date Filter -->
+          <select id="dateFilterSelect" class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] font-semibold cursor-pointer focus:outline-none focus:border-[#4d6042]">
+            <option value="all">All Dates</option>
+            <option value="today">Today Only</option>
+            <option value="this_month">This Month</option>
+          </select>
+        </div>
+
+        <!-- Export & Copy Actions -->
+        <div class="flex items-center gap-2 shrink-0">
+          <button id="btnCopyReport" type="button" class="bg-[#48593e] hover:bg-[#3c4a34] active:bg-[#313d2b] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
+            <span>📋 Copy List</span>
+          </button>
+
+          <button id="btnExportCsv" type="button" class="bg-white hover:bg-[#f4f7f2] text-[#3e4d38] border border-[#d0ded0] font-semibold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all cursor-pointer whitespace-nowrap">
+            <span>📥 Export CSV</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MASTER ROSTER & SPREADSHEET DATABASE TABLE -->
+    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-[#dfe6dc] overflow-hidden">
+      <!-- Table Header & Counter -->
+      <div class="p-3.5 sm:p-4 bg-[#f8faf7] border-b border-[#dfe6dc] flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+          <h2 class="text-sm font-bold text-[#2e3b28]">Spreadsheet Database Records</h2>
+          <span id="filteredResultsBadge" class="bg-[#e9f0e6] text-[#425437] text-xs px-2.5 py-0.5 rounded-full font-bold">0 records</span>
+        </div>
+        <div id="filterSummaryText" class="text-xs text-[#6e7d67]">Loading records...</div>
+      </div>
+
+      <!-- Desktop Table View (Displays all details logged in Google Sheets) -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="bg-[#f2f6ef]/90 border-b border-[#dfe6dc] text-[#55644d] uppercase font-bold tracking-wider text-[11px] select-none">
+              <th class="py-3 px-3 text-center w-12">#</th>
+              <th class="py-3 px-3">Date</th>
+              <th class="py-3 px-3">Time</th>
+              <th class="py-3 px-3.5">Student Name</th>
+              <th class="py-3 px-3">Status</th>
+              <th class="py-3 px-3">Promotion</th>
+              <th class="py-3 px-3">Class Type</th>
+              <th class="py-3 px-3">Group</th>
+              <th class="py-3 px-4">Reason / Notes</th>
+              <th class="py-3 px-3 text-right">Timestamp</th>
+            </tr>
+          </thead>
+          <tbody id="masterTableBody" class="divide-y divide-[#edf2eb] text-[#33412c]">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Cards View (Responsive layout with explicit labels) -->
+      <div id="masterMobileCards" class="md:hidden p-3 space-y-2.5 bg-[#f8faf7]">
+        <!-- Dynamically populated -->
+      </div>
+
+      <!-- Table Footer -->
+      <div class="p-3.5 bg-[#f8faf7] border-t border-[#dfe6dc] text-xs flex flex-wrap items-center justify-between text-[#6a7964] gap-2">
+        <div class="flex items-center gap-3">
+          <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#8c3838]"></span> Absent</span>
+          <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#8c6721]"></span> Late</span>
+        </div>
+        <div class="text-[11px] text-[#6e7d67]">
+          Every row corresponds directly to a row in your Google Sheets database.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // Built-in Google Sheets database configuration
+    const BUILTIN_SHEET_CONFIG = {
+      sheetId: "1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU",
+      gid: "2066081147",
+      sheetUrl: "https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?resourcekey=&gid=2066081147#gid=2066081147"
+    };
+
+    const STORAGE_KEY = "gsea_attendance_incident_log_v1";
+
+    // Application state
+    let records = loadStoredRecords();
+    let selectedPromotion = "all";
+    let isSyncing = false;
+
+    function loadStoredRecords() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      } catch (e) {}
+      return [];
+    }
+
+    function saveStoredRecords() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      } catch (e) {}
+    }
+
+    function strHashCode(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash).toString(36);
+    }
+
+    // Google Visualization JSON extractor
+    function extractGvizJson(text) {
+      const start = text.indexOf("{");
+      const end = text.lastIndexOf("}");
+      if (start !== -1 && end !== -1) {
+        return JSON.parse(text.substring(start, end + 1));
+      }
+      throw new Error("Invalid response format from Google Sheet");
+    }
+
+    // JSONP Fallback
+    function fetchSheetViaJsonp(sheetId, gid, timeoutMs = 7000) {
+      return new Promise((resolve, reject) => {
+        const callbackName = "__ie_sheet_cb_" + Math.floor(Math.random() * 1000000);
+        let timer = null;
+
+        const cleanup = () => {
+          if (timer) clearTimeout(timer);
+          try { delete window[callbackName]; } catch (e) {}
+          const el = document.getElementById(callbackName);
+          if (el) el.remove();
+        };
+
+        window[callbackName] = (data) => {
+          cleanup();
+          resolve(data);
+        };
+
+        const script = document.createElement("script");
+        script.id = callbackName;
+        script.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=responseHandler:${callbackName}&gid=${gid}&_t=${Date.now()}`;
+        script.onerror = () => {
+          cleanup();
+          reject(new Error("Network or permission restriction"));
+        };
+
+        timer = setTimeout(() => {
+          cleanup();
+          reject(new Error("Timeout waiting for spreadsheet"));
+        }, timeoutMs);
+
+        document.head.appendChild(script);
+      });
+    }
+
+    // CSV Parser fallback
+    function parseCsvRows(csvText) {
+      const rows = [];
+      let currentRow = [];
+      let currentVal = "";
+      let insideQuotes = false;
+      for (let i = 0; i < csvText.length; i++) {
+        const c = csvText[i];
+        const next = csvText[i + 1];
+        if (c === '"') {
+          if (insideQuotes && next === '"') {
+            currentVal += '"';
+            i++;
+          } else {
+            insideQuotes = !insideQuotes;
+          }
+        } else if (c === ',' && !insideQuotes) {
+          currentRow.push(currentVal.trim());
+          currentVal = "";
+        } else if ((c === '\r' || c === '\n') && !insideQuotes) {
+          if (c === '\r' && next === '\n') i++;
+          currentRow.push(currentVal.trim());
+          if (currentRow.some(val => val.length > 0)) rows.push(currentRow);
+          currentRow = [];
+          currentVal = "";
+        } else {
+          currentVal += c;
+        }
+      }
+      if (currentVal || currentRow.length > 0) {
+        currentRow.push(currentVal.trim());
+        if (currentRow.some(val => val.length > 0)) rows.push(currentRow);
+      }
+      return rows;
+    }
+
+    function parseCsvTable(rows) {
+      if (!rows || rows.length < 2) return [];
+      const header = rows[0].map(h => String(h || "").toLowerCase().trim());
+      let tsIdx = header.findIndex(c => c.includes("timestamp") || c.includes("horodateur") || c.includes("date & heure") || c.includes("time"));
+      let promoIdx = header.findIndex(c => c.includes("promo"));
+      let classIdx = header.findIndex(c => c.includes("class"));
+      let groupIdx = header.findIndex(c => c.includes("group"));
+      let statusIdx = header.findIndex(c => c.includes("status") || c.includes("incident") || c.includes("statut"));
+      let nameIdx = header.findIndex(c => c.includes("student") || c.includes("name") || c.includes("nom") || c.includes("élève"));
+      let dateIdx = header.findIndex(c => c === "date" || c.includes("incident date") || (c.includes("date") && !c.includes("time")));
+      let notesIdx = header.findIndex(c => c.includes("note") || c.includes("reason") || c.includes("motif") || c.includes("remarque"));
+
+      if (tsIdx === -1) tsIdx = 0;
+      if (promoIdx === -1) promoIdx = 1;
+      if (classIdx === -1) classIdx = 2;
+      if (groupIdx === -1) groupIdx = 3;
+      if (statusIdx === -1) statusIdx = 4;
+      if (nameIdx === -1) nameIdx = 5;
+      if (dateIdx === -1) dateIdx = 6;
+      if (notesIdx === -1) notesIdx = 7;
+
+      const parsedRecords = [];
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+        const studentName = String(row[nameIdx] || "").trim();
+        if (!studentName) continue;
+
+        const statusRaw = String(row[statusIdx] || "Absent").trim();
+        const isLate = statusRaw.toLowerCase().includes("late") || statusRaw.toLowerCase().includes("retard");
+        const status = isLate ? "Late" : "Absent";
+
+        const promotion = String(row[promoIdx] || "GSEA24B").trim();
+        const classType = String(row[classIdx] || "AAS").trim();
+        const group = String(row[groupIdx] || "A").trim();
+        let date = String(row[dateIdx] || "").trim();
+        const notes = String(row[notesIdx] || "").trim();
+        const timestampRaw = String(row[tsIdx] || "").trim();
+
+        if (!date && timestampRaw) {
+          date = timestampRaw.split(" ")[0];
+        }
+
+        let time = "";
+        if (timestampRaw && timestampRaw.includes(" ")) {
+          time = timestampRaw.split(" ")[1]?.substring(0, 5) || "";
+        }
+
+        parsedRecords.push({
+          id: "SHEET-" + i + "-" + strHashCode(timestampRaw + studentName + date + status + i),
+          sheetRow: i,
+          timestamp: timestampRaw,
+          date: date,
+          time: time,
+          promotion: promotion,
+          classType: classType,
+          group: group,
+          status: status,
+          studentName: studentName,
+          notes: notes,
+          source: "sheet"
+        });
+      }
+      return parsedRecords;
+    }
+
+    // Parse Google Visualization Table
+    function parseGvizTable(table) {
+      if (!table || !table.rows) return [];
+
+      const cols = (table.cols || []).map(c => (c.label || c.id || "").trim().toLowerCase());
+
+      let tsIdx = cols.findIndex(c => c.includes("timestamp") || c.includes("horodateur") || c.includes("date & heure") || c.includes("time"));
+      let promoIdx = cols.findIndex(c => c.includes("promo"));
+      let classIdx = cols.findIndex(c => c.includes("class"));
+      let groupIdx = cols.findIndex(c => c.includes("group"));
+      let statusIdx = cols.findIndex(c => c.includes("status") || c.includes("incident") || c.includes("statut"));
+      let nameIdx = cols.findIndex(c => c.includes("student") || c.includes("name") || c.includes("nom") || c.includes("élève"));
+      let dateIdx = cols.findIndex(c => c === "date" || c.includes("incident date") || (c.includes("date") && !c.includes("time")));
+      let notesIdx = cols.findIndex(c => c.includes("note") || c.includes("reason") || c.includes("motif") || c.includes("remarque"));
+
+      if (tsIdx === -1) tsIdx = 0;
+      if (promoIdx === -1) promoIdx = 1;
+      if (classIdx === -1) classIdx = 2;
+      if (groupIdx === -1) groupIdx = 3;
+      if (statusIdx === -1) statusIdx = 4;
+      if (nameIdx === -1) nameIdx = 5;
+      if (dateIdx === -1) dateIdx = 6;
+      if (notesIdx === -1) notesIdx = 7;
+
+      const getVal = (row, idx) => {
+        if (idx < 0 || !row.c || !row.c[idx]) return "";
+        const cell = row.c[idx];
+        if (cell.f !== undefined && cell.f !== null) return String(cell.f).trim();
+        if (cell.v !== undefined && cell.v !== null) return String(cell.v).trim();
+        return "";
+      };
+
+      const parsedRecords = [];
+      for (let rIdx = 0; rIdx < table.rows.length; rIdx++) {
+        const row = table.rows[rIdx];
+        const studentName = getVal(row, nameIdx);
+        if (!studentName) continue;
+
+        const statusRaw = getVal(row, statusIdx) || "Absent";
+        const isLate = statusRaw.toLowerCase().includes("late") || statusRaw.toLowerCase().includes("retard");
+        const status = isLate ? "Late" : "Absent";
+
+        const promotion = getVal(row, promoIdx) || "GSEA24B";
+        const classType = getVal(row, classIdx) || "AAS";
+        const group = getVal(row, groupIdx) || "A";
+        let date = getVal(row, dateIdx);
+        const notes = getVal(row, notesIdx);
+        const timestampRaw = getVal(row, tsIdx);
+
+        if (!date && timestampRaw) {
+          date = timestampRaw.split(" ")[0];
+        }
+
+        let time = "";
+        if (timestampRaw && timestampRaw.includes(" ")) {
+          time = timestampRaw.split(" ")[1]?.substring(0, 5) || "";
+        }
+
+        parsedRecords.push({
+          id: "SHEET-" + (rIdx + 1) + "-" + strHashCode(timestampRaw + studentName + date + status + rIdx),
+          sheetRow: rIdx + 1,
+          timestamp: timestampRaw,
+          date: date,
+          time: time,
+          promotion: promotion,
+          classType: classType,
+          group: group,
+          status: status,
+          studentName: studentName,
+          notes: notes,
+          source: "sheet"
+        });
+      }
+      return parsedRecords;
+    }
+
+    // Merge sheet records preserving every single row
+    function mergeSheetRecords(sheetRecords) {
+      if (!sheetRecords || sheetRecords.length === 0) return;
+
+      const sheetKeys = new Set(sheetRecords.map(r =>
+        (r.timestamp || "").trim() + "___" + (r.studentName || "").toLowerCase().trim()
+      ));
+
+      const pendingLocal = records.filter(r =>
+        r.source === "local" && !sheetKeys.has((r.timestamp || "").trim() + "___" + (r.studentName || "").toLowerCase().trim())
+      );
+
+      records = [...sheetRecords, ...pendingLocal];
+
+      // Sort newest first: sheetRow descending or timestamp descending
+      records.sort((a, b) => {
+        if (b.sheetRow && a.sheetRow) return b.sheetRow - a.sheetRow;
+        const da = a.timestamp || a.date || "";
+        const db = b.timestamp || b.date || "";
+        return db.localeCompare(da);
+      });
+
+      saveStoredRecords();
+    }
+
+    // Sync records from Google Sheets
+    async function syncRecordsFromGoogleSheet(isManual = false) {
+      if (isSyncing) return;
+      isSyncing = true;
+
+      const spinner = document.getElementById("syncSpinner");
+      const statusText = document.getElementById("syncStatusText");
+      if (spinner) spinner.className = "inline-block animate-spin";
+      if (statusText) statusText.textContent = "Syncing...";
+
+      const notice = document.getElementById("sheetPermissionNotice");
+
+      try {
+        let sheetRecords = null;
+
+        // Protocol 1: GViz direct fetch
+        try {
+          const gvizUrl = `https://docs.google.com/spreadsheets/d/${BUILTIN_SHEET_CONFIG.sheetId}/gviz/tq?tqx=out:json&gid=${BUILTIN_SHEET_CONFIG.gid}&_t=${Date.now()}`;
+          const res = await fetch(gvizUrl, { cache: "no-store" });
+          if (res.ok) {
+            const text = await res.text();
+            if (text.includes("google.visualization.Query.setResponse")) {
+              const gvizData = extractGvizJson(text);
+              if (gvizData && gvizData.table) {
+                sheetRecords = parseGvizTable(gvizData.table);
+              }
+            }
+          }
+        } catch (fetchErr) {}
+
+        // Protocol 2: GViz JSONP
+        if (!sheetRecords || sheetRecords.length === 0) {
+          try {
+            const gvizData = await fetchSheetViaJsonp(BUILTIN_SHEET_CONFIG.sheetId, BUILTIN_SHEET_CONFIG.gid, 5000);
+            if (gvizData && gvizData.table) {
+              sheetRecords = parseGvizTable(gvizData.table);
+            }
+          } catch (jsonpErr) {}
+        }
+
+        // Protocol 3: CSV Export
+        if (!sheetRecords || sheetRecords.length === 0) {
+          try {
+            const csvUrl = `https://docs.google.com/spreadsheets/d/${BUILTIN_SHEET_CONFIG.sheetId}/export?format=csv&gid=${BUILTIN_SHEET_CONFIG.gid}&_t=${Date.now()}`;
+            const res = await fetch(csvUrl, { cache: "no-store" });
+            if (res.ok) {
+              const csvText = await res.text();
+              if (csvText && !csvText.includes("<!DOCTYPE") && !csvText.includes("<html")) {
+                const rows = parseCsvRows(csvText);
+                sheetRecords = parseCsvTable(rows);
+              }
+            }
+          } catch (csvErr) {}
+        }
+
+        if (!sheetRecords) {
+          throw new Error("Could not access Google Sheet. Please verify sharing permissions.");
+        }
+
+        mergeSheetRecords(sheetRecords);
+        if (notice) notice.classList.add("hidden");
+        if (statusText) statusText.textContent = `✓ Synced (${sheetRecords.length})`;
+        
+        renderUI();
+
+        if (isManual) {
+          alert(`✓ Sync Successful!\n\nRetrieved ${sheetRecords.length} record(s) directly from your Google Sheet.`);
+        }
+      } catch (err) {
+        console.warn("Sheet sync error:", err);
+        if (notice) notice.classList.remove("hidden");
+        if (statusText) statusText.textContent = "⚠️ Sync Error";
+        if (isManual) {
+          alert(`Could not sync Google Sheet:\n\n${err.message}\n\nPlease check that your sheet is shared as 'Anyone with the link' (Viewer).`);
+        }
+      } finally {
+        isSyncing = false;
+        if (spinner) spinner.className = "inline-block";
+      }
+    }
+
+    // Filtering logic
+    function getFilteredRecords() {
+      const search = (document.getElementById("searchInput")?.value || "").trim().toLowerCase();
+      const statusFilter = document.getElementById("statusFilterSelect")?.value || "Absent";
+      const dateFilter = document.getElementById("dateFilterSelect")?.value || "all";
+      const today = new Date().toISOString().split("T")[0];
+      const thisMonth = today.substring(0, 7);
+
+      return records.filter(r => {
+        // Promotion filter
+        if (selectedPromotion !== "all" && r.promotion !== selectedPromotion) {
+          return false;
+        }
+
+        // Status filter
+        if (statusFilter !== "all" && r.status !== statusFilter) {
+          return false;
+        }
+
+        // Date filter
+        if (dateFilter === "today" && r.date !== today) {
+          return false;
+        }
+        if (dateFilter === "this_month" && !(r.date || "").startsWith(thisMonth)) {
+          return false;
+        }
+
+        // Text search
+        if (search) {
+          const matchName = (r.studentName || "").toLowerCase().includes(search);
+          const matchNotes = (r.notes || "").toLowerCase().includes(search);
+          const matchPromo = (r.promotion || "").toLowerCase().includes(search);
+          const matchClass = (r.classType || "").toLowerCase().includes(search);
+          const matchGroup = (r.group || "").toLowerCase().includes(search);
+          const matchDate = (r.date || "").toLowerCase().includes(search);
+          const matchTimestamp = (r.timestamp || "").toLowerCase().includes(search);
+          if (!matchName && !matchNotes && !matchPromo && !matchClass && !matchGroup && !matchDate && !matchTimestamp) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+    }
+
+    // Render Master UI
+    function renderUI() {
+      // 1. Update KPI stats
+      const totalAbsences = records.filter(r => r.status === "Absent").length;
+      const today = new Date().toISOString().split("T")[0];
+      const absencesToday = records.filter(r => r.status === "Absent" && r.date === today).length;
+
+      document.getElementById("statTotalAbsences").textContent = totalAbsences;
+      document.getElementById("statAbsencesToday").textContent = absencesToday;
+      document.getElementById("statTotalRows").textContent = records.length;
+      document.getElementById("headerCountBadge").textContent = totalAbsences;
+
+      // 2. Update dynamic promotion counts in pills
+      const promos = ["GSEA24B", "GSEA25A", "GSEA25B", "GSEA26A"];
+      promos.forEach(p => {
+        const count = records.filter(r => r.promotion === p && r.status === "Absent").length;
+        const btn = document.querySelector(`.promo-pill[data-promo="${p}"]`);
+        if (btn) {
+          btn.innerHTML = `${p} <span class="text-[10px] bg-black/10 px-1.5 py-0.2 rounded-full font-bold ml-1">${count}</span>`;
+        }
+      });
+      const allBtn = document.querySelector(`.promo-pill[data-promo="all"]`);
+      if (allBtn) {
+        allBtn.innerHTML = `All Promotions <span class="text-[10px] bg-black/10 px-1.5 py-0.2 rounded-full font-bold ml-1">${totalAbsences}</span>`;
+      }
+
+      // 3. Render filtered table rows
+      const filtered = getFilteredRecords();
+      const tbody = document.getElementById("masterTableBody");
+      const mobileCards = document.getElementById("masterMobileCards");
+      const filterSummary = document.getElementById("filterSummaryText");
+      const filteredBadge = document.getElementById("filteredResultsBadge");
+
+      filteredBadge.textContent = `${filtered.length} record(s)`;
+      filterSummary.textContent = `Showing ${filtered.length} of ${records.length} total rows logged in sheets database`;
+
+      if (filtered.length === 0) {
+        const emptyMsg = records.length === 0
+          ? 'No attendance records retrieved yet. Tap "Sync Sheet" above.'
+          : 'No records matching your current Promotion or search filter.';
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="10" class="py-12 text-center text-[#788871] text-xs bg-[#fdfdfc]">
+              <div class="text-2xl mb-1">📋</div>
+              <div class="font-bold text-[#3c4a34] text-sm">No records found</div>
+              <p class="text-[#75846e] mt-1">${emptyMsg}</p>
+            </td>
+          </tr>
+        `;
+        mobileCards.innerHTML = `
+          <div class="py-8 text-center text-[#788871] text-xs bg-white rounded-xl border border-[#dfe6dc] p-4">
+            <div class="text-2xl mb-1">📋</div>
+            <div class="font-bold text-[#3c4a34] text-sm">No records found</div>
+            <p class="text-[#75846e] mt-1">${emptyMsg}</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Render Desktop Rows
+      tbody.innerHTML = filtered.map((r, idx) => {
+        const isAbsent = r.status === "Absent";
+        const statusBadge = isAbsent
+          ? `<span class="inline-flex items-center gap-1 bg-[#fef2f2] border border-[#fbd3d3] text-[#8c3838] font-bold px-2 py-0.5 rounded-full text-[10px]">✕ Absent</span>`
+          : `<span class="inline-flex items-center gap-1 bg-[#fef9ed] border border-[#f8e6bc] text-[#8c6721] font-bold px-2 py-0.5 rounded-full text-[10px]">◷ Late</span>`;
+
+        return `
+          <tr class="${idx % 2 === 0 ? 'bg-white' : 'bg-[#fafcfa]'} hover:bg-[#edf4eb]/60 transition-colors">
+            <td class="py-2.5 px-3 text-center text-[#8e9f88] font-mono text-[11px] font-semibold">${idx + 1}</td>
+            <td class="py-2.5 px-3 font-semibold text-[#2c3726] whitespace-nowrap">📅 ${r.date}</td>
+            <td class="py-2.5 px-3 font-mono text-[11px] text-[#6e7d67] whitespace-nowrap">${r.time || '-'}</td>
+            <td class="py-2.5 px-3.5 font-bold text-[#20291d] text-sm">${r.studentName}</td>
+            <td class="py-2.5 px-3 whitespace-nowrap">${statusBadge}</td>
+            <td class="py-2.5 px-3 font-semibold text-[#3b4c34] text-xs">
+              <span class="bg-[#edf3ee] text-[#3e5644] px-2 py-0.5 rounded font-bold">${r.promotion}</span>
+            </td>
+            <td class="py-2.5 px-3 text-xs font-semibold text-[#3e5644]">${r.classType}</td>
+            <td class="py-2.5 px-3 text-xs font-semibold text-[#4e6047]">Group ${r.group}</td>
+            <td class="py-2.5 px-4 text-xs italic text-[#55644d] max-w-xs truncate" title="${r.notes || ''}">
+              ${r.notes || '<span class="text-[#b2c0ad] not-italic">-</span>'}
+            </td>
+            <td class="py-2.5 px-3 text-right font-mono text-[10px] text-[#889882] whitespace-nowrap">${r.timestamp || '-'}</td>
+          </tr>
+        `;
+      }).join("");
+
+      // Render Mobile Cards
+      mobileCards.innerHTML = filtered.map((r, idx) => {
+        const isAbsent = r.status === "Absent";
+        const statusBadge = isAbsent
+          ? `<span class="inline-flex items-center gap-1 bg-[#fef2f2] border border-[#fbd3d3] text-[#8c3838] font-bold px-2 py-0.5 rounded-full text-[10px]">✕ Absent</span>`
+          : `<span class="inline-flex items-center gap-1 bg-[#fef9ed] border border-[#f8e6bc] text-[#8c6721] font-bold px-2 py-0.5 rounded-full text-[10px]">◷ Late</span>`;
+
+        return `
+          <div class="bg-white border border-[#dfe6dc] rounded-xl p-3.5 shadow-2xs space-y-2">
+            <div class="flex items-center justify-between pb-2 border-b border-[#edf2eb]">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-mono font-bold text-[#889882]">#${idx + 1}</span>
+                <span class="font-bold text-[#283324] text-sm">${r.studentName}</span>
+              </div>
+              <div>${statusBadge}</div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-x-3 gap-y-1.5 text-xs text-[#33412c]">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Incident Date:</span>
+                <span class="font-semibold text-[#2c3726]">📅 ${r.date} ${r.time ? '(' + r.time + ')' : ''}</span>
+              </div>
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Promotion:</span>
+                <span class="font-bold text-[#3b4c34] bg-[#edf3ee] px-1.5 py-0.2 rounded">${r.promotion}</span>
+              </div>
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Class &amp; Group:</span>
+                <span class="font-medium text-[#2c3726]">${r.classType} • Group ${r.group}</span>
+              </div>
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Logged Timestamp:</span>
+                <span class="font-mono text-[10px] text-[#788871]">${r.timestamp || '-'}</span>
+              </div>
+            </div>
+
+            ${r.notes ? `
+              <div class="pt-1.5 border-t border-[#f4f7f2] text-xs text-[#55644d]">
+                <strong class="text-[#3b4c34]">Reason:</strong> <span class="italic">${r.notes}</span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join("");
+    }
+
+    // Set Active Promotion Filter
+    function setPromotionFilter(promo) {
+      selectedPromotion = promo;
+      document.querySelectorAll(".promo-pill").forEach(btn => {
+        if (btn.getAttribute("data-promo") === promo) {
+          btn.className = "promo-pill active bg-[#48593e] text-white font-bold px-3.5 py-1.5 rounded-lg text-xs shadow-2xs border border-[#48593e] cursor-pointer transition-all";
+        } else {
+          btn.className = "promo-pill bg-white text-[#2e3b28] hover:bg-[#edf3ea] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#d7e0d3] cursor-pointer transition-all";
+        }
+      });
+      document.getElementById("activePromoLabel").textContent = `Showing: ${promo === "all" ? "All Promotions" : promo}`;
+      renderUI();
+    }
+
+    // Copy to clipboard
+    function copyFilteredList() {
+      const filtered = getFilteredRecords();
+      if (filtered.length === 0) {
+        alert("No records to copy matching the current filter.");
+        return;
+      }
+
+      const today = new Date().toISOString().split("T")[0];
+      const lines = [
+        `GSEA Absence Report — ${selectedPromotion === "all" ? "All Promotions" : selectedPromotion} (${today})`,
+        `Total Records: ${filtered.length}`,
+        `----------------------------------------`,
+        ...filtered.map((r, i) => `${i + 1}. ${r.studentName} | ${r.status} | Promo: ${r.promotion} | Class: ${r.classType} Grp: ${r.group} | Date: ${r.date} ${r.time || ''} | Reason: ${r.notes || 'None'}`)
+      ];
+      const text = lines.join("\n");
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert(`✓ Copied ${filtered.length} record(s) to clipboard!\n\nReady to paste into WhatsApp, email, or report.`);
+      }).catch(() => {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        alert(`✓ Copied ${filtered.length} record(s) to clipboard!`);
+      });
+    }
+
+    // Export CSV
+    function exportFilteredCsv() {
+      const filtered = getFilteredRecords();
+      if (filtered.length === 0) {
+        alert("No records to export matching the current filter.");
+        return;
+      }
+      const headers = ["#", "Date", "Time", "Student Name", "Status", "Promotion", "Class Type", "Group", "Notes", "Timestamp"];
+      const rows = filtered.map((r, idx) => [
+        idx + 1,
+        `"${r.date || ''}"`,
+        `"${r.time || ''}"`,
+        `"${(r.studentName || '').replace(/"/g, '""')}"`,
+        `"${r.status || ''}"`,
+        `"${r.promotion || ''}"`,
+        `"${r.classType || ''}"`,
+        `"${r.group || ''}"`,
+        `"${(r.notes || '').replace(/"/g, '""')}"`,
+        `"${r.timestamp || ''}"`
+      ]);
+
+      const csvContent = "data:text/csv;charset=utf-8," + [
+        headers.join(","),
+        ...rows.map(r => r.join(","))
+      ].join("\n");
+
+      const link = document.createElement("a");
+      link.href = encodeURI(csvContent);
+      link.download = `GSEA_Absences_${selectedPromotion}_${new Date().toISOString().split("T")[0]}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Event listeners
+    document.querySelectorAll(".promo-pill").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const promo = btn.getAttribute("data-promo");
+        setPromotionFilter(promo);
+      });
+    });
+
+    document.getElementById("searchInput")?.addEventListener("input", renderUI);
+    document.getElementById("statusFilterSelect")?.addEventListener("change", renderUI);
+    document.getElementById("dateFilterSelect")?.addEventListener("change", renderUI);
+    document.getElementById("btnCopyReport")?.addEventListener("click", copyFilteredList);
+    document.getElementById("btnExportCsv")?.addEventListener("click", exportFilteredCsv);
+    document.getElementById("btnSyncSheet")?.addEventListener("click", () => syncRecordsFromGoogleSheet(true));
+    document.getElementById("btnRetrySyncNotice")?.addEventListener("click", () => syncRecordsFromGoogleSheet(true));
+
+    // Initialize UI immediately with stored data, then sync live sheet
+    renderUI();
+    syncRecordsFromGoogleSheet(false);
+  </script>
+</body>
+</html>
+

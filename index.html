@@ -384,89 +384,26 @@
       </form>
     </section>
 
-    <!-- RECENT SUBMISSIONS / DATABASE FEED -->
-    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-[#dfe6dc] overflow-hidden">
-      <!-- Toolbar -->
-      <div class="p-4 sm:p-5 bg-[#f8faf7] border-b border-[#dfe6dc] flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div>
-          <h3 class="text-sm sm:text-base font-bold text-[#2e3b28] tracking-tight flex items-center gap-2">
-            <span>Attendance Incidents Log</span>
-            <span id="logCountBadge" class="bg-[#e9f0e6] text-[#425437] text-xs px-2.5 py-0.5 rounded-full font-semibold">0 records</span>
-          </h3>
-          <p class="text-xs text-[#6e7d67]">Live feed of reported absence and late incidents.</p>
-        </div>
-
-        <!-- Filter & Export Controls -->
-        <div class="flex items-center flex-wrap gap-2">
-          <!-- Search input -->
-          <input id="searchLogInput" type="search" placeholder="Search student..." class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] focus:outline-none focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 w-36 sm:w-44 placeholder-[#97a591]">
-
-          <!-- Status Filter -->
-          <select id="filterStatusSelect" class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] font-semibold cursor-pointer focus:outline-none focus:border-[#4d6042]">
-            <option value="all">All Statuses</option>
-            <option value="Absent">Absent Only</option>
-            <option value="Late">Late Only</option>
-          </select>
-
-          <!-- All Recorded Absences Button -->
-          <button id="btnShowAllAbsences" type="button" class="bg-[#8c3838] hover:bg-[#782f2f] active:bg-[#682626] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap" title="View all recorded student absences">
-            <span>✕</span>
-            <span>All Recorded Absences</span>
-            <span id="absencesCountBadge" class="bg-white/20 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">0</span>
-          </button>
-
-          <!-- Sync Sheet Button -->
-          <button id="btnSyncSheetToolbar" type="button" class="bg-[#edf3ea] hover:bg-[#dfeada] active:bg-[#d0dfcb] text-[#3b4e33] border border-[#cbd9c7] font-bold px-2.5 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap" title="Sync live records from Google Sheet">
-            <span id="toolbarSyncSpinner" class="inline-block transition-transform">🔄</span>
-            <span class="hidden sm:inline">Sync Sheet</span>
-          </button>
-
-          <!-- Copy for Sheets Button -->
-          <button id="btnCopyTableForSheets" type="button" class="bg-[#405c3d] hover:bg-[#344b31] active:bg-[#2a3e28] text-white font-semibold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer" title="Copy all records to clipboard for pasting into Google Sheets">
-            <span>📋 Copy for Sheets</span>
-          </button>
-
-          <!-- Export CSV -->
-          <button id="btnExportCsv" type="button" class="bg-white hover:bg-[#f4f7f2] text-[#3e4d38] border border-[#d0ded0] font-semibold px-2.5 py-1.5 rounded-lg text-xs shadow-2xs transition-all cursor-pointer" title="Download CSV">
-            📥 CSV
-          </button>
-        </div>
+    <!-- ATTENDANCE INCIDENT LOG / IE ACCESS -->
+    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-[#dfe6dc] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <h3 class="text-sm sm:text-base font-bold text-[#2e3b28] tracking-tight flex items-center gap-2">
+          <span>Attendance Incident Log</span>
+          <span id="logCountBadge" class="bg-[#e9f0e6] text-[#425437] text-xs px-2.5 py-0.5 rounded-full font-semibold">0 records</span>
+        </h3>
+        <p class="text-xs text-[#6e7d67]">Database feed and master roster of all reported absences.</p>
       </div>
 
-      <!-- Desktop Table View -->
-      <div class="hidden sm:block overflow-x-auto">
-        <table class="w-full text-left border-collapse text-xs">
-          <thead>
-            <tr class="bg-[#f2f6ef]/80 border-b border-[#dfe6dc] text-[#55644d] uppercase font-bold tracking-wider text-[11px] select-none">
-              <th class="py-2.5 px-3">Date</th>
-              <th class="py-2.5 px-3">Student Name</th>
-              <th class="py-2.5 px-2">Status</th>
-              <th class="py-2.5 px-2">Promo</th>
-              <th class="py-2.5 px-2">Class</th>
-              <th class="py-2.5 px-2">Group</th>
-              <th class="py-2.5 px-3">Reason</th>
-              <th class="py-2.5 px-2 text-center w-12 no-print"></th>
-            </tr>
-          </thead>
-          <tbody id="recordsTableBody" class="divide-y divide-[#edf2eb] text-[#33412c]">
-            <!-- Dynamically populated -->
-          </tbody>
-        </table>
-      </div>
+      <div class="flex items-center gap-2.5 flex-wrap">
+        <!-- IE Button (Red/Claret) -->
+        <a href="ie.html" id="btnOpenIE" class="bg-[#8c3838] hover:bg-[#782f2f] active:bg-[#682626] text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm shadow-xs hover:shadow transition-all flex items-center gap-2 cursor-pointer no-underline" title="View all reported absences in sheets database">
+          <span>IE</span>
+        </a>
 
-      <!-- Mobile Record Cards View (explicit item labels for small screens) -->
-      <div id="recordsMobileCards" class="sm:hidden p-3 space-y-2.5 bg-[#f8faf7]">
-        <!-- Dynamically populated -->
-      </div>
-
-      <!-- Footer Info -->
-      <div class="p-3.5 bg-[#f8faf7] border-t border-[#dfe6dc] text-xs flex flex-wrap items-center justify-between text-[#6a7964] gap-2">
-        <div class="flex items-center gap-3">
-          <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#8c3838]"></span> Absent</span>
-          <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#8c6721]"></span> Late</span>
-        </div>
-        <button id="btnClearAllRecords" type="button" class="text-[#a23b3b] hover:underline text-[11px] font-semibold cursor-pointer no-print">
-          Clear All Records
+        <!-- Sync Sheet Button -->
+        <button id="btnSyncSheetToolbar" type="button" class="bg-[#edf3ea] hover:bg-[#dfeada] active:bg-[#d0dfcb] text-[#3b4e33] border border-[#cbd9c7] font-bold px-3 py-2 rounded-xl text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap" title="Sync live records from Google Sheet">
+          <span id="toolbarSyncSpinner" class="inline-block transition-transform">🔄</span>
+          <span>Sync Sheet</span>
         </button>
       </div>
     </section>
@@ -1017,139 +954,14 @@
     }
 
     // =========================================================================
-    // RECENT RECORDS FEED & TABLE
+    // RECENT RECORDS FEED & BADGES
     // =========================================================================
     function renderRecordsTable() {
-      const tbody = document.getElementById("recordsTableBody");
-      const mobileCards = document.getElementById("recordsMobileCards");
-      const searchQuery = document.getElementById("searchLogInput").value.trim().toLowerCase();
-      const statusFilter = document.getElementById("filterStatusSelect").value;
-
-      const filtered = records.filter(r => {
-        if (statusFilter !== "all" && r.status !== statusFilter) return false;
-        if (searchQuery) {
-          const matchName = r.studentName.toLowerCase().includes(searchQuery);
-          const matchNotes = (r.notes || "").toLowerCase().includes(searchQuery);
-          const matchPromo = r.promotion.toLowerCase().includes(searchQuery);
-          if (!matchName && !matchNotes && !matchPromo) return false;
-        }
-        return true;
-      });
-
-      document.getElementById("logCountBadge").textContent = `${filtered.length} record(s)`;
-
-      if (filtered.length === 0) {
-        const emptyMsg = records.length === 0 
-          ? 'No attendance incidents recorded yet. Use the form above to log absence or late.' 
-          : 'No records matching your search/filter.';
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="8" class="py-8 text-center text-[#788871] text-xs">
-              ${emptyMsg}
-            </td>
-          </tr>
-        `;
-        if (mobileCards) {
-          mobileCards.innerHTML = `
-            <div class="py-8 text-center text-[#788871] text-xs bg-white rounded-xl border border-[#dfe6dc] p-4">
-              ${emptyMsg}
-            </div>
-          `;
-        }
-        return;
+      const logBadge = document.getElementById("logCountBadge");
+      if (logBadge) {
+        logBadge.textContent = `${records.length} record(s)`;
       }
-
-      // 1. Render Desktop Table Rows
-      tbody.innerHTML = filtered.map((r, index) => {
-        const isAbsent = r.status === "Absent";
-        const statusBadge = isAbsent
-          ? `<span class="inline-flex items-center gap-1 bg-[#fef2f2] border border-[#fbd3d3] text-[#933434] font-semibold px-2.5 py-0.5 rounded-full text-[10px]">✕ Absent</span>`
-          : `<span class="inline-flex items-center gap-1 bg-[#fef9ed] border border-[#f8e6bc] text-[#8a6316] font-semibold px-2.5 py-0.5 rounded-full text-[10px]">◷ Late</span>`;
-
-        return `
-          <tr class="${index % 2 === 0 ? 'bg-white' : 'bg-[#fafcfa]'} hover:bg-[#f2f6ef]/60 transition-colors">
-            <td class="py-2.5 px-3 text-[#6e7d67] font-mono text-[11px] whitespace-nowrap">
-              ${r.date} <span class="text-[#96a58f]">(${r.time || ''})</span>
-            </td>
-            <td class="py-2.5 px-3 font-bold text-[#283324] text-xs">
-              ${r.studentName}
-            </td>
-            <td class="py-2.5 px-2 whitespace-nowrap">
-              ${statusBadge}
-            </td>
-            <td class="py-2.5 px-2 font-semibold text-[#3b4c34] text-xs">
-              ${r.promotion}
-            </td>
-            <td class="py-2.5 px-2 text-xs">
-              <span class="font-semibold px-2 py-0.5 rounded ${r.classType === 'AAS' ? 'bg-[#edf3ee] text-[#3e5644]' : 'bg-[#f2f5ed] text-[#4a5a3a]'}">
-                ${r.classType}
-              </span>
-            </td>
-            <td class="py-2.5 px-2 font-semibold text-[#3b4c34] text-xs">
-              Group ${r.group}
-            </td>
-            <td class="py-2.5 px-3 text-[#6e7d67] italic text-[11px] max-w-[200px] truncate" title="${r.notes || ''}">
-              ${r.notes || '<span class="text-[#bcc7b7] not-italic">-</span>'}
-            </td>
-            <td class="py-2.5 px-2 text-center no-print">
-              <button type="button" onclick="deleteRecord('${r.id}')" class="text-[#a5b2a0] hover:text-[#933434] p-1 rounded transition-colors cursor-pointer" title="Delete entry">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-              </button>
-            </td>
-          </tr>
-        `;
-      }).join("");
-
-      // 2. Render Mobile Cards View (with explicit item labels: Date, Status, Promo, Class, Group, Reason)
-      if (mobileCards) {
-        mobileCards.innerHTML = filtered.map(r => {
-          const isAbsent = r.status === "Absent";
-          const statusBadge = isAbsent
-            ? `<span class="inline-flex items-center gap-1 bg-[#fef2f2] border border-[#fbd3d3] text-[#933434] font-semibold px-2 py-0.5 rounded-full text-[10px]">✕ Absent</span>`
-            : `<span class="inline-flex items-center gap-1 bg-[#fef9ed] border border-[#f8e6bc] text-[#8a6316] font-semibold px-2 py-0.5 rounded-full text-[10px]">◷ Late</span>`;
-
-          return `
-            <div class="bg-white border border-[#dfe6dc] rounded-xl p-3.5 shadow-2xs space-y-2.5">
-              <div class="flex items-center justify-between pb-2 border-b border-[#edf2eb]">
-                <div class="font-bold text-[#283324] text-sm leading-tight">${r.studentName}</div>
-                <div class="flex items-center gap-2">
-                  ${statusBadge}
-                  <button type="button" onclick="deleteRecord('${r.id}')" class="text-[#a5b2a0] hover:text-[#933434] p-1 rounded transition-colors cursor-pointer" title="Delete entry">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                  </button>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-2 gap-x-3 gap-y-2 text-xs text-[#33412c]">
-                <div>
-                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Date:</span>
-                  <span class="font-medium text-[#2c3726]">${r.date} <span class="text-[#889882] text-[11px]">(${r.time || ''})</span></span>
-                </div>
-                <div>
-                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Status:</span>
-                  <span class="font-semibold ${isAbsent ? 'text-[#933434]' : 'text-[#8a6316]'}">${r.status}</span>
-                </div>
-                <div>
-                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Promo:</span>
-                  <span class="font-semibold text-[#3b4c34]">${r.promotion}</span>
-                </div>
-                <div>
-                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Class:</span>
-                  <span class="font-semibold px-1.5 py-0.5 rounded text-[11px] ${r.classType === 'AAS' ? 'bg-[#edf3ee] text-[#3e5644]' : 'bg-[#f2f5ed] text-[#4a5a3a]'}">${r.classType}</span>
-                </div>
-                <div>
-                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Group:</span>
-                  <span class="font-semibold text-[#3b4c34]">Group ${r.group}</span>
-                </div>
-                <div>
-                  <span class="text-[10px] font-bold uppercase tracking-wider text-[#6e7d67] block">Reason:</span>
-                  <span class="text-[#55644d] italic truncate block" title="${r.notes || ''}">${r.notes || '<span class="text-[#bcc7b7] not-italic">None</span>'}</span>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join("");
-      }
+      updateStats();
     }
 
     function deleteRecord(id) {
@@ -1160,19 +972,6 @@
       saveRecords();
       renderAbsencesModal();
     }
-
-    // Filter listeners
-    document.getElementById("searchLogInput").addEventListener("input", renderRecordsTable);
-    document.getElementById("filterStatusSelect").addEventListener("change", renderRecordsTable);
-
-    // Clear all
-    document.getElementById("btnClearAllRecords").addEventListener("click", () => {
-      if (records.length === 0) return;
-      if (!confirm("Are you sure you want to clear ALL logged attendance records?")) return;
-      records = [];
-      saveRecords();
-      renderAbsencesModal();
-    });
 
     // Update Statistics Bar & Header
     function updateStats() {
@@ -1319,7 +1118,8 @@
         }
 
         parsedRecords.push({
-          id: "SHEET-" + strHashCode(timestampRaw + studentName + date + status),
+          id: "SHEET-" + (table.rows.indexOf(row) + 1) + "-" + strHashCode(timestampRaw + studentName + date + status + table.rows.indexOf(row)),
+          sheetRow: table.rows.indexOf(row) + 1,
           timestamp: timestampRaw,
           date: date,
           time: time,
@@ -1421,7 +1221,8 @@
         }
 
         parsedRecords.push({
-          id: "SHEET-" + strHashCode(timestampRaw + studentName + date + status),
+          id: "SHEET-" + i + "-" + strHashCode(timestampRaw + studentName + date + status + i),
+          sheetRow: i,
           timestamp: timestampRaw,
           date: date,
           time: time,
@@ -1556,31 +1357,24 @@
     function mergeSheetRecords(sheetRecords) {
       if (!sheetRecords || sheetRecords.length === 0) return;
 
-      const makeKey = (r) => {
-        const d = (r.date || "").trim();
-        const n = (r.studentName || "").toLowerCase().trim();
-        const s = (r.status || "").toLowerCase().trim();
-        const p = (r.promotion || "").toLowerCase().trim();
-        const g = (r.group || "").toLowerCase().trim();
-        return `${d}__${n}__${s}__${p}__${g}`;
-      };
+      // The Google Sheet is the authoritative database.
+      // Every row in sheetRecords represents a valid logged submission.
+      // We also retain any local-only records (source === "local") that haven't appeared in the sheet yet.
+      const sheetKeys = new Set(sheetRecords.map(r =>
+        (r.timestamp || "").trim() + "___" + (r.studentName || "").toLowerCase().trim()
+      ));
 
-      const existingKeys = new Set(records.map(makeKey));
-      let added = 0;
+      const pendingLocal = records.filter(r =>
+        r.source === "local" && !sheetKeys.has((r.timestamp || "").trim() + "___" + (r.studentName || "").toLowerCase().trim())
+      );
 
-      for (const sRec of sheetRecords) {
-        const key = makeKey(sRec);
-        if (!existingKeys.has(key)) {
-          records.push(sRec);
-          existingKeys.add(key);
-          added++;
-        }
-      }
+      records = [...sheetRecords, ...pendingLocal];
 
-      // Sort newest first
+      // Sort newest first: sheetRow descending or timestamp descending
       records.sort((a, b) => {
-        const da = a.date || a.timestamp || "";
-        const db = b.date || b.timestamp || "";
+        if (b.sheetRow && a.sheetRow) return b.sheetRow - a.sheetRow;
+        const da = a.timestamp || a.date || "";
+        const db = b.timestamp || b.date || "";
         return db.localeCompare(da);
       });
 
@@ -1727,9 +1521,9 @@
       });
     }
 
-    // Absences Modal Event Listeners
+    // Absences Modal & Navigation Event Listeners
     document.getElementById("btnShowAllAbsences")?.addEventListener("click", openAbsencesModal);
-    document.getElementById("cardAbsentToday")?.addEventListener("click", openAbsencesModal);
+    document.getElementById("cardAbsentToday")?.addEventListener("click", () => { window.location.href = "ie.html"; });
     document.getElementById("btnSyncSheetToolbar")?.addEventListener("click", () => syncRecordsFromGoogleSheet(true));
     document.getElementById("btnSyncSheetModal")?.addEventListener("click", () => syncRecordsFromGoogleSheet(true));
     document.getElementById("btnRetrySyncModal")?.addEventListener("click", () => syncRecordsFromGoogleSheet(true));
