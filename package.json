@@ -4,7 +4,8 @@
   "scripts": {
     "build": "npx @tailwindcss/cli -i ./src/input.css -o ./output.css && node scripts/safari-compat.js",
     "build:min": "npx @tailwindcss/cli -i ./src/input.css -o ./output.css --minify && node scripts/safari-compat.js",
-    "watch": "npx @tailwindcss/cli -i ./src/input.css -o ./output.css --watch"
+    "watch": "npx @tailwindcss/cli -i ./src/input.css -o ./output.css --watch",
+    "package:moodle": "npm run build && zip -FS -r gsea-attendance-moodle.zip imsmanifest.xml index.html ie.html output.css gform-config.json"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",

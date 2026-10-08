@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="MANIFEST-GSEA-ATTENDANCE-2026" version="1.0"
+          xmlns="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+          xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.imsproject.org/xsd/imscp_rootv1p1p2 imscp_rootv1p1p2.xsd
+                              http://www.adlnet.org/xsd/adlcp_rootv1p2 adlcp_rootv1p2.xsd">
+  <metadata>
+    <schema>ADL SCORM</schema>
+    <schemaversion>1.2</schemaversion>
+  </metadata>
+  <organizations default="ORG-GSEA-ATTENDANCE">
+    <organization identifier="ORG-GSEA-ATTENDANCE">
+      <title>GSEA Attendance - Absence &amp; Late Tracker</title>
+      <item identifier="ITEM-ABSENCE-TRACKER" identifierref="RES-ABSENCE-TRACKER">
+        <title>Absence Tracker</title>
+      </item>
+      <item identifier="ITEM-ABSENCE-DATABASE" identifierref="RES-ABSENCE-DATABASE">
+        <title>Absence Database</title>
+      </item>
+    </organization>
+  </organizations>
+  <resources>
+    <resource identifier="RES-ABSENCE-TRACKER" type="webcontent" adlcp:scormtype="asset" href="index.html">
+      <file href="index.html"/>
+      <file href="output.css"/>
+      <file href="gform-config.json"/>
+      <file href="ie.html"/>
+    </resource>
+    <resource identifier="RES-ABSENCE-DATABASE" type="webcontent" adlcp:scormtype="asset" href="ie.html">
+      <file href="ie.html"/>
+      <file href="output.css"/>
+      <file href="gform-config.json"/>
+      <file href="index.html"/>
+    </resource>
+  </resources>
+</manifest>
+

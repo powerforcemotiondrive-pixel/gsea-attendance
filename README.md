@@ -76,3 +76,26 @@ Instead of marking every present student across 20+ registers, teachers only log
 5. Click **🧪 Send Test Row to Google Sheet** to verify that your Google Sheet receives the test submission.
 
 Done! Any teacher using this webpage can now log absences and lates simultaneously.
+
+---
+
+## 🎓 Moodle / e-Campus Deployment
+
+This repository includes a standard [`imsmanifest.xml`](imsmanifest.xml) allowing you to deploy the entire attendance system into **Moodle (e-Campus)** as a **SCORM package** or **IMS Content Package**.
+
+### 1. Build the Moodle Zip Package
+Run:
+```bash
+npm run package:moodle
+```
+This generates `gsea-attendance-moodle.zip` containing all essential runtime files (`imsmanifest.xml`, `index.html`, `ie.html`, `output.css`, `gform-config.json`).
+
+### 2. Upload to Moodle
+1. In your Moodle course, click **Edit mode** (top right).
+2. Click **Add an activity or resource**.
+3. Choose either:
+   - **SCORM package** (Recommended): Upload `gsea-attendance-moodle.zip`.
+   - **IMS content package**: Upload `gsea-attendance-moodle.zip`.
+4. Set Display mode to **New window** or **Current window / Embedded frame**.
+5. Save and display. Teachers will have 1-click access to the Absence Tracker and Absence Database directly from Moodle!
+
