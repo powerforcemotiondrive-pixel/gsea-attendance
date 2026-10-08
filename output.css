@@ -427,6 +427,9 @@
   .w-12 {
     width: calc(var(--spacing) * 12);
   }
+  .w-14 {
+    width: calc(var(--spacing) * 14);
+  }
   .w-full {
     width: 100%;
   }
@@ -649,14 +652,17 @@
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
   }
+  .border-\[\#782f2f\] {
+    border-color: #782f2f;
+  }
   .border-\[\#14181c\] {
     border-color: #14181c;
   }
-  .border-\[\#48593e\] {
-    border-color: #48593e;
-  }
   .border-\[\#212529\] {
     border-color: #212529;
+  }
+  .border-\[\#705216\] {
+    border-color: #705216;
   }
   .border-\[\#c8dec3\] {
     border-color: #c8dec3;
@@ -682,9 +688,6 @@
   .border-\[\#d6e3d2\] {
     border-color: #d6e3d2;
   }
-  .border-\[\#d7e0d3\] {
-    border-color: #d7e0d3;
-  }
   .border-\[\#dce5d6\] {
     border-color: #dce5d6;
   }
@@ -697,14 +700,11 @@
   .border-\[\#eaf0e6\] {
     border-color: #eaf0e6;
   }
-  .border-\[\#edf2eb\] {
-    border-color: #edf2eb;
-  }
   .border-\[\#eef0f2\] {
     border-color: #eef0f2;
   }
-  .border-\[\#f4f7f2\] {
-    border-color: #f4f7f2;
+  .border-\[\#f1f3f5\] {
+    border-color: #f1f3f5;
   }
   .border-\[\#f5dede\] {
     border-color: #f5dede;
@@ -727,6 +727,9 @@
   .border-\[\#fbd3d3\] {
     border-color: #fbd3d3;
   }
+  .border-transparent {
+    border-color: transparent;
+  }
   .border-white\/15 {
     border-color: rgba(255, 255, 255, 0.15);
     
@@ -737,6 +740,9 @@
   }
   .bg-\[\#1e2328\] {
     background-color: #1e2328;
+  }
+  .bg-\[\#2b3035\]\/10 {
+    background-color: rgba(43, 48, 53, 0.10);
   }
   .bg-\[\#2e343b\] {
     background-color: #2e343b;
@@ -804,9 +810,6 @@
   .bg-\[\#edf3ea\] {
     background-color: #edf3ea;
   }
-  .bg-\[\#edf3ee\] {
-    background-color: #edf3ee;
-  }
   .bg-\[\#edf4ec\] {
     background-color: #edf4ec;
   }
@@ -831,17 +834,14 @@
   .bg-\[\#f8faf7\] {
     background-color: #f8faf7;
   }
-  .bg-\[\#fafcfa\] {
-    background-color: #fafcfa;
+  .bg-\[\#fafafa\] {
+    background-color: #fafafa;
   }
   .bg-\[\#fbf2f2\] {
     background-color: #fbf2f2;
   }
   .bg-\[\#fdfbf9\] {
     background-color: #fdfbf9;
-  }
-  .bg-\[\#fdfdfc\] {
-    background-color: #fdfdfc;
   }
   .bg-\[\#fef2f2\] {
     background-color: #fef2f2;
@@ -857,10 +857,6 @@
   }
   .bg-black\/5 {
     background-color: rgba(0, 0, 0, 0.05);
-    
-  }
-  .bg-black\/10 {
-    background-color: rgba(0, 0, 0, 0.10);
     
   }
   .bg-black\/20 {
@@ -1147,9 +1143,6 @@
   .text-\[\#3c4a34\] {
     color: #3c4a34;
   }
-  .text-\[\#3e5644\] {
-    color: #3e5644;
-  }
   .text-\[\#4d5e44\] {
     color: #4d5e44;
   }
@@ -1158,9 +1151,6 @@
   }
   .text-\[\#4d6645\] {
     color: #4d6645;
-  }
-  .text-\[\#4e6047\] {
-    color: #4e6047;
   }
   .text-\[\#5a6b52\] {
     color: #5a6b52;
@@ -1186,9 +1176,6 @@
   .text-\[\#8c6721\] {
     color: #8c6721;
   }
-  .text-\[\#8e9f88\] {
-    color: #8e9f88;
-  }
   .text-\[\#9ca3af\] {
     color: #9ca3af;
   }
@@ -1197,9 +1184,6 @@
   }
   .text-\[\#868e96\] {
     color: #868e96;
-  }
-  .text-\[\#20291d\] {
-    color: #20291d;
   }
   .text-\[\#33412c\] {
     color: #33412c;
@@ -1218,9 +1202,6 @@
   }
   .text-\[\#55694f\] {
     color: #55694f;
-  }
-  .text-\[\#75846e\] {
-    color: #75846e;
   }
   .text-\[\#82560e\] {
     color: #82560e;
@@ -1243,14 +1224,11 @@
   .text-\[\#788871\] {
     color: #788871;
   }
-  .text-\[\#889882\] {
-    color: #889882;
-  }
   .text-\[\#a23b3b\] {
     color: #a23b3b;
   }
-  .text-\[\#b2c0ad\] {
-    color: #b2c0ad;
+  .text-\[\#adb5bd\] {
+    color: #adb5bd;
   }
   .text-\[\#cbd5e1\] {
     color: #cbd5e1;
@@ -1376,6 +1354,9 @@
     .hover\:border-\[\#ebb5b5\]:hover {
       border-color: #ebb5b5;
     }
+    .hover\:border-\[\#fbd3d3\]:hover {
+      border-color: #fbd3d3;
+    }
     .hover\:bg-\[\#3c4a34\]:hover {
       background-color: #3c4a34;
     }
@@ -1405,9 +1386,6 @@
     }
     .hover\:bg-\[\#edf3ea\]:hover {
       background-color: #edf3ea;
-    }
-    .hover\:bg-\[\#edf4eb\]\/60:hover {
-      background-color: rgba(237, 244, 235, 0.60);
     }
     .hover\:bg-\[\#f1f3f5\]:hover {
       background-color: #f1f3f5;
@@ -1446,6 +1424,9 @@
     }
     .hover\:text-\[\#8c3838\]:hover {
       color: #8c3838;
+    }
+    .hover\:text-\[\#782f2f\]:hover {
+      color: #782f2f;
     }
     .hover\:text-\[\#882b2b\]:hover {
       color: #882b2b;

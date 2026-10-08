@@ -1127,6 +1127,37 @@
       return d;
     }
 
+    function isHeaderRow(name, status, promo, date) {
+      const n = String(name || "").toLowerCase().trim();
+      const s = String(status || "").toLowerCase().trim();
+      const p = String(promo || "").toLowerCase().trim();
+      const d = String(date || "").toLowerCase().trim();
+
+      if (!n) return true;
+
+      const nameHeaders = [
+        "student name", "student", "name", "student's name",
+        "nom de l'élève", "nom de l'eleve", "nom de l'etudiant", "nom", "élève", "eleve", "etudiant",
+        "nom et prénom", "nom et prenom", "nom & prénom", "full name", "first name", "last name"
+      ];
+      if (nameHeaders.includes(n)) return true;
+      if (n === "student name" || n === "nom de l'élève" || n === "nom de l'eleve" || n === "student name:") return true;
+
+      if (s === "incident status" || s === "status" || s === "statut" || s === "incident") {
+        if (n.includes("name") || n.includes("nom") || n.includes("student") || n.includes("eleve")) return true;
+      }
+      if (p === "promotion" || p === "promo" || p === "filière" || p === "filiere") {
+        if (n.includes("name") || n.includes("nom") || n.includes("student")) return true;
+      }
+      if (d === "incident date" || d === "date" || d === "date de l'incident") {
+        if (n.includes("name") || n.includes("nom") || n.includes("student")) return true;
+      }
+      if (["timestamp", "horodateur", "class type", "group", "reason / notes", "notes"].includes(n)) {
+        return true;
+      }
+      return false;
+    }
+
     function parseGvizTable(table) {
       if (!table || !table.rows) return [];
 
@@ -1165,10 +1196,17 @@
         if (!studentName) continue;
 
         const statusRaw = getVal(row, statusIdx) || "Absent";
+        const promotion = getVal(row, promoIdx) || "GSEA24B";
+        const dateRaw = getVal(row, dateIdx);
+
+        // Filter out spreadsheet header row / row 1
+        if (isHeaderRow(studentName, statusRaw, promotion, dateRaw)) {
+          continue;
+        }
+
         const isLate = statusRaw.toLowerCase().includes("late") || statusRaw.toLowerCase().includes("retard");
         const status = isLate ? "Late" : "Absent";
 
-        const promotion = getVal(row, promoIdx) || "GSEA24B";
         const classType = getVal(row, classIdx) || "AAS";
         const group = getVal(row, groupIdx) || "A";
         const notes = getVal(row, notesIdx);
@@ -1271,14 +1309,21 @@
         if (!studentName) continue;
 
         const statusRaw = String(row[statusIdx] || "Absent").trim();
+        const promotion = String(row[promoIdx] || "GSEA24B").trim();
+        const dateRaw = String(row[dateIdx] || "").trim();
+
+        // Filter out spreadsheet header row / row 1
+        if (isHeaderRow(studentName, statusRaw, promotion, dateRaw)) {
+          continue;
+        }
+
         const isLate = statusRaw.toLowerCase().includes("late") || statusRaw.toLowerCase().includes("retard");
         const status = isLate ? "Late" : "Absent";
 
-        const promotion = String(row[promoIdx] || "GSEA24B").trim();
         const classType = String(row[classIdx] || "AAS").trim();
         const group = String(row[groupIdx] || "A").trim();
         const timestampRaw = String(row[tsIdx] || "").trim();
-        let date = formatAnyDateToEuropean(String(row[dateIdx] || "").trim());
+        let date = formatAnyDateToEuropean(dateRaw);
 
         if (!date && timestampRaw) {
           date = formatAnyDateToEuropean(timestampRaw.split(" ")[0]);
@@ -1427,28 +1472,32 @@
     function mergeSheetRecords(sheetRecords) {
       if (!sheetRecords || sheetRecords.length === 0) return;
 
+      // Filter out header row if any
+      const validSheetRecords = sheetRecords.filter(r => !isHeaderRow(r.studentName, r.status, r.promotion, r.date));
+
       // The Google Sheet is the authoritative database.
       // Normalize all sheet record dates and timestamps to European format DD/MM/YYYY.
-      sheetRecords.forEach(r => {
+      validSheetRecords.forEach(r => {
         r.date = formatAnyDateToEuropean(r.date);
         if (r.timestamp && r.timestamp !== "-") {
           r.timestamp = formatTimestampEuropean(r.timestamp);
         }
       });
 
-      // Retain pending local entries ONLY if they do NOT match any entry in Google Sheets.
+      // Retain pending local entries ONLY if created recently (last 15 minutes) and not yet in sheets
+      const now = Date.now();
       const pendingLocal = records.filter(local => {
         if (local.source !== "local") return false;
+        if (local.createdAt && (now - local.createdAt > 15 * 60 * 1000)) return false;
         const localName = (local.studentName || "").toLowerCase().trim();
-        if (!localName) return false;
+        if (!localName || isHeaderRow(local.studentName, local.status, local.promotion, local.date)) return false;
         const localDateEu = formatAnyDateToEuropean(local.date);
 
-        const alreadyInSheet = sheetRecords.some(sheet => {
+        const alreadyInSheet = validSheetRecords.some(sheet => {
           const sheetName = (sheet.studentName || "").toLowerCase().trim();
           if (localName !== sheetName) return false;
           const sheetDateEu = formatAnyDateToEuropean(sheet.date);
           if (localDateEu && sheetDateEu && localDateEu === sheetDateEu) return true;
-          if (localDateEu && sheetDateEu && localDateEu.substring(0, 5) === sheetDateEu.substring(0, 5)) return true;
           return true; // Student name already has a live entry in this sheet
         });
 
@@ -1462,7 +1511,7 @@
         }
       });
 
-      records = [...sheetRecords, ...pendingLocal];
+      records = [...validSheetRecords, ...pendingLocal];
 
       // Sort newest first: sheetRow descending
       records.sort((a, b) => {
