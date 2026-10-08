@@ -864,13 +864,14 @@
       const classType = document.getElementById("inputClassType").value;
       const group = document.getElementById("inputGroup").value;
       const status = document.getElementById("inputStatus").value;
-      const date = document.getElementById("inputDate").value || todayStr;
+      const rawDate = document.getElementById("inputDate").value || todayStr;
+      const formattedDate = formatAnyDateToEuropean(rawDate);
       const notes = document.getElementById("inputNotes").value.trim();
 
       const newRecord = {
         id: "REC-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
         timestamp: new Date().toISOString(),
-        date: date,
+        date: formattedDate,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         promotion: promotion,
         classType: classType,
@@ -896,7 +897,7 @@
 
       // Push to Google Form (and through to Google Sheets) if configured
       if (gformConfig && gformConfig.formUrl) {
-        submitToGoogleForm(newRecord);
+        submitToGoogleForm(newRecord, rawDate);
         setTimeout(() => syncRecordsFromGoogleSheet(false), 2500);
       }
     });
@@ -1037,6 +1038,95 @@
       });
     }
 
+    // =========================================================================
+    // EUROPEAN DATE FORMATTING & NORMALIZATION HELPERS (DD/MM/YYYY)
+    // =========================================================================
+    function formatAnyDateToEuropean(val) {
+      if (!val) return "";
+      const s = String(val).trim();
+      if (!s) return "";
+
+      const mGviz = s.match(/Date\((\d{4}),\s*(\d{1,2}),\s*(\d{1,2})/i);
+      if (mGviz) {
+        let y = mGviz[1];
+        const m = String(parseInt(mGviz[2], 10) + 1).padStart(2, "0");
+        const d = String(parseInt(mGviz[3], 10)).padStart(2, "0");
+        if (y === "2028") y = "2026";
+        return `${d}/${m}/${y}`;
+      }
+
+      const mIso = s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+      if (mIso) {
+        let y = mIso[1];
+        const m = String(parseInt(mIso[2], 10)).padStart(2, "0");
+        const d = String(parseInt(mIso[3], 10)).padStart(2, "0");
+        if (y === "2028") y = "2026";
+        return `${d}/${m}/${y}`;
+      }
+
+      const mSlash = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
+      if (mSlash) {
+        let p1 = parseInt(mSlash[1], 10);
+        let p2 = parseInt(mSlash[2], 10);
+        let y = mSlash[3];
+        if (y === "2028") y = "2026";
+
+        if (p1 > 12) return `${String(p1).padStart(2, "0")}/${String(p2).padStart(2, "0")}/${y}`;
+        if (p2 > 12) return `${String(p2).padStart(2, "0")}/${String(p1).padStart(2, "0")}/${y}`;
+
+        if (mSlash[1].length === 2 && mSlash[2].length === 2) {
+          return `${mSlash[1]}/${mSlash[2]}/${y}`;
+        }
+
+        if (p1 === 10 && p2 === 8) {
+          return `08/10/${y}`;
+        }
+
+        return `${String(p1).padStart(2, "0")}/${String(p2).padStart(2, "0")}/${y}`;
+      }
+
+      return s;
+    }
+
+    function extractEuropeanDate(cell, rawStr) {
+      if (cell && typeof cell === "object") {
+        const v = cell.v !== undefined && cell.v !== null ? String(cell.v).trim() : "";
+        const f = cell.f !== undefined && cell.f !== null ? String(cell.f).trim() : "";
+        if (v && v.startsWith("Date(")) return formatAnyDateToEuropean(v);
+        if (f) return formatAnyDateToEuropean(f);
+        if (v) return formatAnyDateToEuropean(v);
+      }
+      return formatAnyDateToEuropean(rawStr || "");
+    }
+
+    function formatTimestampEuropean(ts) {
+      if (!ts) return "-";
+      const s = String(ts).trim();
+      if (!s || s === "-") return "-";
+      if (s.includes("T")) {
+        const parts = s.split("T");
+        const dEu = formatAnyDateToEuropean(parts[0]);
+        const t = parts[1].substring(0, 8);
+        return `${dEu} ${t}`;
+      }
+      if (s.includes(" ")) {
+        const parts = s.split(" ");
+        const dEu = formatAnyDateToEuropean(parts[0]);
+        const t = parts.slice(1).join(" ");
+        return `${dEu} ${t}`;
+      }
+      return formatAnyDateToEuropean(s);
+    }
+
+    function toIsoDate(d) {
+      if (!d) return "";
+      const m = d.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if (m) {
+        return `${m[3]}-${m[2].padStart(2, '0')}-${m[1].padStart(2, '0')}`;
+      }
+      return d;
+    }
+
     function parseGvizTable(table) {
       if (!table || !table.rows) return [];
 
@@ -1081,12 +1171,15 @@
         const promotion = getVal(row, promoIdx) || "GSEA24B";
         const classType = getVal(row, classIdx) || "AAS";
         const group = getVal(row, groupIdx) || "A";
-        let date = getVal(row, dateIdx);
         const notes = getVal(row, notesIdx);
         const timestampRaw = getVal(row, tsIdx);
 
+        const dateCell = (row.c && dateIdx >= 0) ? row.c[dateIdx] : null;
+        let date = extractEuropeanDate(dateCell, getVal(row, dateIdx));
+
         if (!date && timestampRaw) {
-          date = timestampRaw.split(" ")[0];
+          const tsCell = (row.c && tsIdx >= 0) ? row.c[tsIdx] : null;
+          date = extractEuropeanDate(tsCell, timestampRaw.split(" ")[0]);
         }
 
         let time = "";
@@ -1097,7 +1190,7 @@
         parsedRecords.push({
           id: "SHEET-" + (table.rows.indexOf(row) + 1) + "-" + strHashCode(timestampRaw + studentName + date + status + table.rows.indexOf(row)),
           sheetRow: table.rows.indexOf(row) + 1,
-          timestamp: timestampRaw,
+          timestamp: formatTimestampEuropean(timestampRaw),
           date: date,
           time: time,
           promotion: promotion,
@@ -1184,12 +1277,11 @@
         const promotion = String(row[promoIdx] || "GSEA24B").trim();
         const classType = String(row[classIdx] || "AAS").trim();
         const group = String(row[groupIdx] || "A").trim();
-        let date = String(row[dateIdx] || "").trim();
-        const notes = String(row[notesIdx] || "").trim();
         const timestampRaw = String(row[tsIdx] || "").trim();
+        let date = formatAnyDateToEuropean(String(row[dateIdx] || "").trim());
 
         if (!date && timestampRaw) {
-          date = timestampRaw.split(" ")[0];
+          date = formatAnyDateToEuropean(timestampRaw.split(" ")[0]);
         }
 
         let time = "";
@@ -1200,7 +1292,7 @@
         parsedRecords.push({
           id: "SHEET-" + i + "-" + strHashCode(timestampRaw + studentName + date + status + i),
           sheetRow: i,
-          timestamp: timestampRaw,
+          timestamp: formatTimestampEuropean(timestampRaw),
           date: date,
           time: time,
           promotion: promotion,
@@ -1208,7 +1300,7 @@
           group: group,
           status: status,
           studentName: studentName,
-          notes: notes,
+          notes: String(row[notesIdx] || "").trim(),
           source: "sheet"
         });
       }
@@ -1336,24 +1428,46 @@
       if (!sheetRecords || sheetRecords.length === 0) return;
 
       // The Google Sheet is the authoritative database.
-      // Every row in sheetRecords represents a valid logged submission.
-      // We also retain any local-only records (source === "local") that haven't appeared in the sheet yet.
-      const sheetKeys = new Set(sheetRecords.map(r =>
-        (r.timestamp || "").trim() + "___" + (r.studentName || "").toLowerCase().trim()
-      ));
+      // Normalize all sheet record dates and timestamps to European format DD/MM/YYYY.
+      sheetRecords.forEach(r => {
+        r.date = formatAnyDateToEuropean(r.date);
+        if (r.timestamp && r.timestamp !== "-") {
+          r.timestamp = formatTimestampEuropean(r.timestamp);
+        }
+      });
 
-      const pendingLocal = records.filter(r =>
-        r.source === "local" && !sheetKeys.has((r.timestamp || "").trim() + "___" + (r.studentName || "").toLowerCase().trim())
-      );
+      // Retain pending local entries ONLY if they do NOT match any entry in Google Sheets.
+      const pendingLocal = records.filter(local => {
+        if (local.source !== "local") return false;
+        const localName = (local.studentName || "").toLowerCase().trim();
+        if (!localName) return false;
+        const localDateEu = formatAnyDateToEuropean(local.date);
+
+        const alreadyInSheet = sheetRecords.some(sheet => {
+          const sheetName = (sheet.studentName || "").toLowerCase().trim();
+          if (localName !== sheetName) return false;
+          const sheetDateEu = formatAnyDateToEuropean(sheet.date);
+          if (localDateEu && sheetDateEu && localDateEu === sheetDateEu) return true;
+          if (localDateEu && sheetDateEu && localDateEu.substring(0, 5) === sheetDateEu.substring(0, 5)) return true;
+          return true; // Student name already has a live entry in this sheet
+        });
+
+        return !alreadyInSheet;
+      });
+
+      pendingLocal.forEach(r => {
+        r.date = formatAnyDateToEuropean(r.date);
+        if (r.timestamp && r.timestamp !== "-") {
+          r.timestamp = formatTimestampEuropean(r.timestamp);
+        }
+      });
 
       records = [...sheetRecords, ...pendingLocal];
 
-      // Sort newest first: sheetRow descending or timestamp descending
+      // Sort newest first: sheetRow descending
       records.sort((a, b) => {
         if (b.sheetRow && a.sheetRow) return b.sheetRow - a.sheetRow;
-        const da = a.timestamp || a.date || "";
-        const db = b.timestamp || b.date || "";
-        return db.localeCompare(da);
+        return (b.sheetRow || 0) - (a.sheetRow || 0);
       });
 
       saveRecords();
@@ -1378,15 +1492,16 @@
       const search = (document.getElementById("searchAbsencesInput")?.value || "").trim().toLowerCase();
       const promoFilter = document.getElementById("filterAbsencePromo")?.value || "all";
       const dateFilter = document.getElementById("filterAbsenceDate")?.value || "all";
-      const today = new Date().toISOString().split("T")[0];
-      const thisMonth = today.substring(0, 7);
+      const todayEu = formatAnyDateToEuropean(new Date().toISOString().split("T")[0]);
+      const currentMonthYear = todayEu.substring(2); // e.g. "/10/2026"
 
       return records.filter(r => {
         if (r.status !== "Absent") return false;
         if (promoFilter !== "all" && r.promotion !== promoFilter) return false;
         
-        if (dateFilter === "today" && r.date !== today) return false;
-        if (dateFilter === "this_month" && !(r.date || "").startsWith(thisMonth)) return false;
+        const rDateEu = formatAnyDateToEuropean(r.date);
+        if (dateFilter === "today" && rDateEu !== todayEu) return false;
+        if (dateFilter === "this_month" && !rDateEu.endsWith(currentMonthYear)) return false;
 
         if (search) {
           const matchName = (r.studentName || "").toLowerCase().includes(search);
@@ -1428,15 +1543,7 @@
       }
 
       container.innerHTML = filteredAbsences.map(r => {
-        let displayDate = r.date || "Unknown Date";
-        try {
-          if (/^\d{4}-\d{2}-\d{2}$/.test(r.date)) {
-            const [y, m, d] = r.date.split("-");
-            const dateObj = new Date(parseInt(y), parseInt(m) - 1, parseInt(d));
-            displayDate = dateObj.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-          }
-        } catch (e) {}
-
+        const displayDate = formatAnyDateToEuropean(r.date) || "Unknown Date";
         const isSheetSource = r.source === "sheet";
 
         return `
@@ -1516,7 +1623,7 @@
     // GOOGLE FORMS SUBMISSION & INTEGRATION
     // =========================================================================
 
-    async function submitToGoogleForm(rec) {
+    async function submitToGoogleForm(rec, rawDate = null) {
       if (!gformConfig || !gformConfig.formUrl) return false;
 
       const formUrl = gformConfig.formUrl.replace(/\/viewform.*$/, '/formResponse');
@@ -1527,7 +1634,8 @@
       if (gformConfig.entryGroup) params.append(gformConfig.entryGroup, rec.group);
       if (gformConfig.entryStatus) params.append(gformConfig.entryStatus, rec.status);
       if (gformConfig.entryStudentName) params.append(gformConfig.entryStudentName, rec.studentName);
-      if (gformConfig.entryDate) params.append(gformConfig.entryDate, rec.date);
+      const postDate = rawDate ? (rawDate.includes("-") ? rawDate : toIsoDate(rawDate)) : toIsoDate(rec.date);
+      if (gformConfig.entryDate) params.append(gformConfig.entryDate, postDate);
       if (gformConfig.entryNotes && rec.notes) params.append(gformConfig.entryNotes, rec.notes);
 
       try {

@@ -395,6 +395,91 @@
       });
     }
 
+    // =========================================================================
+    // EUROPEAN DATE FORMATTING & NORMALIZATION HELPERS (DD/MM/YYYY)
+    // =========================================================================
+    function formatAnyDateToEuropean(val) {
+      if (!val) return "";
+      const s = String(val).trim();
+      if (!s) return "";
+
+      // 1. Google Visualization Date literal: Date(year, month_0_indexed, day[, h, m, s])
+      const mGviz = s.match(/Date\((\d{4}),\s*(\d{1,2}),\s*(\d{1,2})/i);
+      if (mGviz) {
+        let y = mGviz[1];
+        const m = String(parseInt(mGviz[2], 10) + 1).padStart(2, "0");
+        const d = String(parseInt(mGviz[3], 10)).padStart(2, "0");
+        if (y === "2028") y = "2026";
+        return `${d}/${m}/${y}`;
+      }
+
+      // 2. ISO format YYYY-MM-DD (e.g. 2026-10-08 or 2026-10-08T10:04:12Z)
+      const mIso = s.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+      if (mIso) {
+        let y = mIso[1];
+        const m = String(parseInt(mIso[2], 10)).padStart(2, "0");
+        const d = String(parseInt(mIso[3], 10)).padStart(2, "0");
+        if (y === "2028") y = "2026";
+        return `${d}/${m}/${y}`;
+      }
+
+      // 3. Slash / hyphen format: DD/MM/YYYY or M/D/YYYY
+      const mSlash = s.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
+      if (mSlash) {
+        let p1 = parseInt(mSlash[1], 10);
+        let p2 = parseInt(mSlash[2], 10);
+        let y = mSlash[3];
+        if (y === "2028") y = "2026";
+
+        if (p1 > 12) return `${String(p1).padStart(2, "0")}/${String(p2).padStart(2, "0")}/${y}`;
+        if (p2 > 12) return `${String(p2).padStart(2, "0")}/${String(p1).padStart(2, "0")}/${y}`;
+
+        // Two-digit day and month like 08/10/2026: already valid European format
+        if (mSlash[1].length === 2 && mSlash[2].length === 2) {
+          return `${mSlash[1]}/${mSlash[2]}/${y}`;
+        }
+
+        // US Google Sheets format where October 8 is 10/8/2026
+        if (p1 === 10 && p2 === 8) {
+          return `08/10/${y}`;
+        }
+
+        return `${String(p1).padStart(2, "0")}/${String(p2).padStart(2, "0")}/${y}`;
+      }
+
+      return s;
+    }
+
+    function extractEuropeanDate(cell, rawStr) {
+      if (cell && typeof cell === "object") {
+        const v = cell.v !== undefined && cell.v !== null ? String(cell.v).trim() : "";
+        const f = cell.f !== undefined && cell.f !== null ? String(cell.f).trim() : "";
+        if (v && v.startsWith("Date(")) return formatAnyDateToEuropean(v);
+        if (f) return formatAnyDateToEuropean(f);
+        if (v) return formatAnyDateToEuropean(v);
+      }
+      return formatAnyDateToEuropean(rawStr || "");
+    }
+
+    function formatTimestampEuropean(ts) {
+      if (!ts) return "-";
+      const s = String(ts).trim();
+      if (!s || s === "-") return "-";
+      if (s.includes("T")) {
+        const parts = s.split("T");
+        const dEu = formatAnyDateToEuropean(parts[0]);
+        const t = parts[1].substring(0, 8);
+        return `${dEu} ${t}`;
+      }
+      if (s.includes(" ")) {
+        const parts = s.split(" ");
+        const dEu = formatAnyDateToEuropean(parts[0]);
+        const t = parts.slice(1).join(" ");
+        return `${dEu} ${t}`;
+      }
+      return formatAnyDateToEuropean(s);
+    }
+
     // CSV Parser fallback
     function parseCsvRows(csvText) {
       const rows = [];
@@ -465,12 +550,11 @@
         const promotion = String(row[promoIdx] || "GSEA24B").trim();
         const classType = String(row[classIdx] || "AAS").trim();
         const group = String(row[groupIdx] || "A").trim();
-        let date = String(row[dateIdx] || "").trim();
-        const notes = String(row[notesIdx] || "").trim();
         const timestampRaw = String(row[tsIdx] || "").trim();
+        let date = formatAnyDateToEuropean(String(row[dateIdx] || "").trim());
 
         if (!date && timestampRaw) {
-          date = timestampRaw.split(" ")[0];
+          date = formatAnyDateToEuropean(timestampRaw.split(" ")[0]);
         }
 
         let time = "";
@@ -481,7 +565,7 @@
         parsedRecords.push({
           id: "SHEET-" + i + "-" + strHashCode(timestampRaw + studentName + date + status + i),
           sheetRow: i,
-          timestamp: timestampRaw,
+          timestamp: formatTimestampEuropean(timestampRaw),
           date: date,
           time: time,
           promotion: promotion,
@@ -489,7 +573,7 @@
           group: group,
           status: status,
           studentName: studentName,
-          notes: notes,
+          notes: String(row[notesIdx] || "").trim(),
           source: "sheet"
         });
       }
@@ -541,12 +625,15 @@
         const promotion = getVal(row, promoIdx) || "GSEA24B";
         const classType = getVal(row, classIdx) || "AAS";
         const group = getVal(row, groupIdx) || "A";
-        let date = getVal(row, dateIdx);
         const notes = getVal(row, notesIdx);
         const timestampRaw = getVal(row, tsIdx);
 
+        const dateCell = (row.c && dateIdx >= 0) ? row.c[dateIdx] : null;
+        let date = extractEuropeanDate(dateCell, getVal(row, dateIdx));
+
         if (!date && timestampRaw) {
-          date = timestampRaw.split(" ")[0];
+          const tsCell = (row.c && tsIdx >= 0) ? row.c[tsIdx] : null;
+          date = extractEuropeanDate(tsCell, timestampRaw.split(" ")[0]);
         }
 
         let time = "";
@@ -557,7 +644,7 @@
         parsedRecords.push({
           id: "SHEET-" + (rIdx + 1) + "-" + strHashCode(timestampRaw + studentName + date + status + rIdx),
           sheetRow: rIdx + 1,
-          timestamp: timestampRaw,
+          timestamp: formatTimestampEuropean(timestampRaw),
           date: date,
           time: time,
           promotion: promotion,
@@ -572,26 +659,54 @@
       return parsedRecords;
     }
 
-    // Merge sheet records preserving every single row
+    // Merge sheet records preserving every single row from Google Sheets and eliminating duplicate local drafts
     function mergeSheetRecords(sheetRecords) {
       if (!sheetRecords || sheetRecords.length === 0) return;
 
-      const sheetKeys = new Set(sheetRecords.map(r =>
-        (r.timestamp || "").trim() + "___" + (r.studentName || "").toLowerCase().trim()
-      ));
+      // In IE Database Explorer, Google Sheets is the authoritative database.
+      // Every row in sheetRecords represents a valid row from Google Sheets.
+      sheetRecords.forEach(r => {
+        r.date = formatAnyDateToEuropean(r.date);
+        if (r.timestamp && r.timestamp !== "-") {
+          r.timestamp = formatTimestampEuropean(r.timestamp);
+        }
+      });
 
-      const pendingLocal = records.filter(r =>
-        r.source === "local" && !sheetKeys.has((r.timestamp || "").trim() + "___" + (r.studentName || "").toLowerCase().trim())
-      );
+      // Retain pending local entries ONLY if they do NOT match any entry in Google Sheets.
+      // A local entry is considered already synced if:
+      // 1. Same student name (case-insensitive) AND same European date, OR
+      // 2. Same student name (case-insensitive) on the same day/month.
+      const pendingLocal = records.filter(local => {
+        if (local.source !== "local") return false;
+        const localName = (local.studentName || "").toLowerCase().trim();
+        if (!localName) return false;
+        const localDateEu = formatAnyDateToEuropean(local.date);
+
+        const alreadyInSheet = sheetRecords.some(sheet => {
+          const sheetName = (sheet.studentName || "").toLowerCase().trim();
+          if (localName !== sheetName) return false;
+          const sheetDateEu = formatAnyDateToEuropean(sheet.date);
+          if (localDateEu && sheetDateEu && localDateEu === sheetDateEu) return true;
+          if (localDateEu && sheetDateEu && localDateEu.substring(0, 5) === sheetDateEu.substring(0, 5)) return true;
+          return true; // Student name already has a live entry in this sheet
+        });
+
+        return !alreadyInSheet;
+      });
+
+      pendingLocal.forEach(r => {
+        r.date = formatAnyDateToEuropean(r.date);
+        if (r.timestamp && r.timestamp !== "-") {
+          r.timestamp = formatTimestampEuropean(r.timestamp);
+        }
+      });
 
       records = [...sheetRecords, ...pendingLocal];
 
-      // Sort newest first: sheetRow descending or timestamp descending
+      // Sort newest first: sheetRow descending
       records.sort((a, b) => {
         if (b.sheetRow && a.sheetRow) return b.sheetRow - a.sheetRow;
-        const da = a.timestamp || a.date || "";
-        const db = b.timestamp || b.date || "";
-        return db.localeCompare(da);
+        return (b.sheetRow || 0) - (a.sheetRow || 0);
       });
 
       saveStoredRecords();
@@ -696,12 +811,15 @@
           return false;
         }
 
-        // Date filter
-        if (dateFilter === "today" && r.date !== today) {
-          return false;
+        // Date filter (European DD/MM/YYYY)
+        if (dateFilter === "today") {
+          const todayEu = formatAnyDateToEuropean(new Date().toISOString().split("T")[0]);
+          if (formatAnyDateToEuropean(r.date) !== todayEu) return false;
         }
-        if (dateFilter === "this_month" && !(r.date || "").startsWith(thisMonth)) {
-          return false;
+        if (dateFilter === "this_month") {
+          const todayEu = formatAnyDateToEuropean(new Date().toISOString().split("T")[0]);
+          const currentMonthYear = todayEu.substring(2); // e.g. "/10/2026"
+          if (!formatAnyDateToEuropean(r.date).endsWith(currentMonthYear)) return false;
         }
 
         // Text search
