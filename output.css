@@ -929,6 +929,9 @@
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
   }
+  .px-5 {
+    padding-inline: calc(var(--spacing) * 5);
+  }
   .px-6 {
     padding-inline: calc(var(--spacing) * 6);
   }
@@ -1165,6 +1168,9 @@
   .text-\[\#94a3b8\] {
     color: #94a3b8;
   }
+  .text-\[\#343c46\] {
+    color: #343c46;
+  }
   .text-\[\#868e96\] {
     color: #868e96;
   }
@@ -1393,14 +1399,14 @@
       background-color: rgba(255, 255, 255, 0.20);
     }
     
+    .hover\:text-\[\#1a1e21\]:hover {
+      color: #1a1e21;
+    }
     .hover\:text-\[\#2e3b28\]:hover {
       color: #2e3b28;
     }
     .hover\:text-\[\#882b2b\]:hover {
       color: #882b2b;
-    }
-    .hover\:text-\[\#212529\]:hover {
-      color: #212529;
     }
     .hover\:shadow:hover {
       --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));

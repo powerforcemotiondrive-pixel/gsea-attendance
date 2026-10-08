@@ -48,6 +48,23 @@
     }
 
     /* =========================================================================
+       SIGNATURE TACTILE MICRO-TEXTURE: Unified across ALL buttons
+       ========================================================================= */
+    .btn-pill,
+    .btn-textured,
+    #btnSubmitForm,
+    #btnClearInputs,
+    #btnOpenIE,
+    #btnReturnECampus,
+    #btnRetrySyncModal {
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.14) 0%, transparent 70%),
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.045) 0, rgba(255, 255, 255, 0.045) 1px, transparent 0, transparent 4px),
+        repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.16) 0, rgba(0, 0, 0, 0.16) 1px, transparent 0, transparent 4px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.14) 100%) !important;
+    }
+
+    /* =========================================================================
        BUTTON STYLES: Executive Charcoal Grey with Claret Highlights
        ========================================================================= */
 
@@ -79,9 +96,9 @@
     .group-btn.active:hover,
     .group-btn.active:focus,
     .group-btn.active:active {
-      background-color: #2e343b !important;
+      background-color: #2c343e !important;
       color: #ffffff !important;
-      border-color: #212529 !important;
+      border-color: #20262e !important;
       box-shadow: 0 1px 3px rgba(33, 37, 41, 0.22) !important;
     }
 
@@ -91,18 +108,18 @@
     .classtype-btn.active[data-value="AAS"]:hover,
     .classtype-btn.active[data-value="AAS"]:focus,
     .classtype-btn.active[data-value="AAS"]:active {
-      background-color: #2e343b !important;
+      background-color: #2c343e !important;
       color: #ffffff !important;
-      border-color: #212529 !important;
+      border-color: #20262e !important;
       box-shadow: 0 1px 3px rgba(33, 37, 41, 0.22) !important;
     }
     .classtype-btn.active[data-value="AG"],
     .classtype-btn.active[data-value="AG"]:hover,
     .classtype-btn.active[data-value="AG"]:focus,
     .classtype-btn.active[data-value="AG"]:active {
-      background-color: #384048 !important;
+      background-color: #38424e !important;
       color: #ffffff !important;
-      border-color: #262c32 !important;
+      border-color: #2a323c !important;
       box-shadow: 0 1px 3px rgba(33, 37, 41, 0.22) !important;
     }
 
@@ -371,7 +388,7 @@
               <span>Submit Absence</span>
             </button>
 
-            <button type="button" id="btnClearInputs" class="text-[#6c757d] hover:text-[#212529] text-xs font-semibold px-3 py-2 rounded-lg cursor-pointer">
+            <button type="button" id="btnClearInputs" class="bg-white hover:bg-[#f1f3f5] text-[#343c46] hover:text-[#1a1e21] border border-[#cfd4da] text-xs sm:text-sm font-semibold px-5 py-3 rounded-xl shadow-2xs transition-all cursor-pointer">
               Clear
             </button>
           </div>
@@ -386,6 +403,13 @@
       </form>
     </section>
   </main>
+
+  <!-- PAGE FOOTER -->
+  <footer class="py-4 text-center text-xs text-[#6c757d]">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="font-medium tracking-wide">Phil PARRIS LH /LAN</p>
+    </div>
+  </footer>
 
   <!-- ALL RECORDED ABSENCES MODAL -->
   <div id="allAbsencesModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 z-50 hidden no-print">

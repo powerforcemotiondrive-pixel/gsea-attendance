@@ -58,6 +58,24 @@
         linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.14) 100%);
     }
 
+    /* Signature Tactile Micro-Texture for All Buttons */
+    .btn-pill,
+    .status-tab,
+    .promo-pill,
+    .btn-textured,
+    #btnSyncSheet,
+    #btnCopyReport,
+    #btnExportCsv,
+    #btnRetrySyncNotice,
+    #btnReturnLogger,
+    #btnBrandIE {
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.14) 0%, transparent 70%),
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.045) 0, rgba(255, 255, 255, 0.045) 1px, transparent 0, transparent 4px),
+        repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.16) 0, rgba(0, 0, 0, 0.16) 1px, transparent 0, transparent 4px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.14) 100%) !important;
+    }
+
     /* Internal scrollable table window for ~10 visible records */
     .table-scroll-window {
       max-height: 460px;
@@ -98,7 +116,7 @@
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
       <!-- Brand & Title -->
       <div class="flex items-center space-x-3">
-        <a href="index.html" class="w-10 h-10 rounded-xl bg-[#8c3838] hover:bg-[#782f2f] text-white flex items-center justify-center border border-white/20 shadow-xs font-black text-sm tracking-wider transition-transform active:scale-95" title="Back to Absence Logger">
+        <a href="index.html" id="btnBrandIE" class="w-10 h-10 rounded-xl bg-[#8c3838] hover:bg-[#782f2f] text-white flex items-center justify-center border border-white/20 shadow-xs font-black text-sm tracking-wider transition-transform active:scale-95" title="Back to Absence Logger">
           IE
         </a>
         <div>
@@ -122,7 +140,7 @@
           <span id="syncStatusText">Sync</span>
         </button>
 
-        <a href="index.html" class="bg-[#38424e] hover:bg-[#434e5c] active:bg-[#2e3742] text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 transition-all no-underline shadow-2xs">
+        <a href="index.html" id="btnReturnLogger" class="bg-[#38424e] hover:bg-[#434e5c] active:bg-[#2e3742] text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 transition-all no-underline shadow-2xs">
           <span>← Back to Logger</span>
         </a>
       </div>
@@ -337,6 +355,13 @@
     </section>
 
   </main>
+
+  <!-- PAGE FOOTER -->
+  <footer class="py-4 text-center text-xs text-[#6c757d]">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="font-medium tracking-wide">Phil PARRIS LH /LAN</p>
+    </div>
+  </footer>
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
