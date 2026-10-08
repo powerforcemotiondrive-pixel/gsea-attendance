@@ -365,7 +365,16 @@
         const raw = localStorage.getItem(DELETED_KEY);
         if (raw) {
           const arr = JSON.parse(raw);
-          if (Array.isArray(arr)) return new Set(arr);
+          if (Array.isArray(arr)) {
+            // Filter out legacy record IDs (SHEET-*, LOCAL-*) so count is exactly 1 per deleted record
+            const cleaned = arr.filter(item => typeof item === "string" && !item.startsWith("SHEET-") && !item.startsWith("LOCAL-"));
+            const sigSet = new Set(cleaned);
+            // Self-heal localStorage if duplicate or legacy IDs were present
+            if (arr.length !== sigSet.size) {
+              saveDeletedSignatures(sigSet);
+            }
+            return sigSet;
+          }
         }
       } catch (e) {}
       return new Set();
@@ -390,8 +399,7 @@
       const set = loadDeletedSignatures();
       if (set.size === 0) return false;
       const sig = getRecordSignature(r);
-      const sigWithTime = `${sig}_${String(r.time || "").trim()}`;
-      return set.has(sig) || set.has(sigWithTime) || (r.id && set.has(r.id));
+      return set.has(sig);
     }
 
     // Delete record directly from webpage
@@ -407,10 +415,9 @@
 
       if (!confirm(confirmMsg)) return;
 
-      // 1. Add signature to deleted signatures blacklist
+      // 1. Add exactly ONE signature to deleted signatures blacklist
       const set = loadDeletedSignatures();
       set.add(getRecordSignature(target));
-      if (target.id) set.add(target.id);
       saveDeletedSignatures(set);
 
       // 2. Remove immediately from memory
@@ -999,7 +1006,7 @@
       const footerContainer = document.getElementById("footerRestoreContainer");
       if (footerContainer) {
         if (delSet.size > 0) {
-          footerContainer.innerHTML = `<span>Direct Cloud Sync with Google Sheets</span> • <span class="text-[#8c3838] font-bold">${delSet.size} deleted locally</span> (<button type="button" onclick="restoreDeletedRecords()" class="text-[#8c3838] underline hover:text-[#782f2f] cursor-pointer font-bold">Restore All</button>)`;
+          footerContainer.innerHTML = `<span>Direct Cloud Sync with Google Sheets</span> • <span class="text-[#8c3838] font-bold">${delSet.size} record${delSet.size === 1 ? '' : 's'} deleted locally</span> (<button type="button" onclick="restoreDeletedRecords()" class="text-[#8c3838] underline hover:text-[#782f2f] cursor-pointer font-bold">Restore All</button>)`;
         } else {
           footerContainer.innerHTML = `Direct Cloud Sync with Google Sheets`;
         }
