@@ -179,18 +179,11 @@
         </div>
       </div>
 
-      <!-- Header Action Controls (IE button at top removed as requested) -->
+      <!-- Header Sync Indicator (Green indicator showing Sync, no connection link to sheets) -->
       <div class="flex items-center gap-2">
-        <button id="btnOpenFormsModal" type="button" class="bg-white/10 hover:bg-white/15 active:bg-white/20 text-[#e2e8f0] text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 transition-all cursor-pointer">
-          <svg class="w-3.5 h-3.5 text-[#cbd5e1]" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-          </svg>
-          <span id="headerFormStatus">✓ Synced to Sheets</span>
-        </button>
-
-        <div id="localCacheStatus" class="text-[11px] bg-black/20 text-[#e2e8f0] border border-white/15 px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5 shrink-0" title="All entries are saved offline-first in browser storage">
-          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-          <span>✓ Ready</span>
+        <div id="headerSyncStatus" class="bg-white/10 text-[#e2e8f0] text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 shrink-0" title="Database Sync">
+          <span id="syncIndicatorDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span id="headerFormStatus">Sync</span>
         </div>
       </div>
     </div>
@@ -425,7 +418,7 @@
           <div class="space-y-1">
             <span class="font-bold text-[#2e3b28]">Option 1 — Share Link (Recommended):</span>
             <ol class="list-decimal list-inside pl-1 space-y-0.5 text-[#55644d]">
-              <li>Open your <a id="linkOpenGoogleSheet" href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="underline font-bold text-[#8c2d2d]">Google Sheet (Click here)</a></li>
+              <li>Open Google Sheets</li>
               <li>Click the blue <strong>Share</strong> button (top right of Google Sheets)</li>
               <li>Under <em>General access</em>, change from <strong>Restricted</strong> to <strong>Anyone with the link</strong> (Viewer)</li>
               <li>Click <strong>Done</strong>, then return here and tap <strong>🔄 Retry Sync</strong>.</li>
@@ -441,10 +434,7 @@
           </div>
         </div>
         <div class="pt-1 flex items-center gap-2">
-          <a href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="bg-[#8c2d2d] hover:bg-[#782626] text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1 shadow-xs transition-colors">
-            <span>↗ Open Google Sheet</span>
-          </a>
-          <button id="btnRetrySyncModal" type="button" class="bg-white hover:bg-[#fef4f4] text-[#8c2d2d] border border-[#fbd3d3] font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer shadow-xs transition-colors">
+          <button id="btnRetrySyncModal" type="button" class="bg-[#8c2d2d] hover:bg-[#782626] text-white font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer shadow-xs transition-colors">
             🔄 Retry Sync
           </button>
         </div>
@@ -952,25 +942,11 @@
       const absenceBadge = document.getElementById("absencesCountBadge");
       if (absenceBadge) absenceBadge.textContent = totalAbsences;
 
-      const statEl = document.getElementById("statFormStatus");
-      const iconEl = document.getElementById("statFormIcon");
       const headerEl = document.getElementById("headerFormStatus");
+      const syncDot = document.getElementById("syncIndicatorDot");
 
-      if (gformConfig && gformConfig.formUrl) {
-        if (statEl) {
-          statEl.textContent = "Synced to Sheets";
-          statEl.className = "text-xs sm:text-sm font-semibold text-[#3b5936] truncate max-w-[130px]";
-        }
-        if (iconEl) iconEl.className = "w-9 h-9 rounded-lg bg-[#eaf0e6] text-[#3b5936] flex items-center justify-center font-bold text-sm";
-        if (headerEl) headerEl.textContent = "✓ Synced to Sheets";
-      } else {
-        if (statEl) {
-          statEl.textContent = "Local Only";
-          statEl.className = "text-xs sm:text-sm font-semibold text-[#5a6b52] truncate max-w-[130px]";
-        }
-        if (iconEl) iconEl.className = "w-9 h-9 rounded-lg bg-[#edf2e8] text-[#5a6b52] flex items-center justify-center font-bold text-sm";
-        if (headerEl) headerEl.textContent = "Google Form & Sheets";
-      }
+      if (headerEl) headerEl.textContent = "Sync";
+      if (syncDot) syncDot.className = "w-2 h-2 rounded-full bg-emerald-400";
     }
 
     // =========================================================================
@@ -1424,14 +1400,14 @@
         renderRecordsTable();
 
         if (isManual) {
-          alert(`✓ Synced successfully!\n\nRetrieved ${sheetRecords.length} attendance incident(s) from your Google Spreadsheet.`);
+          alert(`✓ Synced successfully!\n\nRetrieved ${sheetRecords.length} attendance incident(s).`);
         }
       } catch (err) {
-        console.warn("Google Sheet sync error:", err);
-        updateSyncStatusText("⚠️ Cannot read spreadsheet");
+        console.warn("Database sync error:", err);
+        updateSyncStatusText("⚠️ Cannot read database");
         showSheetNotice();
         if (isManual) {
-          alert(`Could not retrieve records from Google Sheet:\n\n${err.message}\n\nPlease check that your Google Sheet sharing is set to 'Anyone with the link' (Viewer) or File > Share > Publish to web.`);
+          alert(`Could not retrieve records:\n\n${err.message}`);
         }
       } finally {
         isSyncingSheet = false;
@@ -1937,9 +1913,9 @@
       updateFormConfigUI();
       formsModal.classList.remove("hidden");
     }
-    document.getElementById("btnOpenFormsModal").addEventListener("click", openFormsModal);
+    document.getElementById("btnOpenFormsModal")?.addEventListener("click", openFormsModal);
     document.getElementById("cardDatabaseSync")?.addEventListener("click", openFormsModal);
-    document.getElementById("btnCloseFormsModal").addEventListener("click", () => {
+    document.getElementById("btnCloseFormsModal")?.addEventListener("click", () => {
       formsModal.classList.add("hidden");
     });
 

@@ -63,6 +63,7 @@
       "Courier New", monospace;
     --color-emerald-400: #34d399;
     --color-emerald-500: #34d399;
+    --color-emerald-700: #34d399;
     --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
@@ -363,9 +364,6 @@
   .h-2\.5 {
     height: calc(var(--spacing) * 2.5);
   }
-  .h-3\.5 {
-    height: calc(var(--spacing) * 3.5);
-  }
   .h-4 {
     height: calc(var(--spacing) * 4);
   }
@@ -402,9 +400,6 @@
   .w-2\.5 {
     width: calc(var(--spacing) * 2.5);
   }
-  .w-3\.5 {
-    width: calc(var(--spacing) * 3.5);
-  }
   .w-4 {
     width: calc(var(--spacing) * 4);
   }
@@ -434,9 +429,6 @@
   }
   .max-w-6xl {
     max-width: var(--container-6xl);
-  }
-  .max-w-\[130px\] {
-    max-width: 130px;
   }
   .max-w-md {
     max-width: var(--container-md);
@@ -1217,11 +1209,11 @@
   .text-\[\#adb5bd\] {
     color: #adb5bd;
   }
-  .text-\[\#cbd5e1\] {
-    color: #cbd5e1;
-  }
   .text-\[\#e2e8f0\] {
     color: #e2e8f0;
+  }
+  .text-emerald-700 {
+    color: var(--color-emerald-700);
   }
   .text-white {
     color: var(--color-white);
@@ -1240,9 +1232,6 @@
   }
   .no-underline {
     text-decoration-line: none;
-  }
-  .underline {
-    text-decoration-line: underline;
   }
   .antialiased {
     -webkit-font-smoothing: antialiased;
@@ -1386,16 +1375,9 @@
     .hover\:bg-\[\#fef2f2\]:hover {
       background-color: #fef2f2;
     }
-    .hover\:bg-\[\#fef4f4\]:hover {
-      background-color: #fef4f4;
-    }
     .hover\:bg-\[\#fef9ed\]:hover {
       background-color: #fef9ed;
     }
-    .hover\:bg-white\/15:hover {
-      background-color: rgba(255, 255, 255, 0.15);
-    }
-    
     .hover\:bg-white\/20:hover {
       background-color: rgba(255, 255, 255, 0.20);
     }
@@ -1403,17 +1385,11 @@
     .hover\:text-\[\#2e3b28\]:hover {
       color: #2e3b28;
     }
-    .hover\:text-\[\#8c3838\]:hover {
-      color: #8c3838;
-    }
     .hover\:text-\[\#882b2b\]:hover {
       color: #882b2b;
     }
     .hover\:text-\[\#212529\]:hover {
       color: #212529;
-    }
-    .hover\:underline:hover {
-      text-decoration-line: underline;
     }
     .hover\:shadow:hover {
       --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
@@ -1475,10 +1451,6 @@
   }
   .active\:bg-\[\#682626\]:active {
     background-color: #682626;
-  }
-  .active\:bg-white\/20:active {
-    background-color: rgba(255, 255, 255, 0.20);
-    
   }
   .active\:bg-white\/25:active {
     background-color: rgba(255, 255, 255, 0.25);

@@ -83,7 +83,7 @@
       <div class="flex items-center gap-2">
         <button id="btnSyncSheet" type="button" class="bg-white/10 hover:bg-white/20 active:bg-white/25 text-[#e2e8f0] text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-1.5 transition-all cursor-pointer">
           <span id="syncSpinner" class="inline-block">🔄</span>
-          <span id="syncStatusText">Sync Sheet</span>
+          <span id="syncStatusText">Sync</span>
         </button>
 
         <a href="index.html" class="bg-[#2e343b] hover:bg-[#39424a] text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 transition-all no-underline shadow-2xs">
@@ -134,35 +134,30 @@
         </div>
       </div>
 
-      <!-- Google Sheet Status -->
+      <!-- Database Status -->
       <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)]">
         <div class="flex items-center justify-between">
-          <span class="text-[10px] sm:text-xs font-bold text-[#6c757d] uppercase tracking-wider">Database Source</span>
+          <span class="text-[10px] sm:text-xs font-bold text-[#6c757d] uppercase tracking-wider">Database Status</span>
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
         </div>
         <div class="mt-1">
-          <span id="statSourceText" class="text-xs sm:text-sm font-bold text-[#1e2226] truncate block">Google Sheets</span>
-          <a id="linkOpenSheet" href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="text-[11px] text-[#2b3035] hover:text-[#8c3838] hover:underline font-semibold inline-flex items-center gap-1">
-            <span>↗ Open Spreadsheet</span>
-          </a>
+          <span id="statSourceText" class="text-xs sm:text-sm font-bold text-emerald-700 truncate block">Connected</span>
+          <span class="text-[11px] text-[#6c757d] font-medium">Live sync active</span>
         </div>
       </div>
     </section>
 
-    <!-- SHEET PERMISSION NOTICE (Hidden by default, shown if permission is restricted) -->
+    <!-- DATABASE PERMISSION / CONNECTION NOTICE (Hidden by default, shown if connection issue occurs) -->
     <div id="sheetPermissionNotice" class="hidden p-4 bg-[#fef4f4] border border-[#fbd3d3] rounded-2xl text-xs text-[#8c2d2d] space-y-2 no-print shadow-xs">
       <div class="font-bold flex items-center gap-2 text-sm">
         <span>⚠️</span>
-        <span>Google Sheet Access Required</span>
+        <span>Database Connection Notice</span>
       </div>
       <p class="text-xs leading-relaxed text-[#752424]">
-        Google returned a permission restriction. Please ensure your Google Sheet General Access is set to <strong>Anyone with the link</strong> (Viewer), or click <strong>File &gt; Share &gt; Publish to web &gt; Publish</strong>.
+        Database connection restriction detected. If records do not load, please contact the administrator.
       </p>
       <div class="flex items-center gap-2 pt-1">
-        <a href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="bg-[#8c2d2d] hover:bg-[#782626] text-white font-bold px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1">
-          <span>↗ Open Google Sheet</span>
-        </a>
-        <button id="btnRetrySyncNotice" type="button" class="bg-white hover:bg-[#fef4f4] text-[#8c2d2d] border border-[#fbd3d3] font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer">
+        <button id="btnRetrySyncNotice" type="button" class="bg-[#8c2d2d] hover:bg-[#782626] text-white font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer">
           🔄 Retry Sync
         </button>
       </div>
@@ -805,14 +800,14 @@
         renderUI();
 
         if (isManual) {
-          alert(`✓ Sync Successful!\n\nRetrieved ${records.length} incident record(s) directly from your Google Sheet.`);
+          alert(`✓ Sync Successful!\n\nRetrieved ${records.length} incident record(s).`);
         }
       } catch (err) {
-        console.warn("Sheet sync error:", err);
+        console.warn("Database sync error:", err);
         if (notice) notice.classList.remove("hidden");
         if (statusText) statusText.textContent = "⚠️ Sync Error";
         if (isManual) {
-          alert(`Could not sync Google Sheet:\n\n${err.message}\n\nPlease check that your sheet is shared as 'Anyone with the link' (Viewer).`);
+          alert(`Could not sync database:\n\n${err.message}`);
         }
       } finally {
         isSyncing = false;
