@@ -426,9 +426,6 @@
   .w-12 {
     width: calc(var(--spacing) * 12);
   }
-  .w-14 {
-    width: calc(var(--spacing) * 14);
-  }
   .w-full {
     width: 100%;
   }
@@ -601,9 +598,6 @@
   :where(.divide-\[\#eef0f2\] > :not(:last-child)) {
     border-color: #eef0f2;
   }
-  .self-end {
-    align-self: flex-end;
-  }
   .truncate {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -722,9 +716,6 @@
   }
   .border-\[\#fbd3d3\] {
     border-color: #fbd3d3;
-  }
-  .border-transparent {
-    border-color: transparent;
   }
   .border-white\/15 {
     border-color: rgba(255, 255, 255, 0.15);
@@ -1350,9 +1341,6 @@
     .hover\:border-\[\#ebb5b5\]:hover {
       border-color: #ebb5b5;
     }
-    .hover\:border-\[\#fbd3d3\]:hover {
-      border-color: #fbd3d3;
-    }
     .hover\:bg-\[\#3c4a34\]:hover {
       background-color: #3c4a34;
     }
@@ -1395,9 +1383,6 @@
     .hover\:bg-\[\#f8f9fa\]:hover {
       background-color: #f8f9fa;
     }
-    .hover\:bg-\[\#fde8e8\]:hover {
-      background-color: #fde8e8;
-    }
     .hover\:bg-\[\#fef2f2\]:hover {
       background-color: #fef2f2;
     }
@@ -1420,9 +1405,6 @@
     }
     .hover\:text-\[\#8c3838\]:hover {
       color: #8c3838;
-    }
-    .hover\:text-\[\#782f2f\]:hover {
-      color: #782f2f;
     }
     .hover\:text-\[\#882b2b\]:hover {
       color: #882b2b;
@@ -1536,9 +1518,6 @@
       --tw-space-y-reverse: 0;
       margin-block-start: calc(calc(var(--spacing) * 5) * var(--tw-space-y-reverse));
       margin-block-end: calc(calc(var(--spacing) * 5) * calc(1 - var(--tw-space-y-reverse)));
-    }
-    .sm\:self-center {
-      align-self: center;
     }
     .sm\:rounded-2xl {
       border-radius: var(--radius-2xl);

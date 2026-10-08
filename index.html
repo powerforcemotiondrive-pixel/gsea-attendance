@@ -934,14 +934,6 @@
       updateStats();
     }
 
-    function deleteRecord(id) {
-      const rec = records.find(r => r.id === id);
-      if (!rec) return;
-      if (!confirm(`Delete incident for "${rec.studentName}" (${rec.status})?`)) return;
-      records = records.filter(r => r.id !== id);
-      saveRecords();
-      renderAbsencesModal();
-    }
 
     // Update Statistics Bar & Header
     function updateStats() {
@@ -1615,11 +1607,6 @@
                 <span><strong class="text-[#3b4c34]">Group:</strong> Group ${r.group}</span>
               </div>
               ${r.notes ? `<div class="text-xs text-[#6e7d67] italic bg-white/70 px-2 py-1 rounded border border-[#faeaea]"><strong class="text-[#3b4c34] not-italic font-semibold">Reason:</strong> ${r.notes}</div>` : ''}
-            </div>
-            <div class="shrink-0 flex items-center gap-2 self-end sm:self-center">
-              <button type="button" onclick="deleteRecord('${r.id}')" class="text-xs text-[#a23b3b] hover:underline cursor-pointer px-2.5 py-1 rounded bg-[#fef2f2] hover:bg-[#fde8e8] font-semibold border border-[#fbd3d3] transition-colors" title="Delete record">
-                Delete
-              </button>
             </div>
           </div>
         `;
