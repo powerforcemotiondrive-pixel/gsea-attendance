@@ -58,14 +58,13 @@
         linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.14) 100%);
     }
 
-    /* Signature Tactile Micro-Texture for All Buttons */
-    .btn-pill,
-    .status-tab,
-    .promo-pill,
+    /* Signature Tactile Micro-Texture for Active Buttons and Primary Action Triggers */
+    .btn-pill.active,
+    .status-tab.active,
+    .promo-pill.active,
     .btn-textured,
     #btnSyncSheet,
     #btnCopyReport,
-    #btnExportCsv,
     #btnRetrySyncNotice,
     #btnReturnLogger,
     #btnBrandIE {
@@ -74,6 +73,14 @@
         repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.045) 0, rgba(255, 255, 255, 0.045) 1px, transparent 0, transparent 4px),
         repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.16) 0, rgba(0, 0, 0, 0.16) 1px, transparent 0, transparent 4px),
         linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(0, 0, 0, 0.14) 100%) !important;
+    }
+
+    /* Inactive Buttons: Clean, smooth, no texture */
+    .btn-pill:not(.active),
+    .status-tab:not(.active),
+    .promo-pill:not(.active),
+    #btnExportCsv {
+      background-image: none !important;
     }
 
     /* Internal scrollable table window for ~10 visible records */
@@ -1089,7 +1096,7 @@
           if (s === "Absent") {
             btn.className = "status-tab active bg-[#8c3838] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs border border-[#782f2f] cursor-pointer transition-all";
           } else if (s === "Late") {
-            btn.className = "status-tab active bg-[#8c6721] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs border border-[#705216] cursor-pointer transition-all";
+            btn.className = "status-tab active bg-[#8c3838] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs border border-[#782f2f] cursor-pointer transition-all";
           } else {
             btn.className = "status-tab active bg-[#2e343b] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs border border-[#212529] cursor-pointer transition-all";
           }

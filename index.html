@@ -48,12 +48,11 @@
     }
 
     /* =========================================================================
-       SIGNATURE TACTILE MICRO-TEXTURE: Unified across ALL buttons
+       SIGNATURE TACTILE MICRO-TEXTURE: Scoped ONLY to ACTIVE & Primary Action Buttons
        ========================================================================= */
-    .btn-pill,
+    .btn-pill.active,
     .btn-textured,
     #btnSubmitForm,
-    #btnClearInputs,
     #btnOpenIE,
     #btnReturnECampus,
     #btnRetrySyncModal {
@@ -68,10 +67,12 @@
        BUTTON STYLES: Executive Charcoal Grey with Claret Highlights
        ========================================================================= */
 
-    /* INACTIVE BUTTONS: Crisp white background with dark charcoal text */
+    /* INACTIVE BUTTONS: Crisp smooth white background with dark charcoal text (NO TEXTURE) */
     .btn-pill:not(.active),
     .btn-pill:not(.active):focus,
-    .btn-pill:not(.active):active {
+    .btn-pill:not(.active):active,
+    #btnClearInputs {
+      background-image: none !important;
       background-color: #ffffff !important;
       color: #2b3035 !important;
       border-color: #d1d5db !important;
@@ -134,15 +135,15 @@
       box-shadow: 0 1px 4px rgba(140, 56, 56, 0.28) !important;
     }
 
-    /* ACTIVE STATUS BUTTON: LATE (Bold Ochre Amber) */
+    /* ACTIVE STATUS BUTTON: LATE (Bold Claret Red Highlight) */
     .status-btn.active[data-value="Late"],
     .status-btn.active[data-value="Late"]:hover,
     .status-btn.active[data-value="Late"]:focus,
     .status-btn.active[data-value="Late"]:active {
-      background-color: #8c6721 !important;
+      background-color: #8c3838 !important;
       color: #ffffff !important;
-      border-color: #8c6721 !important;
-      box-shadow: 0 1px 4px rgba(140, 103, 33, 0.28) !important;
+      border-color: #8c3838 !important;
+      box-shadow: 0 1px 4px rgba(140, 56, 56, 0.28) !important;
     }
 
     /* STATUS BUTTON ICONS */
