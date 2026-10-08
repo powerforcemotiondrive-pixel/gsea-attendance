@@ -147,6 +147,16 @@
     .border-\[\#cfd4da\] { border-color: #cfd4da; }
     .border-\[\#8c3838\] { border-color: #8c3838; }
 
+    /* Executive Textured Charcoal Header */
+    .charcoal-header-textured {
+      background-color: #1e2328;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.07) 0%, transparent 75%),
+        radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.15) 100%);
+      background-size: 100% 100%, 8px 8px, 100% 100%;
+    }
+
     /* Print optimizations */
     @media print {
       body { background: white !important; color: black !important; }
@@ -157,8 +167,8 @@
 </head>
 <body class="bg-[#f3f4f6] min-h-screen text-[#1e2226] antialiased font-sans flex flex-col justify-between">
 
-  <!-- TOP HEADER (Executive Charcoal Grey) -->
-  <header class="bg-[#1e2328] text-white shadow-sm border-b border-[#14181c] no-print sticky top-0 z-30">
+  <!-- TOP HEADER (Executive Textured Charcoal Grey) -->
+  <header class="charcoal-header-textured text-white shadow-sm border-b border-[#14181c] no-print sticky top-0 z-30">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
       <!-- Brand & Title -->
       <div class="flex items-center space-x-3">
@@ -179,8 +189,15 @@
         </div>
       </div>
 
-      <!-- Header Sync Indicator (Green indicator showing Sync, no connection link to sheets) -->
+      <!-- Header Action Controls -->
       <div class="flex items-center gap-2">
+        <a href="https://e-campus.enac.fr/moodle/" id="btnReturnECampus" class="bg-[#2e343b] hover:bg-[#39424a] active:bg-[#252a30] text-white text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 transition-all no-underline shadow-2xs" title="Return to e-Campus">
+          <svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          <span>e-Campus</span>
+        </a>
+
         <div id="headerSyncStatus" class="bg-white/10 text-[#e2e8f0] text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 shrink-0" title="Database Sync">
           <span id="syncIndicatorDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>
           <span id="headerFormStatus">Sync</span>
@@ -194,13 +211,14 @@
 
     <!-- ENTRY FORM CARD -->
     <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-[#e2e5e9] p-4 sm:p-6 no-print">
-      <div class="flex items-center justify-between mb-4 pb-3.5 border-b border-[#eef0f2]">
-        <div>
-          <h2 class="text-base sm:text-lg font-bold text-[#1e2226] tracking-tight">
-            Log Absence
-          </h2>
-          <p class="text-xs text-[#6c757d] mt-0.5">Select the cohort parameters below and enter the student name.</p>
-        </div>
+      <!-- Charcoal Grey Header Box with Rounded Corners -->
+      <div class="charcoal-header-textured text-white rounded-xl sm:rounded-2xl p-4 sm:p-5 mb-4 sm:mb-5 border border-[#14181c] border-l-4 border-l-[#8c3838] shadow-[0_2px_6px_rgba(0,0,0,0.12)]">
+        <h2 class="text-base sm:text-lg font-bold text-white tracking-tight leading-tight">
+          Log Absence
+        </h2>
+        <p class="text-xs text-[#cbd5e1] mt-1 font-normal">
+          Select the cohort parameters below and enter the student name.
+        </p>
       </div>
 
       <form id="attendanceForm" class="space-y-4 sm:space-y-4.5">
@@ -359,7 +377,7 @@
           </div>
 
           <!-- IE Button (Claret) in bottom right, in line with Submit Absence -->
-          <a href="ie.html" id="btnOpenIE" class="bg-[#8c3838] hover:bg-[#782f2f] active:bg-[#682626] text-white font-black px-6 py-3 rounded-xl text-xs sm:text-sm shadow-[0_2px_6px_rgba(140,56,56,0.28)] hover:shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer no-underline tracking-wide shrink-0" title="Open Incident Explorer Database">
+          <a href="ie.html" id="btnOpenIE" class="bg-[#8c3838] hover:bg-[#782f2f] active:bg-[#682626] text-white font-black px-6 py-3 rounded-xl text-xs sm:text-sm shadow-[0_2px_6px_rgba(140,56,56,0.28)] hover:shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer no-underline tracking-wide shrink-0" title="Open Absence Database">
             <span>IE</span>
             <span class="text-xs font-normal opacity-85">↗</span>
           </a>

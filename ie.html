@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IE — Incident Explorer | GSEA Attendance</title>
+  <title>IE — Absence Database | GSEA Attendance</title>
 
   <!-- Tailwind CSS Compiled via CLI (Processed for Safari compatibility) -->
   <link rel="stylesheet" href="output.css">
@@ -48,21 +48,57 @@
     .bg-\[\#2e343b\] { background-color: #2e343b; }
     .bg-\[\#8c3838\] { background-color: #8c3838; }
 
+    /* Executive Textured Charcoal Header */
+    .charcoal-header-textured {
+      background-color: #1e2328;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.07) 0%, transparent 75%),
+        radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(0, 0, 0, 0.15) 100%);
+      background-size: 100% 100%, 8px 8px, 100% 100%;
+    }
+
+    /* Internal scrollable table window for ~10 visible records */
+    .table-scroll-window {
+      max-height: 460px;
+      overflow-y: auto;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+    .table-scroll-window thead th {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background-color: #f8f9fa;
+      box-shadow: inset 0 -1px 0 #e2e5e9;
+    }
+    .mobile-cards-scroll-window {
+      max-height: 520px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
     @media print {
       body { background: white !important; color: black !important; }
       .no-print { display: none !important; }
       .print-full { width: 100% !important; max-width: none !important; }
+      .table-scroll-window, .mobile-cards-scroll-window {
+        max-height: none !important;
+        overflow: visible !important;
+      }
     }
   </style>
 </head>
 <body class="bg-[#f3f4f6] min-h-screen text-[#1e2226] antialiased font-sans flex flex-col justify-between">
 
-  <!-- TOP HEADER (Executive Charcoal Grey) -->
-  <header class="bg-[#1e2328] text-white shadow-sm border-b border-[#14181c] no-print sticky top-0 z-30">
+  <!-- TOP HEADER (Executive Textured Charcoal Grey) -->
+  <header class="charcoal-header-textured text-white shadow-sm border-b border-[#14181c] no-print sticky top-0 z-30">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
       <!-- Brand & Title -->
       <div class="flex items-center space-x-3">
-        <a href="index.html" class="w-10 h-10 rounded-xl bg-[#8c3838] hover:bg-[#782f2f] text-white flex items-center justify-center border border-white/20 shadow-xs font-black text-sm tracking-wider transition-transform active:scale-95" title="Back to Attendance Logger">
+        <a href="index.html" class="w-10 h-10 rounded-xl bg-[#8c3838] hover:bg-[#782f2f] text-white flex items-center justify-center border border-white/20 shadow-xs font-black text-sm tracking-wider transition-transform active:scale-95" title="Back to Absence Logger">
           IE
         </a>
         <div>
@@ -70,10 +106,10 @@
             <span class="text-[10px] font-bold tracking-widest text-[#94a3b8] uppercase">
               GSEA ATTENDANCE 2026 - 2027
             </span>
-            <span class="bg-[#8c3838] text-white text-[10px] font-bold px-2 py-0.2 rounded-full shadow-2xs">Database Explorer</span>
+            <span class="bg-[#8c3838] text-white text-[10px] font-bold px-2 py-0.2 rounded-full shadow-2xs">Absence Database</span>
           </div>
           <h1 class="text-base sm:text-lg font-bold text-white tracking-tight leading-tight flex items-center gap-2">
-            <span>Incident Explorer Database</span>
+            <span>Absence Database</span>
             <span id="headerCountBadge" class="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full font-bold">0</span>
           </h1>
         </div>
@@ -260,21 +296,21 @@
         <div id="filterSummaryText" class="text-xs text-[#6c757d]">Loading records...</div>
       </div>
 
-      <!-- Desktop Table View (Displays all details logged in Google Sheets) -->
-      <div class="hidden md:block overflow-x-auto">
+      <!-- Desktop Table View (Displays all details logged in database - scrolls within ~10 visible rows) -->
+      <div class="hidden md:block table-scroll-window">
         <table class="w-full text-left border-collapse text-xs">
           <thead>
-            <tr class="bg-[#f8f9fa] border-b border-[#e2e5e9] text-[#495057] uppercase font-bold tracking-wider text-[11px] select-none">
-              <th class="py-3 px-3 text-center w-12">#</th>
-              <th class="py-3 px-3">Date</th>
-              <th class="py-3 px-3">Time</th>
-              <th class="py-3 px-3.5">Student Name</th>
-              <th class="py-3 px-3">Status</th>
-              <th class="py-3 px-3">Promotion</th>
-              <th class="py-3 px-3">Class Type</th>
-              <th class="py-3 px-3">Group</th>
-              <th class="py-3 px-4">Reason / Notes</th>
-              <th class="py-3 px-3 text-right">Timestamp</th>
+            <tr class="border-b border-[#e2e5e9] text-[#495057] uppercase font-bold tracking-wider text-[11px] select-none">
+              <th class="py-3 px-3 text-center w-12 bg-[#f8f9fa]">#</th>
+              <th class="py-3 px-3 bg-[#f8f9fa]">Date</th>
+              <th class="py-3 px-3 bg-[#f8f9fa]">Time</th>
+              <th class="py-3 px-3.5 bg-[#f8f9fa]">Student Name</th>
+              <th class="py-3 px-3 bg-[#f8f9fa]">Status</th>
+              <th class="py-3 px-3 bg-[#f8f9fa]">Promotion</th>
+              <th class="py-3 px-3 bg-[#f8f9fa]">Class Type</th>
+              <th class="py-3 px-3 bg-[#f8f9fa]">Group</th>
+              <th class="py-3 px-4 bg-[#f8f9fa]">Reason / Notes</th>
+              <th class="py-3 px-3 text-right bg-[#f8f9fa]">Timestamp</th>
             </tr>
           </thead>
           <tbody id="masterTableBody" class="divide-y divide-[#eef0f2] text-[#1e2226]">
@@ -283,8 +319,8 @@
         </table>
       </div>
 
-      <!-- Mobile Cards View (Responsive layout with explicit labels) -->
-      <div id="masterMobileCards" class="md:hidden p-3 space-y-2.5 bg-[#f8f9fa]">
+      <!-- Mobile Cards View (Responsive layout - scrolls within window) -->
+      <div id="masterMobileCards" class="md:hidden mobile-cards-scroll-window p-3 space-y-2.5 bg-[#f8f9fa]">
         <!-- Dynamically populated -->
       </div>
 
@@ -295,7 +331,7 @@
           <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#8c6721]"></span> Late</span>
         </div>
         <div class="text-[11px] text-[#6c757d]">
-          Direct Cloud Sync with Google Sheets
+          Direct Database Sync
         </div>
       </div>
     </section>
@@ -921,11 +957,11 @@
       const filteredBadge = document.getElementById("filteredResultsBadge");
 
       if (filteredBadge) filteredBadge.textContent = `${filtered.length} record(s)`;
-      if (filterSummary) filterSummary.textContent = `Showing ${filtered.length} of ${records.length} total rows logged in sheets database`;
+      if (filterSummary) filterSummary.textContent = `Showing ${filtered.length} of ${records.length} total rows logged in database`;
 
       if (filtered.length === 0) {
         const emptyMsg = records.length === 0
-          ? 'No attendance records retrieved yet. Tap "Sync Sheet" above.'
+          ? 'No attendance records retrieved yet. Tap "Sync" above.'
           : 'No records matching your current Promotion, Status, or search filter.';
         tbody.innerHTML = `
           <tr>
