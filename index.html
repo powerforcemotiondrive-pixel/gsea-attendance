@@ -199,45 +199,6 @@
   <!-- MAIN CONTAINER -->
   <main class="max-w-6xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-6 flex-1 space-y-5 print-full">
 
-    <!-- SUMMARY STATS BAR -->
-    <section class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 no-print">
-      <!-- TOTAL (All-time records in database) -->
-      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)] flex items-center justify-between">
-        <div>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c757d]">TOTAL</span>
-          <div id="statTotalToday" class="text-xl sm:text-2xl font-black text-[#1e2226]">0</div>
-        </div>
-        <div class="w-9 h-9 rounded-lg bg-[#f1f3f5] text-[#2b3035] flex items-center justify-center font-bold text-sm">📋</div>
-      </div>
-
-      <!-- Late Today -->
-      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)] flex items-center justify-between">
-        <div>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c757d]">Late Today</span>
-          <div id="statLateToday" class="text-xl sm:text-2xl font-bold text-[#8a6316]">0</div>
-        </div>
-        <div class="w-9 h-9 rounded-lg bg-[#fef9ed] text-[#8a6316] border border-[#f8e6bc] flex items-center justify-center font-bold text-base">◷</div>
-      </div>
-
-      <!-- Absent Today -->
-      <div id="cardAbsentToday" class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)] flex items-center justify-between cursor-pointer hover:border-[#8c3838] transition-all" title="Click to view all recorded absences in IE">
-        <div>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c757d]">Absent Today</span>
-          <div id="statAbsentToday" class="text-xl sm:text-2xl font-bold text-[#8c3838]">0</div>
-        </div>
-        <div class="w-9 h-9 rounded-lg bg-[#fef2f2] text-[#8c3838] border border-[#fbd3d3] flex items-center justify-center font-bold text-base">✕</div>
-      </div>
-
-      <!-- Database Sync -->
-      <div id="cardDatabaseSync" class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)] flex items-center justify-between cursor-pointer hover:border-[#2e343b] transition-all" title="Click to view Google Forms & Sheets connection">
-        <div>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c757d]">Database Sync</span>
-          <div id="statFormStatus" class="text-xs sm:text-sm font-semibold text-[#2e343b] truncate max-w-[130px]">Synced to Sheets</div>
-        </div>
-        <div id="statFormIcon" class="w-9 h-9 rounded-lg bg-[#f1f3f5] text-[#2e343b] flex items-center justify-center font-bold text-sm">✓</div>
-      </div>
-    </section>
-
     <!-- ENTRY FORM CARD -->
     <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-[#e2e5e9] p-4 sm:p-6 no-print">
       <div class="flex items-center justify-between mb-4 pb-3.5 border-b border-[#eef0f2]">
@@ -386,50 +347,32 @@
           </div>
         </div>
 
-        <!-- SUBMIT BUTTON & SUCCESS BANNER -->
-        <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <!-- STATUS TOAST / FEEDBACK -->
+        <div id="submitFeedback" class="hidden text-xs font-semibold px-3.5 py-2.5 rounded-xl border flex items-center gap-2 transition-all">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- ACTIONS ROW: SUBMIT & CLEAR (LEFT), IE (RIGHT) -->
+        <div class="pt-2 flex items-center justify-between gap-3">
           <div class="flex items-center gap-2">
-            <button type="submit" id="btnSubmitForm" class="w-full sm:w-auto bg-[#8c3838] hover:bg-[#782f2f] active:scale-98 text-white font-bold text-xs sm:text-sm px-7 py-3 rounded-xl shadow-[0_2px_6px_rgba(140,56,56,0.25)] transition-all cursor-pointer flex items-center justify-center gap-2">
+            <button type="submit" id="btnSubmitForm" class="bg-[#8c3838] hover:bg-[#782f2f] active:scale-98 text-white font-bold text-xs sm:text-sm px-6 sm:px-7 py-3 rounded-xl shadow-[0_2px_6px_rgba(140,56,56,0.25)] transition-all cursor-pointer flex items-center justify-center gap-2">
               <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
               <span>Submit Absence</span>
             </button>
 
             <button type="button" id="btnClearInputs" class="text-[#6c757d] hover:text-[#212529] text-xs font-semibold px-3 py-2 rounded-lg cursor-pointer">
-              Clear Name
+              Clear
             </button>
           </div>
 
-          <!-- Status Toast / Feedback -->
-          <div id="submitFeedback" class="hidden text-xs font-semibold px-3.5 py-2 rounded-xl border flex items-center gap-2 transition-all">
-            <!-- Dynamically populated -->
-          </div>
+          <!-- IE Button (Claret) in bottom right, in line with Submit Absence -->
+          <a href="ie.html" id="btnOpenIE" class="bg-[#8c3838] hover:bg-[#782f2f] active:bg-[#682626] text-white font-black px-6 py-3 rounded-xl text-xs sm:text-sm shadow-[0_2px_6px_rgba(140,56,56,0.28)] hover:shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer no-underline tracking-wide shrink-0" title="Open Incident Explorer Database">
+            <span>IE</span>
+            <span class="text-xs font-normal opacity-85">↗</span>
+          </a>
         </div>
 
       </form>
-    </section>
-
-    <!-- ATTENDANCE INCIDENT LOG / IE ACCESS -->
-    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-[#e2e5e9] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      <div>
-        <h3 class="text-sm sm:text-base font-bold text-[#1e2226] tracking-tight flex items-center gap-2">
-          <span>Attendance Incident Log</span>
-          <span id="logCountBadge" class="bg-[#edf0f2] text-[#2b3035] text-xs px-2.5 py-0.5 rounded-full font-bold">0 records</span>
-        </h3>
-        <p class="text-xs text-[#6c757d]">Database feed and master roster of all reported absences.</p>
-      </div>
-
-      <div class="flex items-center gap-2.5 flex-wrap">
-        <!-- IE Button (Red/Claret) -->
-        <a href="ie.html" id="btnOpenIE" class="bg-[#8c3838] hover:bg-[#782f2f] active:bg-[#682626] text-white font-black px-5 py-2.5 rounded-xl text-xs sm:text-sm shadow-[0_2px_6px_rgba(140,56,56,0.28)] hover:shadow transition-all flex items-center gap-2 cursor-pointer no-underline tracking-wide" title="View all reported absences in sheets database">
-          <span>IE</span>
-        </a>
-
-        <!-- Sync Sheet Button -->
-        <button id="btnSyncSheetToolbar" type="button" class="bg-[#f1f3f5] hover:bg-[#e9ecef] active:bg-[#dee2e6] text-[#2b3035] border border-[#ced4da] font-bold px-3.5 py-2.5 rounded-xl text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap" title="Sync live records from Google Sheet">
-          <span id="toolbarSyncSpinner" class="inline-block transition-transform">🔄</span>
-          <span>Sync Sheet</span>
-        </button>
-      </div>
     </section>
   </main>
 
@@ -966,7 +909,7 @@
         ? `<span class="text-[#3b5936] font-bold ml-1">✓ Sent to Google Form &amp; Sheet</span>`
         : `<span class="text-[#6c7b66] font-normal ml-1">(Saved locally)</span>`;
 
-      toast.className = `text-xs font-semibold px-3.5 py-2 rounded-xl border flex items-center gap-2 ${
+      toast.className = `text-xs font-semibold px-3.5 py-2.5 rounded-xl border flex items-center gap-2 mb-2 transition-all ${
         isAbsent ? 'bg-[#fef4f4] text-[#8c2d2d] border-[#f9d5d5]' : 'bg-[#fefaf0] text-[#82560e] border-[#fae7bc]'
       }`;
       toast.innerHTML = `
@@ -1005,10 +948,13 @@
       const todayRecords = records.filter(r => r.date === today);
       const totalAbsences = records.filter(r => r.status === "Absent").length;
 
-      // TOTAL (All-time in database, not just today)
-      document.getElementById("statTotalToday").textContent = records.length;
-      document.getElementById("statLateToday").textContent = todayRecords.filter(r => r.status === "Late").length;
-      document.getElementById("statAbsentToday").textContent = todayRecords.filter(r => r.status === "Absent").length;
+      // Safe update for optional KPI cards (if present)
+      const elTotal = document.getElementById("statTotalToday");
+      if (elTotal) elTotal.textContent = records.length;
+      const elLate = document.getElementById("statLateToday");
+      if (elLate) elLate.textContent = todayRecords.filter(r => r.status === "Late").length;
+      const elAbsent = document.getElementById("statAbsentToday");
+      if (elAbsent) elAbsent.textContent = todayRecords.filter(r => r.status === "Absent").length;
 
       const absenceBadge = document.getElementById("absencesCountBadge");
       if (absenceBadge) absenceBadge.textContent = totalAbsences;
@@ -1018,15 +964,19 @@
       const headerEl = document.getElementById("headerFormStatus");
 
       if (gformConfig && gformConfig.formUrl) {
-        statEl.textContent = "Synced to Sheets";
-        statEl.className = "text-xs sm:text-sm font-semibold text-[#3b5936] truncate max-w-[130px]";
-        iconEl.className = "w-9 h-9 rounded-lg bg-[#eaf0e6] text-[#3b5936] flex items-center justify-center font-bold text-sm";
-        headerEl.textContent = "✓ Synced to Sheets";
+        if (statEl) {
+          statEl.textContent = "Synced to Sheets";
+          statEl.className = "text-xs sm:text-sm font-semibold text-[#3b5936] truncate max-w-[130px]";
+        }
+        if (iconEl) iconEl.className = "w-9 h-9 rounded-lg bg-[#eaf0e6] text-[#3b5936] flex items-center justify-center font-bold text-sm";
+        if (headerEl) headerEl.textContent = "✓ Synced to Sheets";
       } else {
-        statEl.textContent = "Local Only";
-        statEl.className = "text-xs sm:text-sm font-semibold text-[#5a6b52] truncate max-w-[130px]";
-        iconEl.className = "w-9 h-9 rounded-lg bg-[#edf2e8] text-[#5a6b52] flex items-center justify-center font-bold text-sm";
-        headerEl.textContent = "Google Form & Sheets";
+        if (statEl) {
+          statEl.textContent = "Local Only";
+          statEl.className = "text-xs sm:text-sm font-semibold text-[#5a6b52] truncate max-w-[130px]";
+        }
+        if (iconEl) iconEl.className = "w-9 h-9 rounded-lg bg-[#edf2e8] text-[#5a6b52] flex items-center justify-center font-bold text-sm";
+        if (headerEl) headerEl.textContent = "Google Form & Sheets";
       }
     }
 
