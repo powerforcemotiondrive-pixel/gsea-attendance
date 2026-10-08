@@ -43,9 +43,9 @@
       transform: scale(0.97);
     }
 
-    /* Core olive theme color fallbacks */
-    .bg-\[\#3c4a34\] { background-color: #3c4a34; }
-    .bg-\[\#48593e\] { background-color: #48593e; }
+    /* Core theme color fallbacks */
+    .bg-\[\#1e2328\] { background-color: #1e2328; }
+    .bg-\[\#2e343b\] { background-color: #2e343b; }
     .bg-\[\#8c3838\] { background-color: #8c3838; }
 
     @media print {
@@ -55,10 +55,10 @@
     }
   </style>
 </head>
-<body class="bg-[#f5f7f4] min-h-screen text-[#2c3726] antialiased font-sans flex flex-col justify-between">
+<body class="bg-[#f3f4f6] min-h-screen text-[#1e2226] antialiased font-sans flex flex-col justify-between">
 
-  <!-- TOP HEADER -->
-  <header class="bg-[#3c4a34] text-white shadow-xs border-b border-[#2e3a27] no-print sticky top-0 z-30">
+  <!-- TOP HEADER (Executive Charcoal Grey) -->
+  <header class="bg-[#1e2328] text-white shadow-sm border-b border-[#14181c] no-print sticky top-0 z-30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
       <!-- Brand & Title -->
       <div class="flex items-center space-x-3">
@@ -67,13 +67,13 @@
         </a>
         <div>
           <div class="flex items-center gap-2">
-            <span class="text-[10px] font-bold tracking-widest text-[#c2d7b7] uppercase">
+            <span class="text-[10px] font-bold tracking-widest text-[#94a3b8] uppercase">
               GSEA ATTENDANCE 2026 - 2027
             </span>
             <span class="bg-[#8c3838] text-white text-[10px] font-bold px-2 py-0.2 rounded-full shadow-2xs">Database Explorer</span>
           </div>
           <h1 class="text-base sm:text-lg font-bold text-white tracking-tight leading-tight flex items-center gap-2">
-            <span>All Reported Absences</span>
+            <span>Incident Explorer Database</span>
             <span id="headerCountBadge" class="bg-white/20 text-white text-xs px-2 py-0.5 rounded-full font-bold">0</span>
           </h1>
         </div>
@@ -81,12 +81,12 @@
 
       <!-- Header Action Controls -->
       <div class="flex items-center gap-2">
-        <button id="btnSyncSheet" type="button" class="bg-white/10 hover:bg-white/20 active:bg-white/25 text-[#eaf2e6] text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-1.5 transition-all cursor-pointer">
+        <button id="btnSyncSheet" type="button" class="bg-white/10 hover:bg-white/20 active:bg-white/25 text-[#e2e8f0] text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-1.5 transition-all cursor-pointer">
           <span id="syncSpinner" class="inline-block">🔄</span>
           <span id="syncStatusText">Sync Sheet</span>
         </button>
 
-        <a href="index.html" class="bg-[#48593e] hover:bg-[#55694a] text-white text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-1.5 transition-all no-underline shadow-2xs">
+        <a href="index.html" class="bg-[#2e343b] hover:bg-[#39424a] text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 transition-all no-underline shadow-2xs">
           <span>← Back to Logger</span>
         </a>
       </div>
@@ -98,51 +98,51 @@
 
     <!-- SUMMARY KPIS BAR -->
     <section class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 no-print">
-      <!-- Total Absences -->
-      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+      <!-- Total Sheet Records -->
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)]">
         <div class="flex items-center justify-between">
-          <span class="text-[10px] sm:text-xs font-bold text-[#6a7a63] uppercase tracking-wider">Reported Absences</span>
+          <span class="text-[10px] sm:text-xs font-bold text-[#6c757d] uppercase tracking-wider">Total Incidents</span>
+          <span class="w-6 h-6 rounded-md bg-[#f1f3f5] text-[#2b3035] flex items-center justify-center text-xs font-bold">📋</span>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span id="statTotalRows" class="text-xl sm:text-2xl font-black text-[#1e2226]">0</span>
+          <span class="text-[11px] text-[#6c757d]">in spreadsheet</span>
+        </div>
+      </div>
+
+      <!-- Total Absences -->
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)]">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] sm:text-xs font-bold text-[#6c757d] uppercase tracking-wider">Reported Absences</span>
           <span class="w-6 h-6 rounded-md bg-[#fef2f2] text-[#8c3838] flex items-center justify-center text-xs font-bold">✕</span>
         </div>
         <div class="mt-1 flex items-baseline gap-2">
           <span id="statTotalAbsences" class="text-xl sm:text-2xl font-black text-[#8c3838]">0</span>
-          <span class="text-[11px] text-[#85947f]">in database</span>
+          <span class="text-[11px] text-[#6c757d]">absent</span>
         </div>
       </div>
 
-      <!-- Absences Today -->
-      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+      <!-- Total Lates -->
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)]">
         <div class="flex items-center justify-between">
-          <span class="text-[10px] sm:text-xs font-bold text-[#6a7a63] uppercase tracking-wider">Absences Today</span>
-          <span class="w-6 h-6 rounded-md bg-[#edf3ea] text-[#3e5236] flex items-center justify-center text-xs font-bold">📅</span>
+          <span class="text-[10px] sm:text-xs font-bold text-[#6c757d] uppercase tracking-wider">Reported Lates</span>
+          <span class="w-6 h-6 rounded-md bg-[#fef9ed] text-[#8c6721] border border-[#f8e6bc] flex items-center justify-center text-xs font-bold">◷</span>
         </div>
         <div class="mt-1 flex items-baseline gap-2">
-          <span id="statAbsencesToday" class="text-xl sm:text-2xl font-bold text-[#2e3e27]">0</span>
-          <span class="text-[11px] text-[#85947f]">logged today</span>
-        </div>
-      </div>
-
-      <!-- Total Spreadsheet Records -->
-      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
-        <div class="flex items-center justify-between">
-          <span class="text-[10px] sm:text-xs font-bold text-[#6a7a63] uppercase tracking-wider">Total Sheet Rows</span>
-          <span class="w-6 h-6 rounded-md bg-[#edf3ea] text-[#3e5236] flex items-center justify-center text-xs font-bold">📊</span>
-        </div>
-        <div class="mt-1 flex items-baseline gap-2">
-          <span id="statTotalRows" class="text-xl sm:text-2xl font-bold text-[#2e3e27]">0</span>
-          <span class="text-[11px] text-[#85947f]">rows synced</span>
+          <span id="statTotalLates" class="text-xl sm:text-2xl font-black text-[#8c6721]">0</span>
+          <span class="text-[11px] text-[#6c757d]">late</span>
         </div>
       </div>
 
       <!-- Google Sheet Status -->
-      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_4px_rgba(0,0,0,0.02)]">
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)]">
         <div class="flex items-center justify-between">
-          <span class="text-[10px] sm:text-xs font-bold text-[#6a7a63] uppercase tracking-wider">Database Source</span>
+          <span class="text-[10px] sm:text-xs font-bold text-[#6c757d] uppercase tracking-wider">Database Source</span>
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
         </div>
         <div class="mt-1">
-          <span id="statSourceText" class="text-xs sm:text-sm font-bold text-[#2e3e27] truncate block">Google Sheets</span>
-          <a id="linkOpenSheet" href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="text-[11px] text-[#4d6645] hover:underline font-semibold inline-flex items-center gap-1">
+          <span id="statSourceText" class="text-xs sm:text-sm font-bold text-[#1e2226] truncate block">Google Sheets</span>
+          <a id="linkOpenSheet" href="https://docs.google.com/spreadsheets/d/1P3GPO6bWvoowq5tX75lasFkNuFjo7Uk38VbkbaCChgU/edit?gid=2066081147#gid=2066081147" target="_blank" class="text-[11px] text-[#2b3035] hover:text-[#8c3838] hover:underline font-semibold inline-flex items-center gap-1">
             <span>↗ Open Spreadsheet</span>
           </a>
         </div>
@@ -169,57 +169,72 @@
     </div>
 
     <!-- FILTER & CONTROLS CARD -->
-    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-[#dfe6dc] p-4 sm:p-5 space-y-4 no-print">
+    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-[#e2e5e9] p-4 sm:p-5 space-y-4 no-print">
+
+      <!-- STATUS VIEW TABS -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#eef0f2]">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#2e343b] flex items-center gap-1.5">
+            <span>⚡</span>
+            <span>Status View:</span>
+          </span>
+          <div id="statusTabsContainer" class="inline-flex items-center gap-1 bg-[#f1f3f5] p-1 rounded-xl border border-[#e2e5e9]">
+            <button type="button" data-status="all" class="status-tab active bg-[#2e343b] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs cursor-pointer transition-all">
+              All Incidents <span id="countAllStatus" class="ml-1 bg-black/20 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+            </button>
+            <button type="button" data-status="Absent" class="status-tab bg-white text-[#8c3838] hover:bg-[#fef2f2] font-bold px-3 py-1.5 rounded-lg text-xs border border-[#fbd3d3] cursor-pointer transition-all">
+              ✕ Absences <span id="countAbsentStatus" class="ml-1 bg-[#8c3838]/10 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+            </button>
+            <button type="button" data-status="Late" class="status-tab bg-white text-[#8c6721] hover:bg-[#fef9ed] font-bold px-3 py-1.5 rounded-lg text-xs border border-[#f8e6bc] cursor-pointer transition-all">
+              ◷ Lates <span id="countLateStatus" class="ml-1 bg-[#8c6721]/10 px-1.5 py-0.2 rounded-full text-[10px]">0</span>
+            </button>
+          </div>
+        </div>
+        <span id="activeStatusLabel" class="text-xs font-semibold text-[#6c757d]">Showing: All Incidents (Absences &amp; Lates)</span>
+      </div>
 
       <!-- PROMOTION FILTER BAR (User Required) -->
       <div class="space-y-2">
         <div class="flex items-center justify-between">
-          <label class="text-xs font-bold uppercase tracking-wider text-[#3d5035] flex items-center gap-1.5">
+          <label class="text-xs font-bold uppercase tracking-wider text-[#2e343b] flex items-center gap-1.5">
             <span>🎓</span>
             <span>Filter by PROMOTION:</span>
           </label>
-          <span id="activePromoLabel" class="text-xs font-semibold text-[#6e7d67]">Showing: All Promotions</span>
+          <span id="activePromoLabel" class="text-xs font-semibold text-[#6c757d]">Showing: All Promotions</span>
         </div>
 
         <!-- Promotion Pills -->
         <div id="promoPillsContainer" class="flex flex-wrap gap-2">
-          <button type="button" data-promo="all" class="promo-pill active bg-[#48593e] text-white font-bold px-3.5 py-1.5 rounded-lg text-xs shadow-2xs border border-[#48593e] cursor-pointer transition-all">
+          <button type="button" data-promo="all" class="promo-pill active bg-[#2e343b] text-white font-bold px-3.5 py-1.5 rounded-lg text-xs shadow-2xs border border-[#212529] cursor-pointer transition-all">
             All Promotions
           </button>
-          <button type="button" data-promo="GSEA24B" class="promo-pill bg-white text-[#2e3b28] hover:bg-[#edf3ea] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#d7e0d3] cursor-pointer transition-all">
+          <button type="button" data-promo="GSEA24B" class="promo-pill bg-white text-[#2b3035] hover:bg-[#f1f3f5] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#cfd4da] cursor-pointer transition-all">
             GSEA24B
           </button>
-          <button type="button" data-promo="GSEA25A" class="promo-pill bg-white text-[#2e3b28] hover:bg-[#edf3ea] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#d7e0d3] cursor-pointer transition-all">
+          <button type="button" data-promo="GSEA25A" class="promo-pill bg-white text-[#2b3035] hover:bg-[#f1f3f5] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#cfd4da] cursor-pointer transition-all">
             GSEA25A
           </button>
-          <button type="button" data-promo="GSEA25B" class="promo-pill bg-white text-[#2e3b28] hover:bg-[#edf3ea] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#d7e0d3] cursor-pointer transition-all">
+          <button type="button" data-promo="GSEA25B" class="promo-pill bg-white text-[#2b3035] hover:bg-[#f1f3f5] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#cfd4da] cursor-pointer transition-all">
             GSEA25B
           </button>
-          <button type="button" data-promo="GSEA26A" class="promo-pill bg-white text-[#2e3b28] hover:bg-[#edf3ea] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#d7e0d3] cursor-pointer transition-all">
+          <button type="button" data-promo="GSEA26A" class="promo-pill bg-white text-[#2b3035] hover:bg-[#f1f3f5] font-semibold px-3.5 py-1.5 rounded-lg text-xs border border-[#cfd4da] cursor-pointer transition-all">
             GSEA26A
           </button>
         </div>
       </div>
 
       <!-- SECONDARY FILTERS & ACTIONS BAR -->
-      <div class="pt-3 border-t border-[#edf2eb] flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div class="pt-3 border-t border-[#eef0f2] flex flex-col md:flex-row md:items-center justify-between gap-3">
         <!-- Search & Secondary Filters -->
         <div class="flex items-center flex-wrap gap-2 flex-1">
           <!-- Search input -->
           <div class="relative flex-1 min-w-[180px] max-w-sm">
-            <input id="searchInput" type="search" placeholder="Search student name, reason, date..." class="w-full border border-[#d0ded0] rounded-lg pl-8 pr-3 py-1.5 text-xs bg-white text-[#2c3726] focus:outline-none focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 placeholder-[#97a591]">
-            <span class="absolute left-2.5 top-2 text-[#97a591] text-xs">🔍</span>
+            <input id="searchInput" type="search" placeholder="Search student name, reason, date..." class="w-full border border-[#cfd4da] rounded-lg pl-8 pr-3 py-1.5 text-xs bg-white text-[#1e2226] focus:outline-none focus:border-[#8c3838] focus:ring-2 focus:ring-[#8c3838]/15 placeholder-[#9ca3af]">
+            <span class="absolute left-2.5 top-2 text-[#9ca3af] text-xs">🔍</span>
           </div>
 
-          <!-- Status Filter -->
-          <select id="statusFilterSelect" class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] font-semibold cursor-pointer focus:outline-none focus:border-[#4d6042]">
-            <option value="Absent" selected>Reported Absences Only</option>
-            <option value="all">All Incidents (Absences &amp; Lates)</option>
-            <option value="Late">Lates Only</option>
-          </select>
-
           <!-- Date Filter -->
-          <select id="dateFilterSelect" class="border border-[#d0ded0] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2c3726] font-semibold cursor-pointer focus:outline-none focus:border-[#4d6042]">
+          <select id="dateFilterSelect" class="border border-[#cfd4da] rounded-lg px-2.5 py-1.5 text-xs bg-white text-[#2b3035] font-semibold cursor-pointer focus:outline-none focus:border-[#8c3838]">
             <option value="all">All Dates</option>
             <option value="today">Today Only</option>
             <option value="this_month">This Month</option>
@@ -228,11 +243,11 @@
 
         <!-- Export & Copy Actions -->
         <div class="flex items-center gap-2 shrink-0">
-          <button id="btnCopyReport" type="button" class="bg-[#48593e] hover:bg-[#3c4a34] active:bg-[#313d2b] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
+          <button id="btnCopyReport" type="button" class="bg-[#2e343b] hover:bg-[#212529] active:bg-[#1a1e21] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
             <span>📋 Copy List</span>
           </button>
 
-          <button id="btnExportCsv" type="button" class="bg-white hover:bg-[#f4f7f2] text-[#3e4d38] border border-[#d0ded0] font-semibold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all cursor-pointer whitespace-nowrap">
+          <button id="btnExportCsv" type="button" class="bg-white hover:bg-[#f8f9fa] text-[#2b3035] border border-[#cfd4da] font-semibold px-3 py-1.5 rounded-lg text-xs shadow-2xs transition-all cursor-pointer whitespace-nowrap">
             <span>📥 Export CSV</span>
           </button>
         </div>
@@ -240,21 +255,21 @@
     </section>
 
     <!-- MASTER ROSTER & SPREADSHEET DATABASE TABLE -->
-    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-[#dfe6dc] overflow-hidden">
+    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-[#e2e5e9] overflow-hidden">
       <!-- Table Header & Counter -->
-      <div class="p-3.5 sm:p-4 bg-[#f8faf7] border-b border-[#dfe6dc] flex flex-wrap items-center justify-between gap-2">
+      <div class="p-3.5 sm:p-4 bg-[#f8f9fa] border-b border-[#e2e5e9] flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2">
-          <h2 class="text-sm font-bold text-[#2e3b28]">Spreadsheet Database Records</h2>
-          <span id="filteredResultsBadge" class="bg-[#e9f0e6] text-[#425437] text-xs px-2.5 py-0.5 rounded-full font-bold">0 records</span>
+          <h2 class="text-sm font-bold text-[#1e2226]">Spreadsheet Database Records</h2>
+          <span id="filteredResultsBadge" class="bg-[#edf0f2] text-[#2b3035] text-xs px-2.5 py-0.5 rounded-full font-bold">0 records</span>
         </div>
-        <div id="filterSummaryText" class="text-xs text-[#6e7d67]">Loading records...</div>
+        <div id="filterSummaryText" class="text-xs text-[#6c757d]">Loading records...</div>
       </div>
 
       <!-- Desktop Table View (Displays all details logged in Google Sheets) -->
       <div class="hidden md:block overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs">
           <thead>
-            <tr class="bg-[#f2f6ef]/90 border-b border-[#dfe6dc] text-[#55644d] uppercase font-bold tracking-wider text-[11px] select-none">
+            <tr class="bg-[#f8f9fa] border-b border-[#e2e5e9] text-[#495057] uppercase font-bold tracking-wider text-[11px] select-none">
               <th class="py-3 px-3 text-center w-12">#</th>
               <th class="py-3 px-3">Date</th>
               <th class="py-3 px-3">Time</th>
@@ -267,25 +282,25 @@
               <th class="py-3 px-3 text-right">Timestamp</th>
             </tr>
           </thead>
-          <tbody id="masterTableBody" class="divide-y divide-[#edf2eb] text-[#33412c]">
+          <tbody id="masterTableBody" class="divide-y divide-[#eef0f2] text-[#1e2226]">
             <!-- Dynamically populated -->
           </tbody>
         </table>
       </div>
 
       <!-- Mobile Cards View (Responsive layout with explicit labels) -->
-      <div id="masterMobileCards" class="md:hidden p-3 space-y-2.5 bg-[#f8faf7]">
+      <div id="masterMobileCards" class="md:hidden p-3 space-y-2.5 bg-[#f8f9fa]">
         <!-- Dynamically populated -->
       </div>
 
       <!-- Table Footer -->
-      <div class="p-3.5 bg-[#f8faf7] border-t border-[#dfe6dc] text-xs flex flex-wrap items-center justify-between text-[#6a7964] gap-2">
+      <div class="p-3.5 bg-[#f8f9fa] border-t border-[#e2e5e9] text-xs flex flex-wrap items-center justify-between text-[#6c757d] gap-2">
         <div class="flex items-center gap-3">
           <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#8c3838]"></span> Absent</span>
           <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#8c6721]"></span> Late</span>
         </div>
-        <div class="text-[11px] text-[#6e7d67]">
-          Every row corresponds directly to a row in your Google Sheets database.
+        <div class="text-[11px] text-[#6c757d]">
+          Direct Cloud Sync with Google Sheets
         </div>
       </div>
     </section>
@@ -306,6 +321,7 @@
     // Application state
     let records = loadStoredRecords();
     let selectedPromotion = "all";
+    let selectedStatus = "all"; // Defaults to showing All Incidents (Absences & Lates)
     let isSyncing = false;
 
     function loadStoredRecords() {
@@ -665,7 +681,6 @@
     // Filtering logic
     function getFilteredRecords() {
       const search = (document.getElementById("searchInput")?.value || "").trim().toLowerCase();
-      const statusFilter = document.getElementById("statusFilterSelect")?.value || "Absent";
       const dateFilter = document.getElementById("dateFilterSelect")?.value || "all";
       const today = new Date().toISOString().split("T")[0];
       const thisMonth = today.substring(0, 7);
@@ -676,8 +691,8 @@
           return false;
         }
 
-        // Status filter
-        if (statusFilter !== "all" && r.status !== statusFilter) {
+        // Status filter (all, Absent, Late)
+        if (selectedStatus !== "all" && r.status !== selectedStatus) {
           return false;
         }
 
@@ -711,18 +726,35 @@
     function renderUI() {
       // 1. Update KPI stats
       const totalAbsences = records.filter(r => r.status === "Absent").length;
-      const today = new Date().toISOString().split("T")[0];
-      const absencesToday = records.filter(r => r.status === "Absent" && r.date === today).length;
+      const totalLates = records.filter(r => r.status === "Late").length;
+      const totalRows = records.length;
 
-      document.getElementById("statTotalAbsences").textContent = totalAbsences;
-      document.getElementById("statAbsencesToday").textContent = absencesToday;
-      document.getElementById("statTotalRows").textContent = records.length;
-      document.getElementById("headerCountBadge").textContent = totalAbsences;
+      const statTotalAbsencesEl = document.getElementById("statTotalAbsences");
+      const statTotalLatesEl = document.getElementById("statTotalLates");
+      const statTotalRowsEl = document.getElementById("statTotalRows");
+      const headerCountBadgeEl = document.getElementById("headerCountBadge");
 
-      // 2. Update dynamic promotion counts in pills
+      if (statTotalAbsencesEl) statTotalAbsencesEl.textContent = totalAbsences;
+      if (statTotalLatesEl) statTotalLatesEl.textContent = totalLates;
+      if (statTotalRowsEl) statTotalRowsEl.textContent = totalRows;
+      if (headerCountBadgeEl) headerCountBadgeEl.textContent = totalRows;
+
+      // 2. Update status tab counters
+      const countAllStatusEl = document.getElementById("countAllStatus");
+      const countAbsentStatusEl = document.getElementById("countAbsentStatus");
+      const countLateStatusEl = document.getElementById("countLateStatus");
+      if (countAllStatusEl) countAllStatusEl.textContent = totalRows;
+      if (countAbsentStatusEl) countAbsentStatusEl.textContent = totalAbsences;
+      if (countLateStatusEl) countLateStatusEl.textContent = totalLates;
+
+      // 3. Update dynamic promotion counts in pills
       const promos = ["GSEA24B", "GSEA25A", "GSEA25B", "GSEA26A"];
       promos.forEach(p => {
-        const count = records.filter(r => r.promotion === p && r.status === "Absent").length;
+        const count = records.filter(r => {
+          if (r.promotion !== p) return false;
+          if (selectedStatus !== "all" && r.status !== selectedStatus) return false;
+          return true;
+        }).length;
         const btn = document.querySelector(`.promo-pill[data-promo="${p}"]`);
         if (btn) {
           btn.innerHTML = `${p} <span class="text-[10px] bg-black/10 px-1.5 py-0.2 rounded-full font-bold ml-1">${count}</span>`;
@@ -730,23 +762,27 @@
       });
       const allBtn = document.querySelector(`.promo-pill[data-promo="all"]`);
       if (allBtn) {
-        allBtn.innerHTML = `All Promotions <span class="text-[10px] bg-black/10 px-1.5 py-0.2 rounded-full font-bold ml-1">${totalAbsences}</span>`;
+        const allCount = records.filter(r => {
+          if (selectedStatus !== "all" && r.status !== selectedStatus) return false;
+          return true;
+        }).length;
+        allBtn.innerHTML = `All Promotions <span class="text-[10px] bg-black/10 px-1.5 py-0.2 rounded-full font-bold ml-1">${allCount}</span>`;
       }
 
-      // 3. Render filtered table rows
+      // 4. Render filtered table rows
       const filtered = getFilteredRecords();
       const tbody = document.getElementById("masterTableBody");
       const mobileCards = document.getElementById("masterMobileCards");
       const filterSummary = document.getElementById("filterSummaryText");
       const filteredBadge = document.getElementById("filteredResultsBadge");
 
-      filteredBadge.textContent = `${filtered.length} record(s)`;
-      filterSummary.textContent = `Showing ${filtered.length} of ${records.length} total rows logged in sheets database`;
+      if (filteredBadge) filteredBadge.textContent = `${filtered.length} record(s)`;
+      if (filterSummary) filterSummary.textContent = `Showing ${filtered.length} of ${records.length} total rows logged in sheets database`;
 
       if (filtered.length === 0) {
         const emptyMsg = records.length === 0
           ? 'No attendance records retrieved yet. Tap "Sync Sheet" above.'
-          : 'No records matching your current Promotion or search filter.';
+          : 'No records matching your current Promotion, Status, or search filter.';
         tbody.innerHTML = `
           <tr>
             <td colspan="10" class="py-12 text-center text-[#788871] text-xs bg-[#fdfdfc]">
@@ -839,6 +875,31 @@
       }).join("");
     }
 
+    // Set Active Status Filter
+    function setStatusFilter(status) {
+      selectedStatus = status;
+      document.querySelectorAll(".status-tab").forEach(btn => {
+        const s = btn.getAttribute("data-status");
+        if (s === status) {
+          btn.className = "status-tab active bg-[#48593e] text-white font-bold px-3 py-1.5 rounded-lg text-xs shadow-2xs cursor-pointer transition-all";
+        } else {
+          if (s === "Absent") {
+            btn.className = "status-tab bg-white text-[#8c3838] hover:bg-[#fef2f2] font-bold px-3 py-1.5 rounded-lg text-xs border border-[#fbd3d3] cursor-pointer transition-all";
+          } else if (s === "Late") {
+            btn.className = "status-tab bg-white text-[#8c6721] hover:bg-[#fef9ed] font-bold px-3 py-1.5 rounded-lg text-xs border border-[#f8e6bc] cursor-pointer transition-all";
+          } else {
+            btn.className = "status-tab bg-white text-[#2e3b28] hover:bg-[#edf3ea] font-semibold px-3 py-1.5 rounded-lg text-xs border border-[#d7e0d3] cursor-pointer transition-all";
+          }
+        }
+      });
+
+      const label = status === "all" ? "All Incidents (Absences & Lates)" : (status === "Absent" ? "Absences Only" : "Lates Only");
+      const labelEl = document.getElementById("activeStatusLabel");
+      if (labelEl) labelEl.textContent = `Showing: ${label}`;
+
+      renderUI();
+    }
+
     // Set Active Promotion Filter
     function setPromotionFilter(promo) {
       selectedPromotion = promo;
@@ -862,8 +923,9 @@
       }
 
       const today = new Date().toISOString().split("T")[0];
+      const statusLabel = selectedStatus === "all" ? "Incidents" : (selectedStatus === "Absent" ? "Absences" : "Lates");
       const lines = [
-        `GSEA Absence Report — ${selectedPromotion === "all" ? "All Promotions" : selectedPromotion} (${today})`,
+        `GSEA ${statusLabel} Report — ${selectedPromotion === "all" ? "All Promotions" : selectedPromotion} (${today})`,
         `Total Records: ${filtered.length}`,
         `----------------------------------------`,
         ...filtered.map((r, i) => `${i + 1}. ${r.studentName} | ${r.status} | Promo: ${r.promotion} | Class: ${r.classType} Grp: ${r.group} | Date: ${r.date} ${r.time || ''} | Reason: ${r.notes || 'None'}`)
@@ -911,13 +973,20 @@
 
       const link = document.createElement("a");
       link.href = encodeURI(csvContent);
-      link.download = `GSEA_Absences_${selectedPromotion}_${new Date().toISOString().split("T")[0]}.csv`;
+      link.download = `GSEA_Incidents_${selectedPromotion}_${new Date().toISOString().split("T")[0]}.csv`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
 
     // Event listeners
+    document.querySelectorAll(".status-tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const s = btn.getAttribute("data-status");
+        setStatusFilter(s);
+      });
+    });
+
     document.querySelectorAll(".promo-pill").forEach(btn => {
       btn.addEventListener("click", () => {
         const promo = btn.getAttribute("data-promo");
@@ -926,12 +995,28 @@
     });
 
     document.getElementById("searchInput")?.addEventListener("input", renderUI);
-    document.getElementById("statusFilterSelect")?.addEventListener("change", renderUI);
     document.getElementById("dateFilterSelect")?.addEventListener("change", renderUI);
     document.getElementById("btnCopyReport")?.addEventListener("click", copyFilteredList);
     document.getElementById("btnExportCsv")?.addEventListener("click", exportFilteredCsv);
     document.getElementById("btnSyncSheet")?.addEventListener("click", () => syncRecordsFromGoogleSheet(true));
     document.getElementById("btnRetrySyncNotice")?.addEventListener("click", () => syncRecordsFromGoogleSheet(true));
+
+    // Auto-refresh when tab gains focus or user switches back to browser
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        syncRecordsFromGoogleSheet(false);
+      }
+    });
+    window.addEventListener("focus", () => {
+      syncRecordsFromGoogleSheet(false);
+    });
+
+    // Background auto-sync every 12 seconds so phone entries appear on computer automatically
+    setInterval(() => {
+      if (document.visibilityState === "visible" && !isSyncing) {
+        syncRecordsFromGoogleSheet(false);
+      }
+    }, 12000);
 
     // Initialize UI immediately with stored data, then sync live sheet
     renderUI();

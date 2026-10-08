@@ -48,29 +48,29 @@
     }
 
     /* =========================================================================
-       FIX PHONE VIEW: Prevent sticky hover and eliminate whited-out text
+       BUTTON STYLES: Executive Charcoal Grey with Claret Highlights
        ========================================================================= */
 
-    /* INACTIVE BUTTONS: Always solid crisp white background with bold dark olive text */
+    /* INACTIVE BUTTONS: Crisp white background with dark charcoal text */
     .btn-pill:not(.active),
     .btn-pill:not(.active):focus,
     .btn-pill:not(.active):active {
       background-color: #ffffff !important;
-      color: #2e3b28 !important;
-      border-color: #d7e0d3 !important;
+      color: #2b3035 !important;
+      border-color: #d1d5db !important;
       box-shadow: none !important;
     }
 
     /* Only apply hover on devices with a true mouse pointer (Desktop) */
     @media (hover: hover) and (pointer: fine) {
       .btn-pill:not(.active):hover {
-        background-color: #edf3ea !important;
-        color: #1e2819 !important;
-        border-color: #b9ccb2 !important;
+        background-color: #f1f3f5 !important;
+        color: #1a1e21 !important;
+        border-color: #adb5bd !important;
       }
     }
 
-    /* ACTIVE PROMOTION & GROUP BUTTONS: Always dark executive olive with crisp pure white text */
+    /* ACTIVE PROMOTION & GROUP BUTTONS: Executive Charcoal Grey with pure white text */
     .promotion-btn.active,
     .promotion-btn.active:hover,
     .promotion-btn.active:focus,
@@ -79,34 +79,34 @@
     .group-btn.active:hover,
     .group-btn.active:focus,
     .group-btn.active:active {
-      background-color: #48593e !important;
+      background-color: #2e343b !important;
       color: #ffffff !important;
-      border-color: #48593e !important;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14) !important;
+      border-color: #212529 !important;
+      box-shadow: 0 1px 3px rgba(33, 37, 41, 0.22) !important;
     }
 
-    /* ACTIVE CLASS TYPE BUTTONS (AAS vs AG) */
+    /* ACTIVE CLASS TYPE BUTTONS (AAS vs AG): Charcoal grey */
     .classtype-btn.active,
     .classtype-btn.active[data-value="AAS"],
     .classtype-btn.active[data-value="AAS"]:hover,
     .classtype-btn.active[data-value="AAS"]:focus,
     .classtype-btn.active[data-value="AAS"]:active {
-      background-color: #4a5f4e !important;
+      background-color: #2e343b !important;
       color: #ffffff !important;
-      border-color: #4a5f4e !important;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14) !important;
+      border-color: #212529 !important;
+      box-shadow: 0 1px 3px rgba(33, 37, 41, 0.22) !important;
     }
     .classtype-btn.active[data-value="AG"],
     .classtype-btn.active[data-value="AG"]:hover,
     .classtype-btn.active[data-value="AG"]:focus,
     .classtype-btn.active[data-value="AG"]:active {
-      background-color: #556644 !important;
+      background-color: #384048 !important;
       color: #ffffff !important;
-      border-color: #556644 !important;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14) !important;
+      border-color: #262c32 !important;
+      box-shadow: 0 1px 3px rgba(33, 37, 41, 0.22) !important;
     }
 
-    /* ACTIVE STATUS BUTTON: ABSENT (Bold Crimson Red) */
+    /* ACTIVE STATUS BUTTON: ABSENT (Bold Claret Red Highlight) */
     .status-btn.active[data-value="Absent"],
     .status-btn.active[data-value="Absent"]:hover,
     .status-btn.active[data-value="Absent"]:focus,
@@ -114,7 +114,7 @@
       background-color: #8c3838 !important;
       color: #ffffff !important;
       border-color: #8c3838 !important;
-      box-shadow: 0 1px 3px rgba(140, 56, 56, 0.28) !important;
+      box-shadow: 0 1px 4px rgba(140, 56, 56, 0.28) !important;
     }
 
     /* ACTIVE STATUS BUTTON: LATE (Bold Ochre Amber) */
@@ -125,7 +125,7 @@
       background-color: #8c6721 !important;
       color: #ffffff !important;
       border-color: #8c6721 !important;
-      box-shadow: 0 1px 3px rgba(140, 103, 33, 0.28) !important;
+      box-shadow: 0 1px 4px rgba(140, 103, 33, 0.28) !important;
     }
 
     /* STATUS BUTTON ICONS */
@@ -134,20 +134,18 @@
       color: #ffffff !important;
     }
     .status-btn:not(.active) .status-icon {
-      background-color: #f3f6f1 !important;
-      color: #6b7b64 !important;
+      background-color: #f1f3f5 !important;
+      color: #6c757d !important;
     }
 
-    /* Core olive theme color fallbacks */
-    .bg-\[\#3c4a34\] { background-color: #3c4a34; }
-    .bg-\[\#48593e\] { background-color: #48593e; }
-    .bg-\[\#4a5f4e\] { background-color: #4a5f4e; }
-    .bg-\[\#425437\] { background-color: #425437; }
+    /* Core theme color fallbacks */
+    .bg-\[\#1e2328\] { background-color: #1e2328; }
+    .bg-\[\#2e343b\] { background-color: #2e343b; }
     .bg-\[\#8c3838\] { background-color: #8c3838; }
     .bg-\[\#8c6721\] { background-color: #8c6721; }
-    .border-\[\#dfe6dc\] { border-color: #dfe6dc; }
-    .border-\[\#d0ded0\] { border-color: #d0ded0; }
-    .border-\[\#48593e\] { border-color: #48593e; }
+    .border-\[\#e2e5e9\] { border-color: #e2e5e9; }
+    .border-\[\#cfd4da\] { border-color: #cfd4da; }
+    .border-\[\#8c3838\] { border-color: #8c3838; }
 
     /* Print optimizations */
     @media print {
@@ -157,24 +155,23 @@
     }
   </style>
 </head>
-<body class="bg-[#f5f7f4] min-h-screen text-[#2c3726] antialiased font-sans flex flex-col justify-between">
+<body class="bg-[#f3f4f6] min-h-screen text-[#1e2226] antialiased font-sans flex flex-col justify-between">
 
-  <!-- TOP HEADER (Executive Olive Green) -->
-  <header class="bg-[#3c4a34] text-white shadow-xs border-b border-[#2e3a27] no-print sticky top-0 z-30">
+  <!-- TOP HEADER (Executive Charcoal Grey) -->
+  <header class="bg-[#1e2328] text-white shadow-sm border-b border-[#14181c] no-print sticky top-0 z-30">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
       <!-- Brand & Title -->
       <div class="flex items-center space-x-3">
         <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/15 shadow-inner">
-          <svg class="w-5 h-5 text-[#cde2c4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-[#e2e8f0]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
           </svg>
         </div>
         <div>
           <div class="flex items-center gap-1.5">
-            <span class="block text-[10px] font-bold tracking-widest text-[#c2d7b7] uppercase">
+            <span class="block text-[10px] font-bold tracking-widest text-[#94a3b8] uppercase">
               GSEA ATTENDANCE 2026 - 2027
             </span>
-            <span class="bg-[#8c3838] text-white text-[9px] font-bold px-1.5 py-0.2 rounded shadow-2xs">v2.0 IE</span>
           </div>
           <h1 class="text-base sm:text-lg font-bold text-white tracking-tight leading-tight">
             Absence Tracker
@@ -182,22 +179,16 @@
         </div>
       </div>
 
-      <!-- Header Action Controls -->
+      <!-- Header Action Controls (IE button at top removed as requested) -->
       <div class="flex items-center gap-2">
-        <!-- Prominent IE Header Button -->
-        <a href="ie.html" class="bg-[#8c3838] hover:bg-[#782f2f] text-white text-xs font-bold px-3 py-1.5 rounded-lg border border-white/20 flex items-center gap-1.5 transition-all no-underline shadow-xs" title="Open IE — All Reported Absences Database">
-          <span>IE</span>
-          <span class="hidden sm:inline font-semibold text-[11px] text-white/90">Database</span>
-        </a>
-
-        <button id="btnOpenFormsModal" type="button" class="bg-white/10 hover:bg-white/15 active:bg-white/20 text-[#eaf2e6] text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 transition-all cursor-pointer">
-          <svg class="w-3.5 h-3.5 text-[#cadbc1]" viewBox="0 0 24 24" fill="currentColor">
+        <button id="btnOpenFormsModal" type="button" class="bg-white/10 hover:bg-white/15 active:bg-white/20 text-[#e2e8f0] text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/15 flex items-center gap-1.5 transition-all cursor-pointer">
+          <svg class="w-3.5 h-3.5 text-[#cbd5e1]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
           </svg>
           <span id="headerFormStatus">✓ Synced to Sheets</span>
         </button>
 
-        <div id="localCacheStatus" class="text-[11px] bg-black/15 text-[#d8e7d2] border border-white/15 px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5 shrink-0" title="All entries are saved offline-first in browser storage">
+        <div id="localCacheStatus" class="text-[11px] bg-black/20 text-[#e2e8f0] border border-white/15 px-2.5 py-1 rounded-md font-semibold flex items-center gap-1.5 shrink-0" title="All entries are saved offline-first in browser storage">
           <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           <span>✓ Ready</span>
         </div>
@@ -210,113 +201,122 @@
 
     <!-- SUMMARY STATS BAR -->
     <section class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 no-print">
-      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between">
+      <!-- TOTAL (All-time records in database) -->
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)] flex items-center justify-between">
         <div>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c7b66]">Total Today</span>
-          <div id="statTotalToday" class="text-xl sm:text-2xl font-bold text-[#33412c]">0</div>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c757d]">TOTAL</span>
+          <div id="statTotalToday" class="text-xl sm:text-2xl font-black text-[#1e2226]">0</div>
         </div>
-        <div class="w-9 h-9 rounded-lg bg-[#edf2e8] text-[#4d5e43] flex items-center justify-center font-bold text-sm">📋</div>
+        <div class="w-9 h-9 rounded-lg bg-[#f1f3f5] text-[#2b3035] flex items-center justify-center font-bold text-sm">📋</div>
       </div>
 
-      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between">
+      <!-- Late Today -->
+      <div class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)] flex items-center justify-between">
         <div>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c7b66]">Late Today</span>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c757d]">Late Today</span>
           <div id="statLateToday" class="text-xl sm:text-2xl font-bold text-[#8a6316]">0</div>
         </div>
         <div class="w-9 h-9 rounded-lg bg-[#fef9ed] text-[#8a6316] border border-[#f8e6bc] flex items-center justify-center font-bold text-base">◷</div>
       </div>
 
-      <div id="cardAbsentToday" class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between cursor-pointer hover:border-[#8c3838] transition-all" title="Click to view all recorded absences">
+      <!-- Absent Today -->
+      <div id="cardAbsentToday" class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)] flex items-center justify-between cursor-pointer hover:border-[#8c3838] transition-all" title="Click to view all recorded absences in IE">
         <div>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c7b66]">Absent Today</span>
-          <div id="statAbsentToday" class="text-xl sm:text-2xl font-bold text-[#933434]">0</div>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c757d]">Absent Today</span>
+          <div id="statAbsentToday" class="text-xl sm:text-2xl font-bold text-[#8c3838]">0</div>
         </div>
-        <div class="w-9 h-9 rounded-lg bg-[#fef2f2] text-[#933434] border border-[#fbd3d3] flex items-center justify-center font-bold text-base">✕</div>
+        <div class="w-9 h-9 rounded-lg bg-[#fef2f2] text-[#8c3838] border border-[#fbd3d3] flex items-center justify-center font-bold text-base">✕</div>
       </div>
 
-      <div id="cardDatabaseSync" class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#dfe6dc] shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-center justify-between cursor-pointer hover:border-[#4d6042] transition-all" title="Click to view Google Forms & Sheets connection">
+      <!-- Database Sync -->
+      <div id="cardDatabaseSync" class="bg-white p-3.5 sm:p-4 rounded-xl border border-[#e2e5e9] shadow-[0_2px_6px_rgba(0,0,0,0.05)] flex items-center justify-between cursor-pointer hover:border-[#2e343b] transition-all" title="Click to view Google Forms & Sheets connection">
         <div>
-          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c7b66]">Database Sync</span>
-          <div id="statFormStatus" class="text-xs sm:text-sm font-semibold text-[#3b5936] truncate max-w-[130px]">Synced to Sheets</div>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#6c757d]">Database Sync</span>
+          <div id="statFormStatus" class="text-xs sm:text-sm font-semibold text-[#2e343b] truncate max-w-[130px]">Synced to Sheets</div>
         </div>
-        <div id="statFormIcon" class="w-9 h-9 rounded-lg bg-[#eaf0e6] text-[#3b5936] flex items-center justify-center font-bold text-sm">✓</div>
+        <div id="statFormIcon" class="w-9 h-9 rounded-lg bg-[#f1f3f5] text-[#2e343b] flex items-center justify-center font-bold text-sm">✓</div>
       </div>
     </section>
 
     <!-- ENTRY FORM CARD -->
-    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-[#dfe6dc] p-4 sm:p-6 no-print">
-      <div class="flex items-center justify-between mb-4 pb-3.5 border-b border-[#eaf0e6]">
+    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-[#e2e5e9] p-4 sm:p-6 no-print">
+      <div class="flex items-center justify-between mb-4 pb-3.5 border-b border-[#eef0f2]">
         <div>
-          <h2 class="text-base sm:text-lg font-bold text-[#2e3b28] tracking-tight flex items-center gap-2">
-            <span>Log Incident</span>
-            <span class="text-xs bg-[#ecf2e7] text-[#425437] px-2.5 py-0.5 rounded-full font-semibold">Absence Tracker</span>
+          <h2 class="text-base sm:text-lg font-bold text-[#1e2226] tracking-tight">
+            Log Absence
           </h2>
-          <p class="text-xs text-[#6e7d67] mt-0.5">Select the cohort parameters below and enter the student name.</p>
+          <p class="text-xs text-[#6c757d] mt-0.5">Select the cohort parameters below and enter the student name.</p>
         </div>
       </div>
 
-      <form id="attendanceForm" class="space-y-4 sm:space-y-5">
+      <form id="attendanceForm" class="space-y-4 sm:space-y-4.5">
 
-        <!-- 3 SELECTORS GRID -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <!-- BOXES 1, 2, 3 RESPONSIVE GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4">
 
-          <!-- 1. PROMOTION SELECTOR -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-[#52634b] mb-2">
-              1. Promotion
-            </label>
-            <div id="promotionOptions" class="grid grid-cols-2 gap-1.5">
-              <button type="button" data-value="GSEA24B" class="btn-pill promotion-btn active py-2.5 px-3 rounded-lg text-xs font-semibold text-center border">
+          <!-- BOX 1: 1. PROMOTION SELECTOR -->
+          <div class="bg-[#f8f9fa] border border-[#e2e5e9] rounded-xl sm:rounded-2xl p-3.5 sm:p-4 shadow-[0_1px_4px_rgba(0,0,0,0.04)] space-y-2.5">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold uppercase tracking-wider text-[#2e343b]">
+                1. Promotion
+              </label>
+              <span class="text-[10px] font-semibold text-[#6c757d]">Cohort</span>
+            </div>
+            <div id="promotionOptions" class="grid grid-cols-2 gap-2">
+              <button type="button" data-value="GSEA24B" class="btn-pill promotion-btn active py-2.5 px-3 rounded-lg text-xs font-bold text-center border">
                 GSEA24B
               </button>
-              <button type="button" data-value="GSEA25A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border">
+              <button type="button" data-value="GSEA25A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-bold text-center border">
                 GSEA25A
               </button>
-              <button type="button" data-value="GSEA25B" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border">
+              <button type="button" data-value="GSEA25B" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-bold text-center border">
                 GSEA25B
               </button>
-              <button type="button" data-value="GSEA26A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border">
+              <button type="button" data-value="GSEA26A" class="btn-pill promotion-btn py-2.5 px-3 rounded-lg text-xs font-bold text-center border">
                 GSEA26A
               </button>
             </div>
             <input type="hidden" id="inputPromotion" value="GSEA24B">
           </div>
 
-          <!-- 2. CLASS TYPE SELECTOR -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-[#52634b] mb-2">
-              2. Class Type
-            </label>
-            <div id="classTypeOptions" class="grid grid-cols-2 gap-1.5">
-              <button type="button" data-value="AAS" class="btn-pill classtype-btn active py-2.5 px-3 rounded-lg text-xs font-semibold text-center border">
+          <!-- BOX 2: 2. CLASS TYPE SELECTOR (Without Applied Animal Sciences / Agriculture text) -->
+          <div class="bg-[#f8f9fa] border border-[#e2e5e9] rounded-xl sm:rounded-2xl p-3.5 sm:p-4 shadow-[0_1px_4px_rgba(0,0,0,0.04)] space-y-2.5">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold uppercase tracking-wider text-[#2e343b]">
+                2. Class Type
+              </label>
+              <span class="text-[10px] font-semibold text-[#6c757d]">Program</span>
+            </div>
+            <div id="classTypeOptions" class="grid grid-cols-2 gap-2">
+              <button type="button" data-value="AAS" class="btn-pill classtype-btn active py-2.5 px-3 rounded-lg text-xs font-bold text-center border">
                 AAS
               </button>
-              <button type="button" data-value="AG" class="btn-pill classtype-btn py-2.5 px-3 rounded-lg text-xs font-semibold text-center border">
+              <button type="button" data-value="AG" class="btn-pill classtype-btn py-2.5 px-3 rounded-lg text-xs font-bold text-center border">
                 AG
               </button>
             </div>
             <input type="hidden" id="inputClassType" value="AAS">
-            <p class="text-[11px] text-[#788871] mt-2">
-              Applied Animal Sciences (AAS) or Agriculture (AG)
-            </p>
           </div>
 
-          <!-- 3. GROUP SELECTOR -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-[#52634b] mb-2">
-              3. Group
-            </label>
+          <!-- BOX 3: 3. GROUP SELECTOR -->
+          <div class="bg-[#f8f9fa] border border-[#e2e5e9] rounded-xl sm:rounded-2xl p-3.5 sm:p-4 shadow-[0_1px_4px_rgba(0,0,0,0.04)] space-y-2.5">
+            <div class="flex items-center justify-between">
+              <label class="block text-xs font-bold uppercase tracking-wider text-[#2e343b]">
+                3. Group
+              </label>
+              <span class="text-[10px] font-semibold text-[#6c757d]">Section</span>
+            </div>
             <div id="groupOptions" class="grid grid-cols-4 gap-1.5">
-              <button type="button" data-value="A" class="btn-pill group-btn active py-2.5 px-2 rounded-lg text-xs font-semibold text-center border">
+              <button type="button" data-value="A" class="btn-pill group-btn active py-2.5 px-2 rounded-lg text-xs font-bold text-center border">
                 A
               </button>
-              <button type="button" data-value="B" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-semibold text-center border">
+              <button type="button" data-value="B" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-bold text-center border">
                 B
               </button>
-              <button type="button" data-value="C" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-semibold text-center border">
+              <button type="button" data-value="C" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-bold text-center border">
                 C
               </button>
-              <button type="button" data-value="D" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-semibold text-center border">
+              <button type="button" data-value="D" class="btn-pill group-btn py-2.5 px-2 rounded-lg text-xs font-bold text-center border">
                 D
               </button>
             </div>
@@ -324,13 +324,16 @@
           </div>
         </div>
 
-        <!-- STATUS SELECTOR (LATE vs ABSENT) -->
-        <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-[#52634b] mb-2">
-            4. Incident Status
-          </label>
+        <!-- BOX 4: 4. STATUS SELECTOR (LATE vs ABSENT) -->
+        <div class="bg-[#f8f9fa] border border-[#e2e5e9] rounded-xl sm:rounded-2xl p-3.5 sm:p-4 shadow-[0_1px_4px_rgba(0,0,0,0.04)] space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold uppercase tracking-wider text-[#2e343b]">
+              4. STATUS
+            </label>
+            <span class="text-[10px] font-semibold text-[#6c757d]">Attendance State</span>
+          </div>
           <div id="statusOptions" class="grid grid-cols-2 gap-3 max-w-md">
-            <!-- Absent Option (Default / Primary) -->
+            <!-- Absent Option (Default / Claret Highlight) -->
             <button type="button" data-value="Absent" class="btn-pill status-btn active py-2.5 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 border">
               <span class="status-icon w-5 h-5 rounded-full flex items-center justify-center text-xs">✕</span>
               <span>Absent</span>
@@ -345,50 +348,59 @@
           <input type="hidden" id="inputStatus" value="Absent">
         </div>
 
-        <!-- STUDENT NAME & OPTIONAL DETAILS -->
-        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2">
-          <!-- Student Name Input (Primary) -->
-          <div class="sm:col-span-6">
-            <label for="inputStudentName" class="block text-xs font-bold text-[#44543d] uppercase tracking-wider mb-1">
-              5. Student Name <span class="text-[#a23b3b]">*</span>
+        <!-- BOX 5: 5. STUDENT DETAILS (NAME, DATE, NOTES) -->
+        <div class="bg-[#f8f9fa] border border-[#e2e5e9] rounded-xl sm:rounded-2xl p-3.5 sm:p-4 shadow-[0_1px_4px_rgba(0,0,0,0.04)] space-y-3">
+          <div class="flex items-center justify-between">
+            <label for="inputStudentName" class="block text-xs font-bold text-[#2e343b] uppercase tracking-wider">
+              5. Student Details <span class="text-[#8c3838]">*</span>
             </label>
-            <div class="relative">
-              <input id="inputStudentName" type="text" placeholder="Type student full name (e.g. Alex Morgan)..." class="w-full border border-[#d0ded0] rounded-xl px-3.5 py-2.5 text-sm font-semibold text-[#2c3726] focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 focus:outline-none transition-all placeholder-[#97a591] bg-white shadow-2xs" required autofocus autocomplete="off">
+            <span class="text-[10px] font-semibold text-[#6c757d]">Required</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+            <!-- Student Name Input (Primary) -->
+            <div class="sm:col-span-6">
+              <label for="inputStudentName" class="block text-[11px] font-bold text-[#495057] uppercase tracking-wider mb-1">
+                Student Full Name <span class="text-[#8c3838]">*</span>
+              </label>
+              <div class="relative">
+                <input id="inputStudentName" type="text" placeholder="Type student full name (e.g. Alex Morgan)..." class="w-full border border-[#cfd4da] rounded-xl px-3.5 py-2.5 text-sm font-semibold text-[#1e2226] focus:border-[#8c3838] focus:ring-2 focus:ring-[#8c3838]/15 focus:outline-none transition-all placeholder-[#9ca3af] bg-white shadow-2xs" required autofocus autocomplete="off">
+              </div>
             </div>
-          </div>
 
-          <!-- Date -->
-          <div class="sm:col-span-3">
-            <label for="inputDate" class="block text-xs font-bold text-[#44543d] uppercase tracking-wider mb-1">
-              Date
-            </label>
-            <input id="inputDate" type="date" class="w-full border border-[#d0ded0] rounded-xl px-3 py-2.5 text-xs font-bold text-[#2c3726] focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 focus:outline-none bg-white shadow-2xs">
-          </div>
+            <!-- Date -->
+            <div class="sm:col-span-3">
+              <label for="inputDate" class="block text-[11px] font-bold text-[#495057] uppercase tracking-wider mb-1">
+                Date
+              </label>
+              <input id="inputDate" type="date" class="w-full border border-[#cfd4da] rounded-xl px-3 py-2.5 text-xs font-bold text-[#1e2226] focus:border-[#8c3838] focus:ring-2 focus:ring-[#8c3838]/15 focus:outline-none bg-white shadow-2xs">
+            </div>
 
-          <!-- Optional Notes / Reason -->
-          <div class="sm:col-span-3">
-            <label for="inputNotes" class="block text-xs font-bold text-[#44543d] uppercase tracking-wider mb-1">
-              Reason / Notes <span class="text-[#7f8f78] font-normal lowercase">(optional)</span>
-            </label>
-            <input id="inputNotes" type="text" placeholder="e.g. Doctor, 15m late..." class="w-full border border-[#d0ded0] rounded-xl px-3 py-2.5 text-xs text-[#2c3726] focus:border-[#4d6042] focus:ring-2 focus:ring-[#4d6042]/15 focus:outline-none placeholder-[#97a591] bg-white shadow-2xs">
+            <!-- Optional Notes / Reason -->
+            <div class="sm:col-span-3">
+              <label for="inputNotes" class="block text-[11px] font-bold text-[#495057] uppercase tracking-wider mb-1">
+                Reason / Notes <span class="text-[#868e96] font-normal lowercase">(optional)</span>
+              </label>
+              <input id="inputNotes" type="text" placeholder="e.g. Doctor, 15m late..." class="w-full border border-[#cfd4da] rounded-xl px-3 py-2.5 text-xs text-[#1e2226] focus:border-[#8c3838] focus:ring-2 focus:ring-[#8c3838]/15 focus:outline-none placeholder-[#9ca3af] bg-white shadow-2xs">
+            </div>
           </div>
         </div>
 
         <!-- SUBMIT BUTTON & SUCCESS BANNER -->
         <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div class="flex items-center gap-2">
-            <button type="submit" id="btnSubmitForm" class="w-full sm:w-auto bg-[#425437] hover:bg-[#36452d] active:scale-98 text-white font-bold text-xs sm:text-sm px-7 py-3 rounded-xl shadow-xs transition-all cursor-pointer flex items-center justify-center gap-2">
+            <button type="submit" id="btnSubmitForm" class="w-full sm:w-auto bg-[#8c3838] hover:bg-[#782f2f] active:scale-98 text-white font-bold text-xs sm:text-sm px-7 py-3 rounded-xl shadow-[0_2px_6px_rgba(140,56,56,0.25)] transition-all cursor-pointer flex items-center justify-center gap-2">
               <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-              <span>Submit Record</span>
+              <span>Submit Absence</span>
             </button>
 
-            <button type="button" id="btnClearInputs" class="text-[#708068] hover:text-[#33422a] text-xs font-semibold px-3 py-2 rounded-lg cursor-pointer">
+            <button type="button" id="btnClearInputs" class="text-[#6c757d] hover:text-[#212529] text-xs font-semibold px-3 py-2 rounded-lg cursor-pointer">
               Clear Name
             </button>
           </div>
 
           <!-- Status Toast / Feedback -->
-          <div id="submitFeedback" class="hidden text-xs font-semibold px-3 py-2 rounded-xl border flex items-center gap-2 transition-all">
+          <div id="submitFeedback" class="hidden text-xs font-semibold px-3.5 py-2 rounded-xl border flex items-center gap-2 transition-all">
             <!-- Dynamically populated -->
           </div>
         </div>
@@ -397,23 +409,23 @@
     </section>
 
     <!-- ATTENDANCE INCIDENT LOG / IE ACCESS -->
-    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.03)] border border-[#dfe6dc] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <section class="bg-white rounded-2xl shadow-[0_2px_8px_rgba(0,0,0,0.05)] border border-[#e2e5e9] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
-        <h3 class="text-sm sm:text-base font-bold text-[#2e3b28] tracking-tight flex items-center gap-2">
+        <h3 class="text-sm sm:text-base font-bold text-[#1e2226] tracking-tight flex items-center gap-2">
           <span>Attendance Incident Log</span>
-          <span id="logCountBadge" class="bg-[#e9f0e6] text-[#425437] text-xs px-2.5 py-0.5 rounded-full font-semibold">0 records</span>
+          <span id="logCountBadge" class="bg-[#edf0f2] text-[#2b3035] text-xs px-2.5 py-0.5 rounded-full font-bold">0 records</span>
         </h3>
-        <p class="text-xs text-[#6e7d67]">Database feed and master roster of all reported absences.</p>
+        <p class="text-xs text-[#6c757d]">Database feed and master roster of all reported absences.</p>
       </div>
 
       <div class="flex items-center gap-2.5 flex-wrap">
         <!-- IE Button (Red/Claret) -->
-        <a href="ie.html" id="btnOpenIE" class="bg-[#8c3838] hover:bg-[#782f2f] active:bg-[#682626] text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm shadow-xs hover:shadow transition-all flex items-center gap-2 cursor-pointer no-underline" title="View all reported absences in sheets database">
+        <a href="ie.html" id="btnOpenIE" class="bg-[#8c3838] hover:bg-[#782f2f] active:bg-[#682626] text-white font-black px-5 py-2.5 rounded-xl text-xs sm:text-sm shadow-[0_2px_6px_rgba(140,56,56,0.28)] hover:shadow transition-all flex items-center gap-2 cursor-pointer no-underline tracking-wide" title="View all reported absences in sheets database">
           <span>IE</span>
         </a>
 
         <!-- Sync Sheet Button -->
-        <button id="btnSyncSheetToolbar" type="button" class="bg-[#edf3ea] hover:bg-[#dfeada] active:bg-[#d0dfcb] text-[#3b4e33] border border-[#cbd9c7] font-bold px-3 py-2 rounded-xl text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap" title="Sync live records from Google Sheet">
+        <button id="btnSyncSheetToolbar" type="button" class="bg-[#f1f3f5] hover:bg-[#e9ecef] active:bg-[#dee2e6] text-[#2b3035] border border-[#ced4da] font-bold px-3.5 py-2.5 rounded-xl text-xs shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap" title="Sync live records from Google Sheet">
           <span id="toolbarSyncSpinner" class="inline-block transition-transform">🔄</span>
           <span>Sync Sheet</span>
         </button>
@@ -922,12 +934,14 @@
         group: group,
         status: status,
         studentName: studentName,
-        notes: notes
+        notes: notes,
+        source: "local"
       };
 
       // Add to beginning of records list
       records.unshift(newRecord);
       saveRecords();
+      renderRecordsTable();
 
       // Show Feedback Toast
       showFeedbackToast(newRecord);
@@ -991,7 +1005,8 @@
       const todayRecords = records.filter(r => r.date === today);
       const totalAbsences = records.filter(r => r.status === "Absent").length;
 
-      document.getElementById("statTotalToday").textContent = todayRecords.length;
+      // TOTAL (All-time in database, not just today)
+      document.getElementById("statTotalToday").textContent = records.length;
       document.getElementById("statLateToday").textContent = todayRecords.filter(r => r.status === "Late").length;
       document.getElementById("statAbsentToday").textContent = todayRecords.filter(r => r.status === "Absent").length;
 
@@ -1327,6 +1342,7 @@
         updateSyncStatusText(`✓ Synced ${sheetRecords.length} record(s) from spreadsheet`);
         renderAbsencesModal();
         updateStats();
+        renderRecordsTable();
 
         if (isManual) {
           alert(`✓ Synced successfully!\n\nRetrieved ${sheetRecords.length} attendance incident(s) from your Google Spreadsheet.`);
@@ -1983,6 +1999,23 @@
     updateStats();
     renderRecordsTable();
     updateFormConfigUI();
+
+    // Auto-refresh when tab gains focus or user switches back to browser
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        syncRecordsFromGoogleSheet(false);
+      }
+    });
+    window.addEventListener("focus", () => {
+      syncRecordsFromGoogleSheet(false);
+    });
+
+    // Background auto-sync every 12 seconds so phone entries appear on computer automatically
+    setInterval(() => {
+      if (document.visibilityState === "visible" && !isSyncingSheet) {
+        syncRecordsFromGoogleSheet(false);
+      }
+    }, 12000);
 
     // Auto-sync live spreadsheet records on page load
     syncRecordsFromGoogleSheet(false);
